@@ -33,7 +33,7 @@ const CERTIFICATIONS = [
     id: 'google-ai',
     title: 'Google AI Specialization',
     subtitle: '7-Course Professional Credential',
-    image: "/button3423.png",
+    image: "./button3423.png",
     courses: [
       { title: "AI Fundamentals", desc: "Mapped core AI capabilities to specific logistical and enterprise workflows to guarantee operational ROI." },
       { title: "AI for Brainstorming & Planning", desc: "Utilized multi-modal AI to architect, prototype, and pressure-test structural system designs." },
@@ -48,7 +48,7 @@ const CERTIFICATIONS = [
     id: 'prompting-essentials',
     title: 'Google Prompting Essentials',
     subtitle: 'Advanced Prompt Engineering',
-    image: "/button3423.png",
+    image: "./button3423.png",
     courses: [
       { title: "Start Writing Prompts like a Pro", desc: "Engineered strict 5-step prompt frameworks to extract highly specific, business-ready data safely." },
       { title: "Design Prompts for Everyday Work", desc: "Automated workflow logic to eliminate manual data processing and accelerate deliverables." },
@@ -65,7 +65,7 @@ const CAPABILITIES = [
     title: "Brand Builder", 
     type: "APP_MODULE",
     icon: <Layers className="text-cyan-400" size={24} />,
-    image: "/Gemini_Generated_Image_2idzz52idzz52idz.png",
+    image: "./Gemini_Generated_Image_2idzz52idzz52idz.png",
     description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets without prompt injection risks.",
     metrics: ["Imagen 4.0", "Eval Pipelines", "Few-Shot Logic"],
     repoUrl: "https://github.com/leonrdardenaitech/brand-builder"
@@ -75,7 +75,7 @@ const CAPABILITIES = [
     title: "Hydro Scan", 
     type: "APP_MODULE",
     icon: <Crosshair className="text-cyan-400" size={24} />,
-    image: "/Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
+    image: "./Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
     description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics with real-time neural context syncing.",
     metrics: ["RAG Architecture", "Vector DB", "Tool-Calling"],
     repoUrl: "https://github.com/leonrdardenaitech/hydro-scan"
@@ -85,7 +85,7 @@ const CAPABILITIES = [
     title: "SnapBack AI Agent", 
     type: "AGENT_NODE",
     icon: <Terminal className="text-fuchsia-500" size={24} />,
-    image: "/snapback.jpg",
+    image: "./snapback.jpg",
     description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards for positive inputs and instantly escalates high-risk operational friction to human management.",
     metrics: ["Prompt Chaining", "Sentiment Analysis", "Risk Automation"],
     slides: [
@@ -113,7 +113,7 @@ const CAPABILITIES = [
     title: "Employee Scheduler", 
     type: "AGENT_NODE",
     icon: <Cpu className="text-fuchsia-500" size={24} />,
-    image: "/Gemini_Generated_Image_4v4ckj4v4ckj4v4c.png",
+    image: "./Gemini_Generated_Image_4v4ckj4v4ckj4v4c.png",
     description: "Agentic workflow utilizing orchestration frameworks to automate supply-chain and personnel scheduling. Handles autonomous decision-making through recursive reasoning loops.",
     metrics: ["Agentic Workflows", "Recursive Reasoning", "Logic Gates"],
   slides: [
