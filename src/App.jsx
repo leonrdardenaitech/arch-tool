@@ -268,7 +268,7 @@ export default function App() {
       </header>
       <main className="max-w-7xl mx-auto px-6">
         <section className="py-24 md:py-32 flex flex-col items-center text-center gap-8 border-b border-cyan-900/40 relative overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-30 bg-cover bg-center bg-no-repeat pointer-events-none" style={{ backgroundImage: "url('timbackground.png')" }}></div>
+          <div className="absolute inset-0 z-0 opacity-30 bg-cover bg-center bg-no-repeat pointer-events-none" style={{ backgroundImage: "timbackground.png" }}></div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0a0314]/90 via-[#0a0314]/60 to-[#0a0314] pointer-events-none"></div>
           <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-[#120524] border border-cyan-400/50 text-cyan-300 text-xs font-bold uppercase tracking-widest z-10">
             <ShieldCheck size={16} className="text-fuchsia-500" />
@@ -283,7 +283,7 @@ export default function App() {
           </p>
         </section>
         <section className="py-24 space-y-12 border-b border-cyan-900/40 relative overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-20 bg-cover bg-center bg-no-repeat pointer-events-none" style={{ backgroundImage: "url('ai-cert564.gif')" }}></div>
+          <div className="absolute inset-0 z-0 opacity-20 bg-cover bg-center bg-no-repeat pointer-events-none" style={{ backgroundImage: "ai-cert564.gif" }}></div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0a0314] via-[#0a0314]/60 to-[#0a0314] pointer-events-none"></div>
           <div className="text-center space-y-4 mb-16 relative z-10">
             <h2 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400 uppercase">Verified Architecture Core</h2>
