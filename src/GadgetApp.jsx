@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 
 // --- ROBUST ENVIRONMENT DETECTION ---
-// Wiring this to your existing .env variables
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -109,89 +108,19 @@ const playSlimeSound = (type = 'squish') => {
   } catch (e) {}
 };
 
-export default function GadgetApp() {
-  const [user, setUser] = useState(null);
-  const [savedPrompts, setSavedPrompts] = useState([]);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        await signInAnonymously(auth);
-      } catch (err) { console.error("Auth error:", err); }
-    };
-    initAuth();
-    return onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const q = collection(db, 'artifacts', appId, 'public', 'data', 'prompts');
-    return onSnapshot(q, (s) => setSavedPrompts(s.docs.map(d => ({id: d.id, ...d.data()}))), (e) => console.error(e));
-  }, [user]);
-
-  const triggerSound = (type) => { if (soundEnabled) playSlimeSound(type); };
-
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center font-mono text-emerald-500">BOOTING ARCHREACTOR_5.3...</div>;
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-emerald-400 font-mono overflow-x-hidden selection:bg-purple-900 pb-20">
-      <CustomStyles />
-      <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b-4 border-emerald-900/40 p-4 shadow-2xl">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-emerald-500 rounded-full animate-pulse flex items-center justify-center shadow-[0_0_20px_#10b981]"><Layers className="text-black" /></div>
-            <div>
-              <h1 className="text-2xl font-black italic uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-purple-500 tracking-tighter">Engineer El's Arch</h1>
-              <p className="text-[10px] text-emerald-600 font-bold tracking-widest uppercase">Kernel: 5.3.0-IdentityReady</p>
-            </div>
-          </div>
-          <button onClick={() => { setSoundEnabled(!soundEnabled); triggerSound('droplet'); }} className="p-3 bg-slate-900 border border-emerald-500/50 rounded-xl hover:shadow-[0_0_15px_#10b981]">
-            {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} className="text-red-500" />}
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-16">
-        <SlimeLine savedPrompts={savedPrompts} onInteraction={() => triggerSound('droplet')} />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-12">
-            <RevolvingSection user={user} onInteraction={triggerSound} />
-          </div>
-          <div className="lg:col-span-7">
-            <PromptingEngine user={user} onInteraction={triggerSound} />
-          </div>
-          <div className="lg:col-span-5">
-            <GemSuggester user={user} onInteraction={triggerSound} />
-          </div>
-        </div>
-
-        <SpreadsheetBackbone prompts={savedPrompts} user={user} onInteraction={() => triggerSound('squish')} />
-      </main>
-
-      <footer className="fixed bottom-0 w-full z-40 bg-slate-950 border-t border-slate-900 py-3 px-6 flex justify-between items-center">
-        <span className="text-[9px] text-slate-700 font-black uppercase tracking-widest">© 2026 BRAND.BUILDER.CORE</span>
-        <div className="flex items-center space-x-4">
-          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-          <span className="text-[9px] text-emerald-800 font-bold uppercase">Backbone Status: Ready</span>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
 function SlimeLine({ savedPrompts, onInteraction }) {
   const events = useMemo(() => {
-    const saveEvents = savedPrompts.map(p => ({ date: p.date, thread: `${p.category}: ${p.text.slice(0, 35)}...`, type: 'node' }));
+    const saveEvents = savedPrompts.map(p => ({ 
+      date: p.date, 
+      thread: `${p.category}: ${p.text.slice(0, 35)}...`, 
+      type: 'node' 
+    }));
     return [...SYSTEM_MILESTONES, ...saveEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [savedPrompts]);
 
   const [idx, setIdx] = useState(Math.max(0, events.length - 1));
+  useEffect(() => { setIdx(Math.max(0, events.length - 1)); }, [events.length]);
+
   const cur = events[idx] || { date: 'N/A', thread: 'Initializing SlimeLine...' };
 
   return (
@@ -215,7 +144,7 @@ function SlimeLine({ savedPrompts, onInteraction }) {
   );
 }
 
-function RevolvingSection({ user, onInteraction }) {
+function RevolvingSection({ user, onInteraction, db, appId }) {
   const [rotation, setRotation] = useState(0);
   const [activeForm, setActiveForm] = useState(null);
   const [form, setForm] = useState({ subject: '', info: '', time: '', stack: 'Python', testing: '', results: '', brandVoice: 'Technical', target: '' });
@@ -236,7 +165,9 @@ function RevolvingSection({ user, onInteraction }) {
       
     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'prompts'), {
       text: payload,
-      category: activeForm.name, timestamp: Date.now(), date: form.time || new Date().toLocaleDateString()
+      category: activeForm.name, 
+      timestamp: Date.now(), 
+      date: form.time || new Date().toLocaleString()
     });
     setForm({ subject: '', info: '', time: '', stack: 'Python', testing: '', results: '', brandVoice: 'Technical', target: '' });
     setActiveForm(null);
@@ -276,7 +207,7 @@ function RevolvingSection({ user, onInteraction }) {
               <>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-black text-slate-500">Temporal Stamp</label>
-                  <input type="text" placeholder="2026-02-28..." value={form.time} onChange={e => setForm({...form, time: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl p-5 text-emerald-300 font-mono outline-none focus:border-emerald-500 transition-all" />
+                  <input type="text" placeholder="Auto-stamp on save..." value={form.time} onChange={e => setForm({...form, time: e.target.value})} className="w-full bg-black border border-slate-800 rounded-xl p-5 text-emerald-300 font-mono outline-none focus:border-emerald-500 transition-all" />
                 </div>
                 {activeForm.name === 'Arch Reactor' && (
                   <div className="space-y-2">
@@ -294,7 +225,7 @@ function RevolvingSection({ user, onInteraction }) {
             <textarea placeholder={activeForm.name === 'Identity Chamber' ? "Describe the mission, aesthetic, and soul of the brand..." : "Paste logic, codebase snippets, or testing results..."} value={form.info || form.testing} onChange={e => setForm({...form, info: e.target.value, testing: e.target.value})} className="w-full h-80 bg-black border border-slate-800 rounded-xl p-8 text-emerald-100 text-sm font-mono outline-none focus:border-emerald-500 transition-all" />
           </div>
         </div>
-        <button onClick={handleSave} className={`w-full py-6 mt-12 rounded-[2rem] font-black uppercase text-lg text-black transition-all active:scale-95 shadow-xl ${activeForm.btn}`}>Commit to Slime Backbone</button>
+        <button onClick={handleSave} className={`w-full py-6 mt-12 rounded-[2rem] font-black uppercase text-lg text-black transition-all active:scale-95 shadow-xl ${activeForm.btn}`}>Commit to Sludge Backbone</button>
       </div>
     );
   }
@@ -326,7 +257,7 @@ function RevolvingSection({ user, onInteraction }) {
   );
 }
 
-function PromptingEngine({ user, onInteraction }) {
+function PromptingEngine({ user, onInteraction, db, appId, geminiApiKey }) {
   const [mode, setMode] = useState('simple');
   const [engineState, setEngineState] = useState('pro');
   const [input, setInput] = useState('');
@@ -351,6 +282,18 @@ function PromptingEngine({ user, onInteraction }) {
       setOutput(data.candidates?.[0]?.content?.parts?.[0]?.text || "Link Severed.");
     } catch(e) { setOutput("Nexus Link Broken."); }
     setRefining(false);
+  };
+
+  const saveToBackbone = async () => {
+    if (!user || !output) return;
+    onInteraction('squish');
+    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'prompts'), {
+      text: output,
+      category: 'Refinement',
+      timestamp: Date.now(),
+      date: new Date().toLocaleString()
+    });
+    alert("Synthesized logic committed to Backbone.");
   };
 
   return (
@@ -390,7 +333,7 @@ function PromptingEngine({ user, onInteraction }) {
           <div className="bg-black/80 p-8 rounded-[2rem] border-l-4 border-emerald-500 text-emerald-100 text-sm leading-relaxed animate-fade-in font-sans shadow-inner selection:bg-emerald-500 selection:text-black">
             {output}
             <div className="mt-6 flex justify-end">
-              <button onClick={() => onInteraction('squish')} className="text-[9px] font-black uppercase flex items-center bg-emerald-900/40 px-4 py-2 rounded-full hover:bg-emerald-500 hover:text-black transition-all"><Save size={14} className="mr-2" />Save to Backbone</button>
+              <button onClick={saveToBackbone} className="text-[9px] font-black uppercase flex items-center bg-emerald-900/40 px-4 py-2 rounded-full hover:bg-emerald-500 hover:text-black transition-all"><Save size={14} className="mr-2" />Save to Backbone</button>
             </div>
           </div>
         )}
@@ -399,11 +342,23 @@ function PromptingEngine({ user, onInteraction }) {
   );
 }
 
-function GemSuggester({ user, onInteraction }) {
+function GemSuggester({ user, onInteraction, db, appId }) {
   const [idx, setIdx] = useState(0);
   const gem = GEMS_POOL[idx];
 
   const cycle = (dir) => { setIdx(prev => (prev + dir + GEMS_POOL.length) % GEMS_POOL.length); onInteraction('bounce'); };
+
+  const saveGem = async () => {
+    if (!user) return;
+    onInteraction('squish');
+    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'prompts'), {
+      text: gem.text,
+      category: 'Gems',
+      timestamp: Date.now(),
+      date: new Date().toLocaleString()
+    });
+    alert("Gem locked into Sludge Backbone.");
+  };
 
   return (
     <section className="bg-gradient-to-br from-indigo-950/80 to-purple-950/80 rounded-[3rem] p-12 border-2 border-indigo-500/30 shadow-3xl h-full flex flex-col justify-between min-h-[650px]">
@@ -430,14 +385,35 @@ function GemSuggester({ user, onInteraction }) {
           </div>
         </div>
       </div>
-      <button onClick={async () => { onInteraction('squish'); await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'prompts'), { text: gem.text, category: 'Gems', timestamp: Date.now(), date: new Date().toLocaleDateString() }); }} className="w-full mt-12 py-6 bg-indigo-600 hover:bg-indigo-500 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] shadow-[0_15px_35px_rgba(79,70,229,0.4)] transition-all transform hover:-translate-y-1 active:scale-95 text-white">Commit Gem to Backbone</button>
+      <button onClick={saveGem} className="w-full mt-12 py-6 bg-indigo-600 hover:bg-indigo-500 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] shadow-[0_15px_35px_rgba(79,70,229,0.4)] transition-all transform hover:-translate-y-1 active:scale-95 text-white">Commit Gem to Backbone</button>
     </section>
   );
 }
 
-function SpreadsheetBackbone({ prompts, user, onInteraction }) {
+function SpreadsheetBackbone({ prompts, user, onInteraction, db, appId }) {
   const [filter, setFilter] = useState('All');
   const filtered = filter === 'All' ? prompts : prompts.filter(p => p.category === filter);
+
+  const exportToCSV = () => {
+    onInteraction('droplet');
+    const headers = ["Timestamp", "Sector", "Neural Logic Data"];
+    const rows = filtered.map(p => [
+      p.date, 
+      p.category, 
+      `"${p.text.replace(/"/g, '""')}"`
+    ]);
+    
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `gadget-glob-inventory-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <section className="bg-slate-900/40 rounded-[4rem] border border-slate-900 overflow-hidden shadow-3xl">
@@ -446,10 +422,15 @@ function SpreadsheetBackbone({ prompts, user, onInteraction }) {
           <h2 className="text-3xl font-black text-emerald-400 flex items-center uppercase tracking-tighter"><Database className="mr-5 text-purple-700" size={40} /> Backbone Inventory</h2>
           <p className="text-[11px] text-slate-600 uppercase font-black tracking-[0.4em] mt-2">Persistence Node Matrix - Global Layer</p>
         </div>
-        <select value={filter} onChange={e => setFilter(e.target.value)} className="bg-black border-2 border-slate-800 rounded-2xl px-10 py-4 text-xs text-emerald-400 font-black uppercase cursor-pointer hover:border-emerald-500 transition-all outline-none">
-          <option value="All">All Backbone Nodes</option>
-          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
+        <div className="flex gap-4">
+           <select value={filter} onChange={e => setFilter(e.target.value)} className="bg-black border-2 border-slate-800 rounded-2xl px-8 py-4 text-xs text-emerald-400 font-black uppercase cursor-pointer hover:border-emerald-500 transition-all outline-none">
+             <option value="All">All Backbone Nodes</option>
+             {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+           </select>
+           <button onClick={exportToCSV} className="bg-emerald-600 hover:bg-emerald-500 text-black px-8 py-4 rounded-2xl text-xs font-black uppercase flex items-center gap-2 shadow-xl">
+             <Download size={16} /> Save to File
+           </button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left font-sans text-xs">
@@ -462,7 +443,7 @@ function SpreadsheetBackbone({ prompts, user, onInteraction }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-950">
-            {filtered.map((p) => (
+            {filtered.length > 0 ? filtered.map((p) => (
               <tr key={p.id} className="hover:bg-emerald-500/5 transition-all group">
                 <td className="px-12 py-10 text-slate-500 font-mono text-xs tabular-nums opacity-60">{p.date}</td>
                 <td className="px-12 py-10">
@@ -477,11 +458,89 @@ function SpreadsheetBackbone({ prompts, user, onInteraction }) {
                   </button>
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr><td colSpan="4" className="px-12 py-20 text-center text-slate-800 uppercase font-black tracking-widest">Backbone Empty // Waiting for Logic Injection</td></tr>
+            )}
           </tbody>
         </table>
       </div>
     </section>
+  );
+}
+
+export default function GadgetApp() {
+  const [user, setUser] = useState(null);
+  const [savedPrompts, setSavedPrompts] = useState([]);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        await signInAnonymously(auth);
+      } catch (err) { console.error("Auth error:", err); }
+    };
+    initAuth();
+    return onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const q = collection(db, 'artifacts', appId, 'public', 'data', 'prompts');
+    return onSnapshot(q, (s) => setSavedPrompts(s.docs.map(d => ({id: d.id, ...d.data()}))), (e) => console.error(e));
+  }, [user]);
+
+  const triggerSound = (type) => { if (soundEnabled) playSlimeSound(type); };
+
+  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center font-mono text-emerald-500">BOOTING GADGET_GLOB_5.3...</div>;
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-emerald-400 font-mono overflow-x-hidden selection:bg-purple-900 pb-20">
+      <CustomStyles />
+      <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b-4 border-emerald-900/40 p-4 shadow-2xl">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-emerald-500 rounded-full animate-pulse flex items-center justify-center shadow-[0_0_20px_#10b981]"><Layers className="text-black" /></div>
+            <div>
+              <h1 className="text-2xl font-black italic uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-purple-500 tracking-tighter">Gadget Glob</h1>
+              <p className="text-[10px] text-emerald-600 font-bold tracking-widest uppercase">Kernel: 5.3.0 // Ooze-Ready</p>
+            </div>
+          </div>
+          <button onClick={() => { setSoundEnabled(!soundEnabled); triggerSound('droplet'); }} className="p-3 bg-slate-900 border border-emerald-500/50 rounded-xl hover:shadow-[0_0_15px_#10b981]">
+            {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} className="text-red-500" />}
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-16">
+        <SlimeLine savedPrompts={savedPrompts} onInteraction={() => triggerSound('droplet')} />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-12">
+            <RevolvingSection user={user} onInteraction={triggerSound} db={db} appId={appId} />
+          </div>
+          <div className="lg:col-span-7">
+            <PromptingEngine user={user} onInteraction={triggerSound} db={db} appId={appId} geminiApiKey={geminiApiKey} />
+          </div>
+          <div className="lg:col-span-5">
+            <GemSuggester user={user} onInteraction={triggerSound} db={db} appId={appId} />
+          </div>
+        </div>
+
+        <SpreadsheetBackbone prompts={savedPrompts} user={user} onInteraction={() => triggerSound('squish')} db={db} appId={appId} />
+      </main>
+
+      <footer className="fixed bottom-0 w-full z-40 bg-slate-950 border-t border-slate-900 py-3 px-6 flex justify-between items-center">
+        <span className="text-[9px] text-slate-700 font-black uppercase tracking-widest">© 2026 GADGET.GLOB.CORE</span>
+        <div className="flex items-center space-x-4">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+          <span className="text-[9px] text-emerald-800 font-bold uppercase">Backbone Status: Ready</span>
+        </div>
+      </footer>
+    </div>
   );
 }
 

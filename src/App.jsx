@@ -68,7 +68,8 @@ const CAPABILITIES = [
     image: "Gemini_Generated_Image_2idzz52idzz52idz.png",
     description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets without prompt injection risks.",
     metrics: ["Imagen 4.0", "Eval Pipelines", "Few-Shot Logic"],
-    repoUrl: "https://github.com/leonrdardenaitech/arch-tool/tree/main/brand-builder"
+    liveUrl: "/arch-tool/brand-builder.html",
+    repoUrl: "https://github.com/leonrdardenaitech/brand-builder"
   },
   { 
     id: "hydro-scan", 
@@ -78,7 +79,8 @@ const CAPABILITIES = [
     image: "Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
     description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics with real-time neural context syncing.",
     metrics: ["RAG Architecture", "Vector DB", "Tool-Calling"],
-    repoUrl: "https://github.com/leonrdardenaitech/arch-tool"
+    liveUrl: "https://leonrdardenaitech.github.io/hydro-scan/",
+    repoUrl: "https://github.com/leonrdardenaitech/hydro-scan"
   },
   { 
     id: "snapback-agent", 
@@ -133,9 +135,9 @@ const CAPABILITIES = [
         text: "Phase 4 / Matrix Finalization: A mathematically optimized, conflict-free monthly schedule is deployed automatically.", 
         img: "weekly4.jpg" 
       }
-    ] // This closes the slides array
-  } // This curly brace closes the "Employee Scheduler" object
-]; // This square bracket and semicolon closes the entire CAPABILITIES array
+    ] 
+  } 
+]; 
 
 const SKILLS = [
   "AI Solutions Architecture", "Agentic Workflows", "Retrieval-Augmented Gen (RAG)", 
@@ -242,6 +244,16 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(true);
   const [presentationAgent, setPresentationAgent] = useState(null);
 
+  const handleProjectClick = (project) => {
+    if (project.type === 'AGENT_NODE') {
+      setPresentationAgent(project);
+    } else if (project.liveUrl) {
+      window.open(project.liveUrl, '_blank', 'noreferrer');
+    } else if (project.repoUrl) {
+      window.open(project.repoUrl, '_blank', 'noreferrer');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0314] text-slate-200 font-sans pb-20 relative">
       <PresentationModal agent={presentationAgent} onClose={() => setPresentationAgent(null)} />
@@ -313,13 +325,11 @@ export default function App() {
             {CAPABILITIES.map(project => (
               <div key={project.id} className="group bg-[#0d041a] border border-cyan-500/40 rounded-2xl p-8 hover:border-cyan-300 transition-all flex flex-col h-full shadow-3xl">
                 {project.image && (
-                  <div onClick={() => project.type === 'AGENT_NODE' ? setPresentationAgent(project) : null} className={`w-full h-48 mb-6 rounded-xl overflow-hidden border border-fuchsia-500/30 relative ${project.type === 'AGENT_NODE' ? 'cursor-pointer' : ''}`}>
+                  <div onClick={() => handleProjectClick(project)} className="w-full h-48 mb-6 rounded-xl overflow-hidden border border-fuchsia-500/30 relative cursor-pointer">
                     <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-all" />
-                    {project.type === 'AGENT_NODE' && (
-                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                          <PlayCircle size={48} className="text-cyan-400" />
-                       </div>
-                    )}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                       {project.type === 'AGENT_NODE' ? <PlayCircle size={48} className="text-cyan-400" /> : <ArrowRight size={48} className="text-cyan-400" />}
+                    </div>
                   </div>
                 )}
                 <div className="flex items-center gap-4 mb-6 border-b border-cyan-900/50 pb-6">
@@ -329,7 +339,10 @@ export default function App() {
                 <p className="text-sm text-slate-300 leading-relaxed mb-8">{project.description}</p>
                 <div className="mt-auto">
                   {project.type === 'APP_MODULE' ? (
-                    <a href={project.repoUrl} target="_blank" rel="noreferrer" className="w-full py-4 bg-[#120524] border border-cyan-500/50 rounded-xl text-xs font-bold text-cyan-400 uppercase flex items-center justify-center gap-3"><Github size={16} /> GitHub Repo</a>
+                    <div className="flex gap-4">
+                      <a href={project.liveUrl} target="_blank" rel="noreferrer" className="flex-1 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 border border-cyan-500/50 rounded-xl text-xs font-bold text-white uppercase flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(0,240,255,0.3)]">Launch App</a>
+                      <a href={project.repoUrl} target="_blank" rel="noreferrer" className="px-6 py-4 bg-[#120524] border border-slate-700 rounded-xl text-xs font-bold text-slate-400 uppercase flex items-center justify-center gap-3 hover:text-white transition-colors"><Github size={16} /></a>
+                    </div>
                   ) : (
                     <button onClick={() => setPresentationAgent(project)} className="w-full py-4 bg-[#120524] border border-fuchsia-500/50 rounded-xl text-xs font-bold text-fuchsia-400 uppercase flex items-center justify-center gap-3"><Video size={16} /> Launch Presentation</button>
                   )}

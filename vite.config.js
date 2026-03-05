@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         gadget: resolve(__dirname, 'gadget-glob.html'),
+        brand: resolve(__dirname, 'brand-builder.html'),
       },
     },
   },
