@@ -101,11 +101,19 @@ const BrandBuilderApp = () => {
       margin: 0.5,
       filename: `${brandName}_Brief_007.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        backgroundColor: '#ffffff',
+        logging: true
+      },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-    if (window.html2pdf) window.html2pdf().set(opt).from(element).save();
-    else alert("PDF Library Offline.");
+    if (window.html2pdf) {
+      window.html2pdf().set(opt).from(element).save();
+    } else {
+      alert("PDF Library Offline.");
+    }
   };
 
   return (
