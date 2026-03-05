@@ -77,12 +77,54 @@ const CERTIFICATIONS = [
 // --- DATA: STRATEGIC CAPABILITIES ---
 const CAPABILITIES = [
   { 
+    id: "deep-thinking", 
+    title: "Deep Thinking Node", 
+    type: "AGENT_NODE",
+    icon: <BrainCircuit className="text-cyan-400" size={24} />,
+    image: "3d-brain.jpg",
+    description: "Advanced long-form reasoning node utilizing Chain-of-Thought (CoT) prompting to solve multi-step architectural problems. Operates with explicit logic gates to ensure structural integrity.",
+    metrics: ["Chain-of-Thought", "Logic Gates", "System Synthesis"],
+    slides: [
+      { text: "Step 1 / Decomposition: Breaking complex enterprise requests into discrete, manageable sub-tasks for focused analysis.", img: "3d-brain.jpg" },
+      { text: "Step 2 / Iterative Refinement: Agent recursively evaluates its own logic to eliminate hallucinations and optimize output.", img: "chart floating.jpg" },
+      { text: "Step 3 / Synthesis: Recombining verified sub-tasks into a comprehensive, high-fidelity solution with 99.9% reliability.", img: "glowing crystal.png" }
+    ]
+  },
+  { 
+    id: "eval-sentinel", 
+    title: "Eval Sentinel", 
+    type: "AGENT_NODE",
+    icon: <ShieldCheck className="text-fuchsia-500" size={24} />,
+    image: "seqscan1.png",
+    description: "Autonomous evaluation layer governed by strict security protocols. Continuously monitors AI outputs for bias, hallucination, and prompt injection attempts.",
+    metrics: ["Output Validation", "Security Protocols", "Real-time Monitoring"],
+    slides: [
+      { text: "Phase 1 / Output Monitoring: Continuous scraping and analysis of LLM generations to ensure alignment with enterprise safety guidelines.", img: "seqscan1.png" },
+      { text: "Phase 2 / Bias Detection: Multi-vector analysis to identify and neutralize unintended bias or political skew in real-time.", img: "seqscan2.png" },
+      { text: "Phase 3 / Security Lock: Automated escalation and block triggered when high-risk prompt injection patterns are detected.", img: "seqscan3.png" }
+    ]
+  },
+  { 
+    id: "vector-vault", 
+    title: "Vector Vault", 
+    type: "AGENT_NODE",
+    icon: <Server className="text-cyan-400" size={24} />,
+    image: "3d cloud.png",
+    description: "Enterprise-grade RAG indexing system. Securely stores and retrieves proprietary intelligence with sub-millisecond latency for high-bandwidth AI applications.",
+    metrics: ["Vector Indexing", "RAG Systems", "Unstructured Data"],
+    slides: [
+      { text: "Phase 1 / Data Ingestion: High-speed ingestion of unstructured proprietary data (PDFs, Logs, API Streams).", img: "3d cloud.png" },
+      { text: "Phase 2 / Embedding Generation: Logic-aware embeddings transform raw data into multi-dimensional vectors.", img: "glowing crystal.png" },
+      { text: "Phase 3 / Semantic Retrieval: Neural search zaps relevant data points with sub-millisecond precision.", img: "seqscan1.png" }
+    ]
+  },
+  { 
     id: "brand-builder", 
     title: "Brand Builder", 
     type: "APP_MODULE",
     icon: <Layers className="text-cyan-400" size={24} />,
     image: "Gemini_Generated_Image_2idzz52idzz52idz.png",
-    description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets without prompt injection risks.",
+    description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets.",
     metrics: ["Imagen 4.0", "Eval Pipelines", "Few-Shot Logic"],
     liveUrl: "brand-builder.html",
     repoUrl: "https://github.com/leonrdardenaitech/brand-builder"
@@ -93,7 +135,7 @@ const CAPABILITIES = [
     type: "APP_MODULE",
     icon: <Crosshair className="text-cyan-400" size={24} />,
     image: "Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
-    description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics with real-time neural context syncing.",
+    description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics.",
     metrics: ["RAG Architecture", "Vector DB", "Tool-Calling"],
     liveUrl: "vox.html",
     repoUrl: "https://github.com/leonrdardenaitech/hydro-scan"
@@ -104,7 +146,7 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <Terminal className="text-fuchsia-500" size={24} />,
     image: "snapback.jpg",
-    description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards for positive inputs and instantly escalates high-risk operational friction to human management.",
+    description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards for positive inputs and instantly escalates high-risk operational friction.",
     metrics: ["Prompt Chaining", "Sentiment Analysis", "Risk Automation"],
     slides: [
       { text: "Node 1 / Ingestion: Continuously scraping and parsing multi-channel customer feedback streams via API endpoints.", img: "sbslide1.png" },
@@ -299,7 +341,9 @@ const InteractiveStoryNode = ({ isMuted }) => {
         }
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
-          100% { opacity: 1; filter: blur(0); }
+          10% { opacity: 1; filter: blur(0); }
+          90% { opacity: 1; }
+          100% { opacity: 0; }
         }
         .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-nebula-fade-15 { animation: nebula-fade-15 15s ease-in-out forwards; }
