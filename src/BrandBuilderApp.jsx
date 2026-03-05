@@ -17,8 +17,10 @@ const BrandBuilderApp = () => {
   const generateMockReport = (brand, purpose) => {
     return {
       summary: `AI Agent 007 has identified a significant market gap for ${brand}. By addressing the core friction point ("${purpose}"), this venture positions itself at the intersection of high-growth trends and consumer demand.`,
-      marketResearch: `Analysis of current sector volatility suggests ${brand} could capture 12-15% of niche market share within Q3. Competitor saturation is currently low in the specific vector defined by the user's vision.`,
-      demand: `Google search trends for similar concepts have increased by 214% year-over-year. Consumer sentiment is shifting rapidly toward solutions that prioritize efficiency and the specific values outlined in the ${brand} roadmap.`,
+      marketResearch: `Analysis of current sector volatility suggests ${brand} could capture 12-15% of niche market share within Q3. Competitor saturation is currently low in the specific vector defined by the user's vision. Global indices indicate a shift toward high-fidelity solutions in this category.`,
+      demand: `Google search trends for similar concepts have increased by 214% year-over-year. Consumer sentiment is shifting rapidly toward solutions that prioritize efficiency and the specific values outlined in the ${brand} roadmap. Data suggests a 0.85 correlation between user pain points and this solution.`,
+      roadmap: `Phase 1: Alpha Deployment and Neural Calibration. Phase 2: Scaled Infrastructure Integration. Phase 3: Global Market Saturation. ${brand} is projected to reach operational maturity within 18 months.`,
+      risk: `Primary risk identified as "Legacy Resistance." However, the superior logic gates of ${brand} provide a 40% efficiency advantage over existing systems, mitigating adoption friction.`,
       need: `The primary problem identified is a lack of structural transparency. ${brand} solves this by implementing the specific logic gates mentioned in the operational purpose, creating a 'Blue Ocean' strategy.`,
       value: `${brand} stands for technical excellence and market disruption. It stands against legacy bottlenecks and inefficient resource allocation. Agent 007 confirms high viability.`
     };
@@ -80,18 +82,20 @@ const BrandBuilderApp = () => {
         clearInterval(seqInterval);
         setPhase('complete');
       }
-    }, 7000); // 7 seconds per image
+    }, 7000);
   };
 
   const downloadReport = () => {
     const element = document.getElementById('report-content');
     const brandName = idea || 'Brand';
     
-    // Ensure the library is available
     if (!window.html2pdf) {
-      alert("PDF Generation Library is not yet initialized. Please wait a moment.");
+      alert("PDF Library Offline.");
       return;
     }
+
+    // Force black text for export
+    element.classList.add('pdf-export-mode');
 
     const opt = {
       margin: [0.5, 0.5],
@@ -100,14 +104,15 @@ const BrandBuilderApp = () => {
       html2canvas: { 
         scale: 2, 
         useCORS: true, 
-        backgroundColor: '#ffffff', // Force white background for the PDF
+        backgroundColor: '#ffffff',
         logging: false
       },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    // Execute the download
-    window.html2pdf().from(element).set(opt).save();
+    window.html2pdf().from(element).set(opt).save().then(() => {
+      element.classList.remove('pdf-export-mode');
+    });
   };
 
   return (
@@ -219,6 +224,10 @@ const BrandBuilderApp = () => {
                         <p>{mockReport.marketResearch}</p>
                         <h3>Confirm Demand</h3>
                         <p>{mockReport.demand}</p>
+                        <h3>Strategic Roadmap</h3>
+                        <p>{mockReport.roadmap}</p>
+                        <h3>Risk Assessment</h3>
+                        <p>{mockReport.risk}</p>
                         <h3>Customer Need</h3>
                         <p>{mockReport.need}</p>
                         <h3>Brand Value</h3>
@@ -326,6 +335,14 @@ const BrandBuilderApp = () => {
         .bb-report-img { width: 100%; border-radius: 1.5rem; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .bb-report-text h3 { font-size: 1.1rem; text-transform: uppercase; color: var(--bb-red); margin-top: 2rem; margin-bottom: 0.75rem; font-weight: 900; }
         .bb-report-text p { margin-bottom: 1.25rem; line-height: 1.7; color: #444; }
+        
+        /* PDF EXPORT SPECIFIC STYLES */
+        .pdf-export-mode .bb-report-text h3 { color: #d32f2f !important; }
+        .pdf-export-mode .bb-report-text p { color: #000 !important; }
+        .pdf-export-mode .bb-subject { color: #000 !important; border-top: 1px dashed #000 !important; }
+        .pdf-export-mode .bb-meta p { color: #333 !important; }
+        .pdf-export-mode .bb-email-card { box-shadow: none !important; border: 1px solid #eee; }
+
         .bb-signature { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid #f8f9fa; }
         .bb-valediction { font-style: italic; color: #999; margin-top: 0.5rem; }
 
