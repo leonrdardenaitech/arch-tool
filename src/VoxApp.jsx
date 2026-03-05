@@ -1,144 +1,170 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle, X, CheckCircle2, ChevronRight, Volume2, Database, Zap, Power } from 'lucide-react';
+import { Mic, MicOff, AlertTriangle, Settings, Droplets, Activity, Volume2, VolumeX, Database, Zap, Power, Circle, CheckCircle2, Waves, Speaker } from 'lucide-react';
+
+// --- DATA: DEHYDRATION VECTORS ---
+const DEHYDRATION_DATA = {
+  beer: { type: 'alcohol', impact: -10, tip: "Alcohol inhibits Vasopressin, forcing kidneys to release water prematurely." },
+  wine: { type: 'alcohol', impact: -8, tip: "Alcohol inhibits Vasopressin, forcing kidneys to release water prematurely." },
+  soda: { type: 'sugar', impact: -5, tip: "High sugar draws water out of your cells into your gut to dilute the syrup." },
+  energy: { type: 'caffeine', impact: -7, tip: "High caffeine increases Glomerular Filtration Rate, accelerating water loss." },
+  coffee: { type: 'caffeine', impact: -2, tip: "Mild diuretic effect. Ensure you balance this with pure water." },
+  water: { type: 'pure', impact: 15, tip: "Excellent. Pure hydration directly replenishes your cellular reservoirs." },
+  milk: { type: 'nutrient', impact: 12, tip: "Great choice. The electrolytes and macros in milk promote slow, sustained hydration." }
+};
+
+const PERSONAS = ['Arthur', 'Siri_us', 'Beau', 'Glitch'];
 
 const VoxApp = () => {
-  const [phase, setPhase] = useState('cinematic'); // 'cinematic', 'pitch', 'ready', 'transition', 'app'
-  const [isRecording, setIsRecording] = useState(false);
-  const [hydration, setHydration] = useState(42);
-  const [statusText, setStatusText] = useState('Neural Matrix Calibrating...');
-  const [logs, setLogs] = useState([
-    { time: '08:15 AM', item: 'Morning Coffee', impact: -5 },
-    { time: '09:30 AM', item: 'Electrolyte Water', impact: +12 }
-  ]);
-  const [syncStatus, setStatusSync] = useState({ ring: false, wristband: false });
-  const [voxMessage, setVoxMessage] = useState("System Ready. Good morning, Partner. I'm monitoring your hydration vectors.");
+  // Phase State: 'cinematic', 'pitch', 'ready', 'transition', 'app'
+  const [phase, setPhase] = useState('cinematic'); 
+  const [hydration, setHydration] = useState(25);
+  const [isListening, setIsListening] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [textInput, setTextInput] = useState("");
+  
+  // Simulation & UI State
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [persona, setPersona] = useState('Arthur');
+  const [showMenu, setShowMenu] = useState(false);
+  const [currentTip, setCurrentTip] = useState("System online. Awaiting fluid data.");
+  const [warning, setWarning] = useState(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [dbStatus, setDbStatus] = useState("Initializing Micro-DB...");
-  const audioRef = useRef(null);
 
-  // --- CINEMATIC SEQUENCE LOGIC ---
+  // Refs
+  const pressTimer = useRef(null);
+  const soundEnabledRef = useRef(soundEnabled);
+
+  useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
+
+  // --- CINEMATIC SEQUENCE ---
   useEffect(() => {
     if (phase === 'cinematic') {
-      // 1. Initial silhouette delay
-      setTimeout(() => {
-        setPhase('pitch');
-      }, 2000);
+      setTimeout(() => setPhase('pitch'), 2000);
     }
-    
     if (phase === 'pitch') {
-      // 2. Loading simulation while pitch is visible
-      setTimeout(() => {
-        setDbStatus("Neural Database Pre-Calculated (Temporary Session)");
-      }, 8000);
-      
-      // 3. Show the "Ready" button after pitch hold
-      setTimeout(() => {
-        setPhase('ready');
-      }, 15000);
+      setTimeout(() => setDbStatus("Neural Database Pre-Calculated (Temporary Session)"), 8000);
+      setTimeout(() => setPhase('ready'), 15000);
     }
   }, [phase]);
 
-  const startVoxExperience = () => {
-    // Play sound on user gesture
+  const establishNeuralLink = () => {
     playWaves();
     setPhase('transition');
-    
-    // Final zoom into the app
-    setTimeout(() => {
-      setPhase('app');
-    }, 4000);
+    setTimeout(() => setPhase('app'), 4000);
   };
 
   const playWaves = () => {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const noise = ctx.createBufferSource();
-      const bufferSize = 2 * ctx.sampleRate;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const output = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+      const buffer = ctx.createBuffer(1, 2 * ctx.sampleRate, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
       noise.buffer = buffer;
       noise.loop = true;
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(400, ctx.currentTime);
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0, ctx.currentTime);
       gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1);
       gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 8);
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
+      noise.connect(gain); gain.connect(ctx.destination);
       noise.start();
     } catch (e) {}
   };
 
-  // --- fRAG SIMULATION (Synthesis Prototype Mode) ---
-  const processVoiceInput = (text) => {
-    setStatusText('fRAG Engine: Fetching Neural Context...');
-    setTimeout(() => {
-      let lowerText = text.toLowerCase();
-      let impact = 0;
-      let response = "";
-      let item = "Unknown Source";
+  // --- PERSONA-AWARE MOCK ENGINE (fRAG) ---
+  const getSimulatedResponse = (input, currentPersona) => {
+    const lower = input.toLowerCase();
+    let baseMsg = "";
+    
+    if (lower.includes('water')) baseMsg = "Hydration confirmed. I've updated the micro-DB and synced with your ring.";
+    else if (lower.includes('coffee')) baseMsg = "Caffeine detected. Adjusting hydration bar for diuretic effects.";
+    else if (lower.includes('pickleball')) baseMsg = "Keep your eye on the ball, partner. I'll handle the vitals.";
+    else baseMsg = "I've logged the entry. Neural link stable.";
 
-      if (lowerText.includes('water')) { 
-        impact = 15; 
-        item = "Pure Water"; 
-        response = "Hydration confirmed. I've updated the micro-DB and synced with your ring."; 
-      } else if (lowerText.includes('coffee') || lowerText.includes('soda')) { 
-        impact = -8; 
-        item = "Caffeine Intake"; 
-        response = "Caffeine detected. Adjusting hydration bar for diuretic effects."; 
-      } else { 
-        response = "Input ambiguous. Please specify beverage type for fRAG synthesis."; 
-      }
-
-      if (impact !== 0) {
-        setHydration(prev => Math.max(0, Math.min(100, prev + impact)));
-        setLogs([{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), item, impact }, ...logs]);
-      }
-      setVoxMessage(response);
-      setStatusText('Standby: Neural Link Active.');
-    }, 1500);
+    // Persona modifiers
+    if (currentPersona === 'Arthur') return `[Arthur]: Indeed. ${baseMsg}`;
+    if (currentPersona === 'Glitch') return `[G-L-I-T-C-H]: SYNC... ${baseMsg.toUpperCase()}`;
+    return baseMsg;
   };
 
-  const toggleRecording = () => {
-    if (!isRecording) {
-      setIsRecording(true);
-      setStatusText('Vox is listening...');
-      setTimeout(() => {
-        setIsRecording(false);
-        const inputs = ["I just drank a bottle of water", "Had a coffee", "Just finished some electrolytes"];
-        processVoiceInput(inputs[Math.floor(Math.random() * inputs.length)]);
-      }, 3000);
+  // --- CORE INPUT LOGIC ---
+  const processInput = async (input) => {
+    setCurrentTip("Analyzing fluid data via secure core...");
+    let foundDrink = null;
+    let localImpact = 0;
+
+    Object.keys(DEHYDRATION_DATA).forEach(drink => {
+      if (input.toLowerCase().includes(drink)) {
+        foundDrink = drink;
+        localImpact = DEHYDRATION_DATA[drink].impact;
+      }
+    });
+
+    if (foundDrink) {
+      setHydration(prev => Math.min(Math.max(prev + localImpact, 0), 100));
+      if (localImpact < 0) setWarning({ active: true, message: DEHYDRATION_DATA[foundDrink].tip });
+      else setWarning(null);
     }
+
+    // Neural Simulation delay
+    setTimeout(() => {
+      const reply = getSimulatedResponse(input, persona);
+      setCurrentTip(reply);
+      speakText(reply);
+    }, 1000);
+
+    setTextInput("");
   };
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setCurrentTip("Voice not supported. Use text mode."); return; }
+    const recognition = new SpeechRecognition();
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (e) => processInput(event.results[0][0].transcript.toLowerCase());
+    recognition.onend = () => setIsListening(false);
+    recognition.start();
+  };
+
+  const speakText = (text) => {
+    if (!soundEnabledRef.current || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    if (persona === 'Arthur') {
+      const v = voices.find(v => v.lang.startsWith('en-GB'));
+      if (v) utterance.voice = v;
+      utterance.pitch = 0.9;
+    }
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // --- SVG CIRCLE MATH ---
+  const radius = 110;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (hydration / 100) * circumference;
+  const fluidOz = ((hydration / 100) * 64).toFixed(1);
+
+  // Hidden Menu Logic
+  const handlePressStart = () => { pressTimer.current = setTimeout(() => setShowMenu(true), 3000); };
+  const handlePressEnd = () => { if (pressTimer.current) clearTimeout(pressTimer.current); };
 
   return (
     <div className="vox-container">
-      {/* CINEMATIC LANDING LAYER */}
+      {/* CINEMATIC LAYER */}
       {phase !== 'app' && (
         <div className={`vox-cinematic-overlay ${phase === 'transition' ? 'zoom-out' : ''}`}>
           <div className="phone-silhouette">
             <div className={`pitch-content ${(phase === 'pitch' || phase === 'ready') ? 'fade-in' : ''} ${phase === 'transition' ? 'fade-out' : ''}`}>
               <div className="pitch-text">
-                <p>
-                  Major brands build for the average. <br/>
-                  <strong>We build for the elite.</strong> <br/>
-                  Vox is the straightforward assistant filling the gap where wearables fall short. <br/>
-                  From the pickleball court to the nursery, we've secured the hydration vectors that matter most.
-                </p>
+                <p>Major brands build for the average. <br/><strong>We build for the elite.</strong> <br/>Vox is the straightforward assistant filling the gap where wearables fall short.</p>
               </div>
-              
               <div className="loading-area">
-                <div className="loading-subtext">
-                  <Database size={12} className="animate-pulse" /> <span>{dbStatus}</span>
-                </div>
-                
+                <div className="loading-subtext"><Database size={12} className="animate-pulse" /> <span>{dbStatus}</span></div>
                 {phase === 'ready' && (
-                  <button className="vox-launch-btn animate-bounce-in" onClick={startVoxExperience}>
-                    <Power size={20} />
-                    <span>Establish Neural Link</span>
+                  <button className="vox-launch-btn animate-bounce-in" onClick={establishNeuralLink}>
+                    <Power size={20} /> <span>Establish Neural Link</span>
                   </button>
                 )}
               </div>
@@ -147,178 +173,99 @@ const VoxApp = () => {
         </div>
       )}
 
-      {/* MAIN APP INTERFACE */}
+      {/* APP INTERFACE */}
       <main className={`vox-main-content ${phase === 'app' ? 'app-ready' : 'app-hidden'}`}>
-        <header className="vox-header">
-          <div className="vox-logo-area">
-            <Waves className="vox-accent-blue" size={28} />
-            <div>
-              <h2>Hydro-Scan</h2>
-              <p>AI AGENT: VOX // SYNTHESIS PROTOTYPE</p>
+        <div className="vox-app-shell">
+          <div className="w-full flex justify-between items-center px-8 mb-6 mt-6">
+            <div className="flex items-center gap-2">
+              <Droplets className="text-cyan-400 w-6 h-6" />
+              <h1 className="text-xl font-light tracking-widest text-cyan-50">VOX<span className="font-bold text-cyan-400">HYDRO</span></h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={() => setSoundEnabled(!soundEnabled)} className="text-gray-400 hover:text-cyan-400">
+                {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5 text-red-400" />}
+              </button>
+              <button className={`p-2 rounded-full ${isSyncing ? 'text-green-400 animate-spin' : 'text-gray-500'}`}>
+                <Activity className="w-5 h-5" />
+              </button>
             </div>
           </div>
-          <div className="vox-system-status">
-             <div className={`status-dot ${syncStatus.ring ? 'online' : ''}`}></div>
-             <span>{syncStatus.ring ? 'PROTOTYPE SYNCED' : 'STANDALONE MODE'}</span>
-          </div>
-        </header>
 
-        <section className="vox-monitor-section">
-          <div className="vox-hydration-card">
-            <div className="v-label-group">
-              <h3>Daily Hydration Status</h3>
-              <span className={`v-percent ${hydration < 30 ? 'critical' : ''}`}>{hydration}%</span>
-            </div>
-            <div className="vox-progress-container">
-              <div className="vox-progress-fill" style={{ width: `${hydration}%` }}>
-                <div className="vox-wave"></div>
-              </div>
-            </div>
-            <div className="vox-persona-msg">
-              <Volume2 size={20} className="vox-accent-green" />
-              <p>"{voxMessage}"</p>
+          <div className="relative flex items-center justify-center mb-8 p-4 rounded-full border border-cyan-500/20 bg-cyan-950/10"
+               onMouseDown={handlePressStart} onMouseUp={handlePressEnd}>
+            <div className={`absolute inset-0 rounded-full blur-2xl transition-all duration-1000 ${isListening ? 'bg-cyan-500/20' : 'bg-transparent'}`} />
+            <svg className="w-64 h-64 transform -rotate-90">
+              <defs>
+                <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00f0ff" /><stop offset="100%" stopColor="#0055ff" />
+                </linearGradient>
+              </defs>
+              <circle cx="128" cy="128" r={radius} stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />
+              <circle cx="128" cy="128" r={radius} stroke="url(#neonGradient)" strokeWidth="12" fill="none" strokeLinecap="round"
+                style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset, transition: 'stroke-dashoffset 1.5s' }} />
+            </svg>
+            <div className="absolute flex flex-col items-center">
+              <span className="text-5xl font-extralight text-transparent bg-clip-text bg-gradient-to-br from-white to-cyan-300">
+                {Math.round(hydration)}<span className="text-2xl">%</span>
+              </span>
+              <span className="text-sm font-medium text-cyan-400">{fluidOz} <span className="text-xs text-cyan-600">oz</span></span>
             </div>
           </div>
-        </section>
 
-        <section className="vox-interaction-grid">
-          <div className="vox-interaction-card v-voice">
-            <button className={`vox-mic-btn ${isRecording ? 'recording' : ''}`} onClick={toggleRecording}>
-              <Mic size={40} />
-              <div className="mic-rings"></div>
+          <div className="w-full px-8 mb-6 relative flex items-center justify-center min-h-[96px]">
+            <button onClick={() => setIsMuted(!isMuted)} className="absolute left-8 z-10 p-3 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-400">
+              {isMuted ? <MicOff className="w-5 h-5" /> : <Settings className="w-5 h-5" />}
             </button>
-            <p className="v-hint">{statusText}</p>
-            <span className="v-sub-hint">Voice-fRAG: Log your consumption</span>
+            {isMuted ? (
+              <input type="text" value={textInput} onChange={e => setTextInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && processInput(textInput)}
+                placeholder="Type fluid entry..." className="w-full bg-black/40 border border-cyan-500/40 rounded-full pl-16 pr-5 py-3 text-sm text-cyan-50" />
+            ) : (
+              <button onClick={startListening} className={`w-24 h-24 rounded-full flex justify-center items-center border transition-all ${isListening ? 'bg-cyan-500/20 border-cyan-400' : 'bg-cyan-950/20 border-cyan-500/40'}`}>
+                <Mic className={`w-8 h-8 ${isListening ? 'text-cyan-300' : 'text-cyan-500'}`} />
+              </button>
+            )}
           </div>
 
-          <div className="vox-interaction-card v-hardware">
-            <h4>SYNTHESIS NODES</h4>
-            <div className="v-device-list">
-              <div className={`v-device ${syncStatus.ring ? 'active' : ''}`} onClick={() => setStatusSync(s => ({...s, ring: true}))}>
-                <Circle size={20} />
-                <div className="v-dev-info">
-                  <p>Silicon Ring</p>
-                  <span>{syncStatus.ring ? 'CALIBRATED' : 'DEMO SYNC'}</span>
-                </div>
-                {syncStatus.ring && <CheckCircle2 size={16} className="v-online" />}
-              </div>
-              <div className={`v-device ${syncStatus.wristband ? 'active' : ''}`} onClick={() => setStatusSync(s => ({...s, wristband: true}))}>
-                <Activity size={20} />
-                <div className="v-dev-info">
-                  <p>Neural Wristband</p>
-                  <span>{syncStatus.wristband ? 'CALIBRATED' : 'DEMO SYNC'}</span>
-                </div>
-                {syncStatus.wristband && <CheckCircle2 size={16} className="v-online" />}
-              </div>
+          <div className="w-full px-8 flex-grow flex flex-col justify-end pb-8">
+            <div className={`relative min-h-[130px] p-5 rounded-xl border-l-4 transition-all ${warning ? 'bg-amber-950/30 border-amber-500' : 'bg-cyan-950/20 border-cyan-500'}`}>
+              {warning && <div className="flex items-center gap-2 mb-3 text-amber-400 uppercase text-xs font-bold"><AlertTriangle size={16}/> Vitals Alert</div>}
+              <p className="text-sm font-light leading-relaxed">{warning ? warning.message : currentTip}</p>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section className="vox-intel-section">
-          <div className="vox-intel-card">
-            <div className="v-intel-header">
-              <Zap size={18} className="vox-accent-blue" />
-              <h4>fRAG RETRIEVAL HISTORY</h4>
-            </div>
-            <div className="v-log-list">
-              {logs.map((log, i) => (
-                <div key={i} className="v-log-item">
-                  <span className="v-log-time">{log.time}</span>
-                  <span className="v-log-name">{log.item}</span>
-                  <span className={`v-log-impact ${log.impact > 0 ? 'pos' : 'neg'}`}>
-                    {log.impact > 0 ? '+' : ''}{log.impact}%
-                  </span>
-                </div>
+        {showMenu && (
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-8 z-[3000]">
+            <h2 className="text-2xl font-light text-cyan-400 mb-8">Override Protocol</h2>
+            <div className="w-full space-y-3">
+              {PERSONAS.map(p => (
+                <button key={p} onClick={() => { setPersona(p); setShowMenu(false); }} className={`w-full py-3 rounded-xl border ${persona === p ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300' : 'border-white/10 text-gray-300'}`}>
+                  {p.replace('_', '-')}
+                </button>
               ))}
             </div>
+            <button onClick={() => setShowMenu(false)} className="mt-8 text-sm text-gray-500">Close Settings</button>
           </div>
-        </section>
+        )}
       </main>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        :root {
-          --v-bg: #050a0f;
-          --v-card: #0d151d;
-          --v-blue: #3b82f6;
-          --v-green: #10b981;
-          --v-red: #ef4444;
-          --v-text: #f8fafc;
-          --v-dim: #64748b;
-        }
-
-        .vox-container { min-height: 100vh; background: var(--v-bg); color: var(--v-text); font-family: 'Inter', sans-serif; position: relative; overflow: hidden; }
-
-        /* CINEMATIC LAYER */
-        .vox-cinematic-overlay {
-          position: fixed; inset: 0; z-index: 2000; background: #000;
-          display: flex; align-items: center; justify-content: center;
-          transition: transform 4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s;
-        }
+        .vox-container { min-height: 100vh; background: #060b14; color: #fff; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; }
+        .vox-cinematic-overlay { position: fixed; inset: 0; z-index: 2000; background: #000; display: flex; align-items: center; justify-content: center; transition: transform 4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s; }
         .vox-cinematic-overlay.zoom-out { transform: scale(5); opacity: 0; pointer-events: none; }
-
-        .phone-silhouette {
-          width: 320px; height: 640px; background: #0a0a0a; border: 4px solid #1a1a1a;
-          border-radius: 3rem; display: flex; align-items: center; justify-content: center;
-          padding: 2rem; position: relative; box-shadow: 0 0 100px rgba(59,130,246,0.1);
-        }
-        .phone-silhouette::before { content: ''; position: absolute; top: 20px; width: 60px; height: 5px; background: #1a1a1a; border-radius: 10px; }
-
-        .pitch-content { text-align: center; opacity: 0; transition: opacity 2s ease-in; width: 100%; }
+        .phone-silhouette { width: 320px; height: 640px; background: #0a0a0a; border: 4px solid #1a1a1a; border-radius: 3rem; display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; box-shadow: 0 0 100px rgba(59,130,246,0.1); }
+        .pitch-content { text-align: center; opacity: 0; transition: opacity 2s; width: 100%; }
         .pitch-content.fade-in { opacity: 1; }
-        .pitch-content.fade-out { opacity: 0; transition: opacity 1s; }
-        
         .pitch-text p { font-size: 1rem; line-height: 1.6; color: #ccc; margin-bottom: 2rem; }
-        .pitch-text strong { color: var(--v-blue); font-size: 1.2rem; display: block; margin: 0.5rem 0; }
-
-        .loading-area { min-height: 100px; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-        .loading-subtext { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.55rem; font-weight: 900; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-
-        .vox-launch-btn {
-          background: var(--v-blue); color: #fff; border: none; padding: 1rem 1.5rem; 
-          border-radius: 1rem; font-weight: 900; text-transform: uppercase; 
-          display: flex; align-items: center; gap: 0.75rem; cursor: pointer;
-          box-shadow: 0 0 20px rgba(59,130,246,0.4); font-size: 0.8rem;
-          transition: transform 0.2s;
-        }
-        .vox-launch-btn:hover { transform: scale(1.05); background: #2563eb; }
-
-        /* APP READY STATE */
-        .vox-main-content { max-width: 800px; margin: 0 auto; padding: 2rem; transition: opacity 2s; }
+        .vox-launch-btn { background: #3b82f6; color: #fff; border: none; padding: 1rem 1.5rem; border-radius: 1rem; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .vox-main-content { position: relative; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; transition: opacity 2s; }
         .app-hidden { opacity: 0; }
         .app-ready { opacity: 1; }
-
-        /* COMPONENTS */
-        .vox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .vox-logo-area h2 { font-weight: 900; text-transform: uppercase; font-size: 1.25rem; margin: 0; }
-        .vox-logo-area p { font-size: 0.6rem; font-weight: 900; color: var(--v-dim); letter-spacing: 2px; margin: 0; }
-        
-        .vox-hydration-card { background: var(--v-card); padding: 2.5rem; border-radius: 2rem; border: 1px solid #222; margin-bottom: 2rem; }
-        .v-percent { font-size: 4rem; font-weight: 900; line-height: 1; }
-        .vox-progress-container { height: 50px; background: #000; border-radius: 1rem; overflow: hidden; position: relative; border: 2px solid #222; }
-        .vox-progress-fill { height: 100%; background: linear-gradient(to right, var(--v-blue), #60a5fa); transition: width 1s; }
-        
-        .vox-interaction-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
-        .vox-interaction-card { background: var(--v-card); border-radius: 2rem; padding: 2rem; border: 1px solid #222; }
-        
-        .vox-mic-btn { width: 70px; height: 70px; border-radius: 50%; background: #1e293b; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-        .vox-mic-btn.recording { background: var(--v-red); animation: pulse 1s infinite; }
-
-        .v-device { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #000; border-radius: 1rem; border: 1px solid #222; cursor: pointer; margin-bottom: 0.5rem; }
-        .v-device.active { border-color: var(--v-blue); }
-        .v-dev-info p { margin: 0; font-size: 0.8rem; font-weight: 800; }
-        .v-dev-info span { font-size: 0.6rem; color: var(--v-dim); }
-
-        .v-log-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #000; border-radius: 0.75rem; font-size: 0.8rem; margin-bottom: 0.5rem; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes bounceIn { 
-          from { opacity: 0; transform: scale(0.8); }
-          to { opacity: 1; transform: scale(1); }
-        }
+        .vox-app-shell { position: relative; width: 100%; max-width: 400px; height: 800px; background: #0a1120; border: 1px solid rgba(0,255,255,0.2); rounded: 40px; display: flex; flex-direction: column; items-center; overflow: hidden; box-shadow: 0 0 40px rgba(0,255,255,0.1); }
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-        .vox-accent-blue { color: var(--v-blue); }
-        .vox-accent-green { color: var(--v-green); }
+        .loading-subtext { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.55rem; color: #444; text-transform: uppercase; margin-bottom: 1rem; }
       ` }} />
     </div>
   );
