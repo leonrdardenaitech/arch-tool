@@ -3,7 +3,7 @@ import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle,
 
 const VoxApp = () => {
   const [phase, setPhase] = useState('pitch'); // 'pitch', 'auth', 'app'
-  const [isRecording, setIsM recording] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [hydration, setHydration] = useState(42);
   const [statusText, setStatusText] = useState('Standby: Ready for neural handshake.');
   const [logs, setLogs] = useState([
