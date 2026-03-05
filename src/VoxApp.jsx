@@ -92,7 +92,12 @@ const VoxApp = () => {
         <div className={`vox-cinematic-overlay ${phase === 'transition' ? 'zoom-out' : ''}`}>
           <div className="phone-silhouette">
             <div className={`pitch-text ${phase === 'pitch' ? 'fade-in' : ''} ${phase === 'transition' ? 'fade-out' : ''}`}>
-              <p>Apple and Garmin build for the masses. <br/> <strong>Vox</strong> builds for the masters of the court. <br/> A straightforward AI assistant turning voice into vital health data.</p>
+              <p>
+                Major brands build for the average. <br/>
+                <strong>We build for the elite.</strong> <br/>
+                Vox is the straightforward assistant filling the gap where wearables fall short. <br/>
+                From the pickleball court to the nursery, we've secured the hydration vectors that matter most.
+              </p>
               <div className="loading-subtext">
                 <Database size={12} className="animate-pulse" /> <span>{dbStatus}</span>
               </div>
