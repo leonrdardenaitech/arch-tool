@@ -206,7 +206,7 @@ const OptimizedImage = ({ src, alt, className }) => {
   );
 };
 
-const InteractiveStoryNode = ({ isMuted }) => {
+const InteractiveStoryNode = ({ isMuted, playVideoRequested, onVideoFinish }) => {
   const [step, setStep] = useState('intro'); // 'intro', 'repairA', 'repairB', 'success', 'rewardLoop'
   const [loopIdx, setLoopIdx] = useState(0);
   const [localMute, setLocalMute] = useState(isMuted);
@@ -239,6 +239,8 @@ const InteractiveStoryNode = ({ isMuted }) => {
       audioRef.current.play().catch(e => console.log(e));
     }
 
+    const repairTime = playVideoRequested ? 15000 : 5000; // Longer if video is wanted
+
     setTimeout(() => {
       setStep('success');
       setTimeout(() => {
@@ -249,14 +251,14 @@ const InteractiveStoryNode = ({ isMuted }) => {
           audioRef.current.play().catch(e => console.log(e));
         }
       }, 5000);
-    }, 15000); // 15 seconds for repair phase
+    }, repairTime);
   };
 
   return (
     <div className="w-full h-full bg-black rounded-2xl overflow-hidden flex flex-col items-center justify-center relative">
       <audio ref={audioRef} />
       
-      {/* Sound Toggle */}
+      {/* Sound Toggle (Local) */}
       <button onClick={() => setLocalMute(!localMute)} className="absolute top-6 right-6 z-[100] p-4 bg-black/40 border border-cyan-500/30 rounded-full text-cyan-400 backdrop-blur-md hover:bg-cyan-900/20 transition-all">
         {localMute ? <VolumeX size={24} /> : <Volume2 size={24} className="animate-pulse" />}
       </button>
@@ -264,9 +266,8 @@ const InteractiveStoryNode = ({ isMuted }) => {
       {/* Intro Phase */}
       {step === 'intro' && (
         <div className="relative w-full h-full flex flex-col items-center justify-center p-8 text-center animate-fade-in">
-          {/* Background blurred cybergirlheadfix */}
           <div className="absolute inset-0 z-0 opacity-50">
-            <img src="cybergirlheadfix.jpg" className="w-full h-full object-cover blur-[4px] scale-110" />
+            <img src="cybergirlheadfix.jpg" className="w-full h-full object-cover blur-[2px] scale-110" />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80"></div>
           </div>
           
@@ -275,7 +276,6 @@ const InteractiveStoryNode = ({ isMuted }) => {
               <AlertTriangle size={80} className="text-red-500" />
             </div>
             
-            {/* Stretched Message Bar */}
             <div className="w-full bg-slate-900/90 border-y border-cyan-500/30 py-8 backdrop-blur-md overflow-hidden relative">
               <p className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse">Neural Handshake Required</p>
               <p className="text-white text-xl font-bold tracking-widest px-8 uppercase italic whitespace-nowrap animate-marquee">
@@ -283,7 +283,6 @@ const InteractiveStoryNode = ({ isMuted }) => {
               </p>
             </div>
             
-            {/* Centered Choice Buttons */}
             <div className="flex flex-col sm:flex-row gap-8 justify-center items-center w-full max-w-2xl mx-auto">
               <button onClick={() => handleChoice('A')} className="px-12 py-5 bg-cyan-950 border-2 border-cyan-500 text-cyan-300 font-black uppercase text-xs tracking-widest hover:bg-cyan-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy A: Nebula Fix</button>
               <button onClick={() => handleChoice('B')} className="px-12 py-5 bg-fuchsia-950 border-2 border-fuchsia-500 text-fuchsia-300 font-black uppercase text-xs tracking-widest hover:bg-fuchsia-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy B: Rhythm Core</button>
@@ -292,10 +291,14 @@ const InteractiveStoryNode = ({ isMuted }) => {
         </div>
       )}
 
-      {/* Repair Phases (Images as placeholders) */}
+      {/* Repair Phase */}
       {(step === 'repairA' || step === 'repairB') && (
         <div className="w-full h-full absolute inset-0 bg-black animate-fade-in flex items-center justify-center overflow-hidden">
-          <img src={step === 'repairA' ? "cybergirl.jpg" : "cybergirlheadfix.jpg"} className="w-full h-full object-cover opacity-60 scale-105" />
+          {playVideoRequested ? (
+            <video src={step === 'repairA' ? "/arch-tool/patching1.mp4" : "/arch-tool/patching2.mp4"} autoPlay muted playsInline className="w-full h-full object-cover" />
+          ) : (
+            <img src={step === 'repairA' ? "cybergirl.jpg" : "cybergirlheadfix.jpg"} className="w-full h-full object-cover opacity-60 scale-105" />
+          )}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center py-10 bg-black/60 backdrop-blur-lg border-y border-white/10 font-mono text-base tracking-[0.5em] text-white animate-pulse uppercase z-10 px-4">
             {step === 'repairA' ? 'Deploying Nebula Patch v1.5...' : 'Calibrating Rhythm Core Dynamics...'}
           </div>
@@ -322,7 +325,7 @@ const InteractiveStoryNode = ({ isMuted }) => {
             src={loopImages[loopIdx]} 
             className={`w-full h-full object-cover ${loopIdx === 0 ? 'animate-nebula-zoom-20' : 'animate-nebula-fade-15'}`} 
           />
-          <div className="absolute bottom-12 left-12 z-20 space-y-2">
+          <div className="absolute bottom-12 left-12 z-20 space-y-2 text-left">
             <p className="text-cyan-400 font-mono text-xs tracking-[0.4em] uppercase opacity-60">Synthesis Rewards Active</p>
             <p className="text-white text-3xl font-black italic uppercase tracking-tighter shadow-black drop-shadow-2xl">Deep Space Reverie</p>
             <p className="text-slate-400 font-mono text-[10px] tracking-widest">Logic Node: Sector 08 // Cobblestone Loop Active</p>
@@ -336,12 +339,11 @@ const InteractiveStoryNode = ({ isMuted }) => {
         .animate-marquee { animation: marquee 15s linear infinite; }
         @keyframes nebula-zoom-20 {
           0% { transform: scale(3); filter: blur(10px); opacity: 0; }
-          5% { opacity: 1; }
           100% { transform: scale(1); filter: blur(0); }
         }
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
-          10% { opacity: 1; filter: blur(0); }
+          100% { opacity: 1; filter: blur(0); }
         }
         .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-nebula-fade-15 { animation: nebula-fade-15 15s ease-in-out forwards; }
@@ -353,6 +355,8 @@ const InteractiveStoryNode = ({ isMuted }) => {
 const PresentationModal = ({ agent, onClose, isMuted }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playVideo, setPlayVideo] = useState(false);
+  const [localMute, setLocalMute] = useState(isMuted);
 
   useEffect(() => {
     let timer;
@@ -379,14 +383,24 @@ const PresentationModal = ({ agent, onClose, isMuted }) => {
               <p className="text-xs text-fuchsia-400 font-mono tracking-widest opacity-70">Sector Designation: 08</p>       
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-red-950/30 rounded-full transition-colors text-slate-400 hover:text-red-400">
-            <X size={28} />
-          </button>
+          <div className="flex items-center gap-4">
+            {agent.isStory && (
+              <button onClick={() => setPlayVideo(!playVideo)} className={`p-2 rounded-lg border transition-all ${playVideo ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-slate-900 text-cyan-500 border-cyan-900/50'}`}>
+                <PlayCircle size={20} />
+              </button>
+            )}
+            <button onClick={() => setLocalMute(!localMute)} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-400">
+              {localMute ? <VolumeX size={20} /> : <Volume2 size={20} className="text-cyan-400" />}
+            </button>
+            <button onClick={onClose} className="p-2 hover:bg-red-950/30 rounded-full transition-colors text-slate-400 hover:text-red-400 ml-2">
+              <X size={28} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-[#05010a]">
           {agent.isStory ? (
-            <InteractiveStoryNode isMuted={isMuted} />
+            <InteractiveStoryNode isMuted={localMute} playVideoRequested={playVideo} />
           ) : (
             <div className="p-8 w-full h-full flex flex-col items-center justify-center">
               <div className="absolute w-full h-full bg-cyan-900/10 blur-[100px] rounded-full pointer-events-none"></div>    
@@ -397,7 +411,7 @@ const PresentationModal = ({ agent, onClose, isMuted }) => {
                   className="w-full h-full transition-opacity duration-300"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-cyan-500/30 font-mono text-sm border-2 border-dashed border-cyan-900/50 m-4 rounded-xl z-0">
-                   <span className="mb-2">Scanning Node Data...</span>
+                   <span className="mb-2 uppercase tracking-widest">Scanning Node Data...</span>
                 </div>
               </div>
               <div className="h-20 w-full max-w-3xl bg-[#150727] border border-fuchsia-500/30 rounded-xl p-4 flex items-center justify-center text-center shadow-inner">
