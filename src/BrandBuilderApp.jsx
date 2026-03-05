@@ -25,6 +25,11 @@ const BrandBuilderApp = () => {
       return;
     }
 
+    if (!geminiApiKey) {
+      alert("Operational Error: Nexus API Key Missing. Please check your configuration.");
+      return;
+    }
+
     setPhase('processing');
     setLoading(true);
     setProgress(0);
@@ -45,7 +50,7 @@ const BrandBuilderApp = () => {
 
     } catch (err) {
       console.error("Nexus Link Severed:", err);
-      alert("Operational Error: " + err.message);
+      alert("Operational Error: " + (err.message || "Failed to synthesize vision."));
       setPhase('input');
     }
   };
