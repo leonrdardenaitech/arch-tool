@@ -160,7 +160,7 @@ const CAPABILITIES = [
     title: "Employee Scheduler", 
     type: "AGENT_NODE",
     icon: <Cpu className="text-fuchsia-500" size={24} />,
-    image: "Gemini_Generated_Image_4v4ckj4v4ckj4v4c.png",
+    image: "4in1overlay.png",
     description: "Agentic workflow utilizing orchestration frameworks to automate supply-chain and personnel scheduling. Handles autonomous decision-making through recursive reasoning loops.",
     metrics: ["Agentic Workflows", "Recursive Reasoning", "Logic Gates"],
     slides: [
@@ -234,7 +234,7 @@ const InteractiveStoryNode = ({ isMuted }) => {
   const handleChoice = (choice) => {
     setStep(choice === 'A' ? 'repairA' : 'repairB');
     if (audioRef.current) {
-      audioRef.current.src = choice === 'A' ? '/arch-tool/Nebulabloom.mp3' : '/arch-tool/Starlight_Canopy.mp3';
+      audioRef.current.src = choice === 'A' ? '/arch-tool/Nebulabloom.mp3' : '/arch-tool/hiphopjazz.mp3';
       audioRef.current.loop = false;
       audioRef.current.play().catch(e => console.log(e));
     }
@@ -342,8 +342,6 @@ const InteractiveStoryNode = ({ isMuted }) => {
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
           10% { opacity: 1; filter: blur(0); }
-          90% { opacity: 1; }
-          100% { opacity: 0; }
         }
         .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-nebula-fade-15 { animation: nebula-fade-15 15s ease-in-out forwards; }
@@ -399,8 +397,7 @@ const PresentationModal = ({ agent, onClose, isMuted }) => {
                   className="w-full h-full transition-opacity duration-300"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-cyan-500/30 font-mono text-sm border-2 border-dashed border-cyan-900/50 m-4 rounded-xl z-0">
-                   <span className="mb-2">Scanning Node Data:</span>
-                   <strong className="text-fuchsia-500">{agent.slides[currentSlide].img}</strong>
+                   <span className="mb-2">Scanning Node Data...</span>
                 </div>
               </div>
               <div className="h-20 w-full max-w-3xl bg-[#150727] border border-fuchsia-500/30 rounded-xl p-4 flex items-center justify-center text-center shadow-inner">
@@ -613,14 +610,11 @@ export default function App() {
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes nebula-zoom-20 {
           0% { transform: scale(3); filter: blur(10px); opacity: 0; }
-          5% { opacity: 1; }
-          100% { transform: scale(1); filter: blur(0); }
+          100% { transform: scale(1); filter: blur(0); opacity: 1; }
         }
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
-          10% { opacity: 1; filter: blur(0); }
-          90% { opacity: 1; }
-          100% { opacity: 0; }
+          100% { opacity: 1; filter: blur(0); }
         }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

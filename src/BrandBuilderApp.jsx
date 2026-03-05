@@ -43,11 +43,8 @@ const BrandBuilderApp = () => {
     const messages = [
       "Establishing Secure Neural Link...",
       "Bypassing Regional Firewalls...",
-      "Fetching Sector 1: Global Billboard Concept...",
       "Analyzing Global Market Vectors...",
-      "Fetching Sector 2: Premier Newspaper Spread...",
       "Synthesizing Visual Assets via Google Imagen 4.0...",
-      "Fetching Sector 3: Dynamic Social Engagement...",
       "Finalizing Intelligence Report..."
     ];
     
@@ -59,43 +56,34 @@ const BrandBuilderApp = () => {
         clearInterval(interval);
         startVisualSequence();
       }
-    }, 1800); // Total ~14.4 seconds
+    }, 1500); // Shortened from 2500ms
   };
 
   const startVisualSequence = () => {
-    const ts = Date.now();
-    const cleanIdea = encodeURIComponent(idea);
-    // Lower resolution (w=800) for faster loading and distinct keywords for variety
     const urls = [
-      `https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop&sig=${ts}_bb&q=${cleanIdea}_billboard`,
-      `https://images.unsplash.com/photo-1585829365294-bb7c63b3ecda?q=80&w=800&auto=format&fit=crop&sig=${ts}_news&q=${cleanIdea}_newspaper`,
-      `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop&sig=${ts}_soc&q=${cleanIdea}_social_media`
+      `https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1200&auto=format&fit=crop&text=Billboard_${encodeURIComponent(idea)}`,
+      `https://images.unsplash.com/photo-1585829365294-bb7c63b3ecda?q=80&w=1200&auto=format&fit=crop&text=Newspaper_${encodeURIComponent(idea)}`,
+      `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop&text=Social_${encodeURIComponent(idea)}`
     ];
-    
-    // Pre-load images to avoid blank flashes
-    urls.forEach(url => {
-      const img = new Image();
-      img.src = url;
-    });
-
     setImageUrls(urls);
     setMockReport(generateMockReport(idea, why));
     setPhase('display');
 
     let currentIdx = 0;
     const seqInterval = setInterval(() => {
+      if (phase === 'input') { clearInterval(seqInterval); return; } // Safety check
       currentIdx++;
       if (currentIdx < urls.length) {
         setIsFading(true);
         setTimeout(() => {
-          setCurrentImageIndex(currentIdx);
+          setCurrentImageIndex(prev => (prev + 1) % urls.length);
           setIsFading(false);
         }, 800);
       } else {
         clearInterval(seqInterval);
         setPhase('complete');
       }
-    }, 6000); // 6s per image to give viewer time
+    }, 5000); // Faster rotation (5s instead of 7s)
   };
 
   const downloadReport = () => {
@@ -132,7 +120,7 @@ const BrandBuilderApp = () => {
       <main className="bb-content">
         <header className="bb-header">
           <h1 className="bb-title">Brand Builder</h1>
-          <p className="bb-subtitle">Powered by AI Agent 007 <span className="text-[8px] opacity-40 ml-2">v1.3.0</span></p>
+          <p className="bb-subtitle">Powered by AI Agent 007</p>
         </header>
 
         {/* PHASE 1: INPUT */}
