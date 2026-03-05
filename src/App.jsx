@@ -68,7 +68,7 @@ const CAPABILITIES = [
     image: "Gemini_Generated_Image_2idzz52idzz52idz.png",
     description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets without prompt injection risks.",
     metrics: ["Imagen 4.0", "Eval Pipelines", "Few-Shot Logic"],
-    repoUrl: "https://github.com/leonrdardenaitech/brand-builder"
+    repoUrl: "https://github.com/leonrdardenaitech/arch-tool/tree/main/brand-builder"
   },
   { 
     id: "hydro-scan", 
@@ -78,7 +78,7 @@ const CAPABILITIES = [
     image: "Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
     description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics with real-time neural context syncing.",
     metrics: ["RAG Architecture", "Vector DB", "Tool-Calling"],
-    repoUrl: "https://github.com/leonrdardenaitech/hydro-scan"
+    repoUrl: "https://github.com/leonrdardenaitech/arch-tool"
   },
   { 
     id: "snapback-agent", 
