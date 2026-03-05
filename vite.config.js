@@ -12,6 +12,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         gadget: resolve(__dirname, 'gadget-glob.html'),
         brand: resolve(__dirname, 'brand-builder.html'),
+        vox: resolve(__dirname, 'vox.html'),
       },
     },
   },
