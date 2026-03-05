@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle, X, CheckCircle2, ChevronRight, Volume2, Database, Zap } from 'lucide-react';
+import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle, X, CheckCircle2, ChevronRight, Volume2, Database, Zap, Power } from 'lucide-react';
 
 const VoxApp = () => {
-  const [phase, setPhase] = useState('cinematic'); // 'cinematic', 'pitch', 'transition', 'app'
+  const [phase, setPhase] = useState('cinematic'); // 'cinematic', 'pitch', 'ready', 'transition', 'app'
   const [isRecording, setIsRecording] = useState(false);
   const [hydration, setHydration] = useState(42);
   const [statusText, setStatusText] = useState('Neural Matrix Calibrating...');
@@ -13,43 +13,64 @@ const VoxApp = () => {
   const [syncStatus, setStatusSync] = useState({ ring: false, wristband: false });
   const [voxMessage, setVoxMessage] = useState("System Ready. Good morning, Partner. I'm monitoring your hydration vectors.");
   const [dbStatus, setDbStatus] = useState("Initializing Micro-DB...");
+  const audioRef = useRef(null);
 
   // --- CINEMATIC SEQUENCE LOGIC ---
   useEffect(() => {
-    // 1. Audio Simulation: Ocean Waves
-    const playWaves = () => {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const noise = ctx.createBufferSource();
-        const bufferSize = 2 * ctx.sampleRate;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const output = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-        noise.buffer = buffer;
-        noise.loop = true;
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(400, ctx.currentTime);
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 2);
-        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 10);
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        noise.start();
-      } catch (e) {}
-    };
-
     if (phase === 'cinematic') {
-      playWaves();
-      // Sequence timing
-      setTimeout(() => setPhase('pitch'), 2000); // Start fade in
-      setTimeout(() => setDbStatus("Neural Database Pre-Calculated (Temporary Session)"), 12000); 
-      setTimeout(() => setPhase('transition'), 20000); // Pitch hold done, start zoom
-      setTimeout(() => setPhase('app'), 24000); // App fully usable
+      // 1. Initial silhouette delay
+      setTimeout(() => {
+        setPhase('pitch');
+      }, 2000);
+    }
+    
+    if (phase === 'pitch') {
+      // 2. Loading simulation while pitch is visible
+      setTimeout(() => {
+        setDbStatus("Neural Database Pre-Calculated (Temporary Session)");
+      }, 8000);
+      
+      // 3. Show the "Ready" button after pitch hold
+      setTimeout(() => {
+        setPhase('ready');
+      }, 15000);
     }
   }, [phase]);
+
+  const startVoxExperience = () => {
+    // Play sound on user gesture
+    playWaves();
+    setPhase('transition');
+    
+    // Final zoom into the app
+    setTimeout(() => {
+      setPhase('app');
+    }, 4000);
+  };
+
+  const playWaves = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const noise = ctx.createBufferSource();
+      const bufferSize = 2 * ctx.sampleRate;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+      noise.buffer = buffer;
+      noise.loop = true;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(400, ctx.currentTime);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 8);
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+    } catch (e) {}
+  };
 
   // --- fRAG SIMULATION (Synthesis Prototype Mode) ---
   const processVoiceInput = (text) => {
@@ -60,9 +81,17 @@ const VoxApp = () => {
       let response = "";
       let item = "Unknown Source";
 
-      if (lowerText.includes('water')) { impact = 15; item = "Pure Water"; response = "Hydration confirmed. I've updated the micro-DB and synced with your ring."; }
-      else if (lowerText.includes('coffee') || lowerText.includes('soda')) { impact = -8; item = "Caffeine Intake"; response = "Caffeine detected. Adjusting hydration bar for diuretic effects."; }
-      else { response = "Input ambiguous. Please specify beverage type for fRAG synthesis."; }
+      if (lowerText.includes('water')) { 
+        impact = 15; 
+        item = "Pure Water"; 
+        response = "Hydration confirmed. I've updated the micro-DB and synced with your ring."; 
+      } else if (lowerText.includes('coffee') || lowerText.includes('soda')) { 
+        impact = -8; 
+        item = "Caffeine Intake"; 
+        response = "Caffeine detected. Adjusting hydration bar for diuretic effects."; 
+      } else { 
+        response = "Input ambiguous. Please specify beverage type for fRAG synthesis."; 
+      }
 
       if (impact !== 0) {
         setHydration(prev => Math.max(0, Math.min(100, prev + impact)));
@@ -79,7 +108,7 @@ const VoxApp = () => {
       setStatusText('Vox is listening...');
       setTimeout(() => {
         setIsRecording(false);
-        const inputs = ["I just drank a bottle of water", "Had a coffee"];
+        const inputs = ["I just drank a bottle of water", "Had a coffee", "Just finished some electrolytes"];
         processVoiceInput(inputs[Math.floor(Math.random() * inputs.length)]);
       }, 3000);
     }
@@ -88,25 +117,37 @@ const VoxApp = () => {
   return (
     <div className="vox-container">
       {/* CINEMATIC LANDING LAYER */}
-      {(phase === 'cinematic' || phase === 'pitch' || phase === 'transition') && (
+      {phase !== 'app' && (
         <div className={`vox-cinematic-overlay ${phase === 'transition' ? 'zoom-out' : ''}`}>
           <div className="phone-silhouette">
-            <div className={`pitch-text ${phase === 'pitch' ? 'fade-in' : ''} ${phase === 'transition' ? 'fade-out' : ''}`}>
-              <p>
-                Major brands build for the average. <br/>
-                <strong>We build for the elite.</strong> <br/>
-                Vox is the straightforward assistant filling the gap where wearables fall short. <br/>
-                From the pickleball court to the nursery, we've secured the hydration vectors that matter most.
-              </p>
-              <div className="loading-subtext">
-                <Database size={12} className="animate-pulse" /> <span>{dbStatus}</span>
+            <div className={`pitch-content ${(phase === 'pitch' || phase === 'ready') ? 'fade-in' : ''} ${phase === 'transition' ? 'fade-out' : ''}`}>
+              <div className="pitch-text">
+                <p>
+                  Major brands build for the average. <br/>
+                  <strong>We build for the elite.</strong> <br/>
+                  Vox is the straightforward assistant filling the gap where wearables fall short. <br/>
+                  From the pickleball court to the nursery, we've secured the hydration vectors that matter most.
+                </p>
+              </div>
+              
+              <div className="loading-area">
+                <div className="loading-subtext">
+                  <Database size={12} className="animate-pulse" /> <span>{dbStatus}</span>
+                </div>
+                
+                {phase === 'ready' && (
+                  <button className="vox-launch-btn animate-bounce-in" onClick={startVoxExperience}>
+                    <Power size={20} />
+                    <span>Establish Neural Link</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* MAIN APP INTERFACE (Shows fully after sequence) */}
+      {/* MAIN APP INTERFACE */}
       <main className={`vox-main-content ${phase === 'app' ? 'app-ready' : 'app-hidden'}`}>
         <header className="vox-header">
           <div className="vox-logo-area">
@@ -213,62 +254,69 @@ const VoxApp = () => {
           display: flex; align-items: center; justify-content: center;
           transition: transform 4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s;
         }
-        .vox-cinematic-overlay.zoom-out { transform: scale(3); opacity: 0; pointer-events: none; }
+        .vox-cinematic-overlay.zoom-out { transform: scale(5); opacity: 0; pointer-events: none; }
 
         .phone-silhouette {
-          width: 300px; height: 600px; background: #0a0a0a; border: 4px solid #1a1a1a;
+          width: 320px; height: 640px; background: #0a0a0a; border: 4px solid #1a1a1a;
           border-radius: 3rem; display: flex; align-items: center; justify-content: center;
           padding: 2rem; position: relative; box-shadow: 0 0 100px rgba(59,130,246,0.1);
         }
         .phone-silhouette::before { content: ''; position: absolute; top: 20px; width: 60px; height: 5px; background: #1a1a1a; border-radius: 10px; }
 
-        .pitch-text { text-align: center; opacity: 0; transition: opacity 8s ease-in; }
-        .pitch-text.fade-in { opacity: 1; }
-        .pitch-text.fade-out { opacity: 0; transition: opacity 4s; }
-        .pitch-text p { font-size: 1.1rem; line-height: 1.8; color: #ccc; }
-        .pitch-text strong { color: var(--v-blue); font-size: 1.4rem; }
+        .pitch-content { text-align: center; opacity: 0; transition: opacity 2s ease-in; width: 100%; }
+        .pitch-content.fade-in { opacity: 1; }
+        .pitch-content.fade-out { opacity: 0; transition: opacity 1s; }
+        
+        .pitch-text p { font-size: 1rem; line-height: 1.6; color: #ccc; margin-bottom: 2rem; }
+        .pitch-text strong { color: var(--v-blue); font-size: 1.2rem; display: block; margin: 0.5rem 0; }
 
-        .loading-subtext { margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.6rem; font-weight: 900; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+        .loading-area { min-height: 100px; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        .loading-subtext { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.55rem; font-weight: 900; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+
+        .vox-launch-btn {
+          background: var(--v-blue); color: #fff; border: none; padding: 1rem 1.5rem; 
+          border-radius: 1rem; font-weight: 900; text-transform: uppercase; 
+          display: flex; align-items: center; gap: 0.75rem; cursor: pointer;
+          box-shadow: 0 0 20px rgba(59,130,246,0.4); font-size: 0.8rem;
+          transition: transform 0.2s;
+        }
+        .vox-launch-btn:hover { transform: scale(1.05); background: #2563eb; }
 
         /* APP READY STATE */
         .vox-main-content { max-width: 800px; margin: 0 auto; padding: 2rem; transition: opacity 2s; }
         .app-hidden { opacity: 0; }
         .app-ready { opacity: 1; }
 
-        /* REUSED STYLES FROM PREVIOUS BUILD */
+        /* COMPONENTS */
         .vox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .vox-logo-area { display: flex; align-items: center; gap: 1rem; }
-        .vox-logo-area h2 { font-weight: 900; text-transform: uppercase; font-size: 1.25rem; }
-        .vox-logo-area p { font-size: 0.6rem; font-weight: 900; color: var(--v-dim); letter-spacing: 2px; }
-        .vox-system-status { font-size: 0.7rem; font-weight: 900; display: flex; align-items: center; gap: 0.5rem; color: var(--v-dim); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--v-red); }
-        .status-dot.online { background: var(--v-green); box-shadow: 0 0 10px var(--v-green); }
-
-        .vox-hydration-card { background: var(--v-card); padding: 3rem; border-radius: 2rem; border: 1px solid #222; margin-bottom: 2rem; }
-        .v-label-group { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
-        .v-percent { font-size: 4rem; font-weight: 900; line-height: 1; }
-        .vox-progress-container { height: 60px; background: #000; border-radius: 1rem; overflow: hidden; position: relative; border: 2px solid #222; }
-        .vox-progress-fill { height: 100%; background: linear-gradient(to right, var(--v-blue), #60a5fa); transition: width 1s; }
-        .vox-persona-msg { margin-top: 2rem; display: flex; gap: 1rem; padding: 1.5rem; background: rgba(16,185,129,0.05); border-radius: 1rem; border-left: 4px solid var(--v-green); }
-        .vox-persona-msg p { font-weight: 600; font-style: italic; color: #cbd5e1; font-size: 0.95rem; }
-
-        .vox-interaction-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-        .vox-interaction-card { background: var(--v-card); border-radius: 2rem; padding: 2rem; border: 1px solid #222; }
-        .vox-mic-btn { width: 80px; height: 80px; border-radius: 50%; background: #1e293b; border: none; color: #fff; cursor: pointer; position: relative; margin-bottom: 1rem; }
-        .vox-mic-btn.recording { background: var(--v-red); animation: pulse 1s infinite; }
+        .vox-logo-area h2 { font-weight: 900; text-transform: uppercase; font-size: 1.25rem; margin: 0; }
+        .vox-logo-area p { font-size: 0.6rem; font-weight: 900; color: var(--v-dim); letter-spacing: 2px; margin: 0; }
         
-        .v-device-list { display: flex; flex-direction: column; gap: 1rem; }
-        .v-device { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #000; border-radius: 1rem; border: 1px solid #222; cursor: pointer; }
-        .v-device.active { border-color: var(--v-blue); }
-        .v-online { color: var(--v-green); margin-left: auto; }
+        .vox-hydration-card { background: var(--v-card); padding: 2.5rem; border-radius: 2rem; border: 1px solid #222; margin-bottom: 2rem; }
+        .v-percent { font-size: 4rem; font-weight: 900; line-height: 1; }
+        .vox-progress-container { height: 50px; background: #000; border-radius: 1rem; overflow: hidden; position: relative; border: 2px solid #222; }
+        .vox-progress-fill { height: 100%; background: linear-gradient(to right, var(--v-blue), #60a5fa); transition: width 1s; }
+        
+        .vox-interaction-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .vox-interaction-card { background: var(--v-card); border-radius: 2rem; padding: 2rem; border: 1px solid #222; }
+        
+        .vox-mic-btn { width: 70px; height: 70px; border-radius: 50%; background: #1e293b; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        .vox-mic-btn.recording { background: var(--v-red); animation: pulse 1s infinite; }
 
-        .vox-intel-card { background: var(--v-card); border-radius: 2rem; padding: 2rem; border: 1px solid #222; }
-        .v-intel-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-        .v-log-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #000; border-radius: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; }
-        .v-log-impact.pos { color: var(--v-green); }
-        .v-log-impact.neg { color: var(--v-red); }
+        .v-device { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #000; border-radius: 1rem; border: 1px solid #222; cursor: pointer; margin-bottom: 0.5rem; }
+        .v-device.active { border-color: var(--v-blue); }
+        .v-dev-info p { margin: 0; font-size: 0.8rem; font-weight: 800; }
+        .v-dev-info span { font-size: 0.6rem; color: var(--v-dim); }
+
+        .v-log-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #000; border-radius: 0.75rem; font-size: 0.8rem; margin-bottom: 0.5rem; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes bounceIn { 
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
         .vox-accent-blue { color: var(--v-blue); }
         .vox-accent-green { color: var(--v-green); }
       ` }} />
