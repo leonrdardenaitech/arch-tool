@@ -1,31 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Lightbulb, Download, Send, Sparkles, User, Mail, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 
 const BrandBuilderApp = () => {
-  const [phase, setPhase] = useState('input'); // 'input', 'carousel', 'report'
+  const [phase, setPhase] = useState('input'); // 'input', 'processing', 'complete'
   const [idea, setIdea] = useState('');
   const [why, setWhy] = useState('');
-  const [loadingText, setLoadingText] = useState('Agent 007 is analyzing market data...');
+  const [loading, setLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageUrls, setImageUrls] = useState([]);
   const [reportHtml, setReportHtml] = useState('');
   const [isFading, setIsFading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const carouselLabels = ["Billboard Visualization", "Newspaper Advertisement", "Social Media Feed"];
+  const carouselLabels = ["Global Billboard Concept", "Premier Newspaper Spread", "Dynamic Social Engagement"];
+  const scrollRef = useRef(null);
 
   const generateBrandVision = async () => {
     if (!idea || !why) {
-      alert("Please fill in both fields to activate Agent 007.");
+      alert("Agent 007 requires both fields to be populated.");
       return;
     }
 
-    setPhase('carousel');
+    setPhase('processing');
+    setLoading(true);
+    setProgress(0);
     
     try {
-      // Parallel Processing: Simulated Image Gen and Real Gemini Report
+      // Parallel Processing
       const imagePromise = simulateImageGeneration(idea);
       const reportPromise = generateGeminiReport(idea, why);
 
@@ -33,186 +38,486 @@ const BrandBuilderApp = () => {
       
       setImageUrls(urls);
       setReportHtml(html);
+      setLoading(false);
 
-      // Start the 15-second visual journey (3 images * 5 seconds)
-      runCarouselSequence(urls, html);
+      // Start the 21-second sequence (7s per image)
+      startVisualSequence(urls);
 
     } catch (err) {
-      console.error("Critical Failure:", err);
-      alert("Nexus Link Broken: " + err.message);
+      console.error("Nexus Link Severed:", err);
+      alert("Operational Error: " + err.message);
       setPhase('input');
     }
   };
 
   const simulateImageGeneration = async (brandIdea) => {
-    // Artificial delay to feel like AI is working
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Artificial delay for realism
+    await new Promise(resolve => setTimeout(resolve, 3000));
     return [
-      `https://images.unsplash.com/photo-1542744094-24638eff58bb?q=80&w=800&auto=format&fit=crop&text=Billboard_${encodeURIComponent(brandIdea)}`,
-      `https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop&text=Newspaper_${encodeURIComponent(brandIdea)}`,
-      `https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop&text=Social_${encodeURIComponent(brandIdea)}`
+      `https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1200&auto=format&fit=crop&text=Billboard_${encodeURIComponent(brandIdea)}`,
+      `https://images.unsplash.com/photo-1585829365294-bb7c63b3ecda?q=80&w=1200&auto=format&fit=crop&text=Newspaper_${encodeURIComponent(brandIdea)}`,
+      `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop&text=Social_${encodeURIComponent(brandIdea)}`
     ];
   };
 
   const generateGeminiReport = async (brandIdea, brandWhy) => {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-flash-latest",
-      systemInstruction: "You are AI Agent 007, an elite brand strategist and market researcher. Analysis of Brand Idea and Value Proposition. Format EXACTLY as structured HTML snippets (<h3> and <p> tags) under: Market Research, Confirm Demand, Customer Need, Brand Value. Raw HTML only, no markdown."
+      systemInstruction: "You are AI Agent 007. Provide an expert market intelligence report. Include a 'Short Summary of Findings' at the top. Format as clean HTML snippets (<h3> and <p>). Do not use markdown backticks."
     });
 
-    const prompt = `Brand Idea: ${brandIdea}. Value Proposition: ${brandWhy}. Generate the Intelligence Report.`;
+    const prompt = `Brand: ${brandIdea}. Purpose: ${brandWhy}. Draft the Intelligence Report.`;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text();
   };
 
-  const runCarouselSequence = (urls, html) => {
-    let index = 0;
+  const startVisualSequence = (urls) => {
+    let currentIdx = 0;
     const interval = setInterval(() => {
-      index++;
-      if (index < urls.length) {
+      currentIdx++;
+      if (currentIdx < urls.length) {
         setIsFading(true);
         setTimeout(() => {
-          setCurrentImageIndex(index);
+          setCurrentImageIndex(currentIdx);
           setIsFading(false);
-        }, 500);
+        }, 800);
       } else {
         clearInterval(interval);
-        setPhase('report');
+        setPhase('complete');
       }
-    }, 5000);
+    }, 7000); // 7 seconds per image
   };
 
   const downloadReport = () => {
-    const element = document.getElementById('report-content-to-print');
+    const element = document.getElementById('report-content');
     const brandName = idea || 'Brand';
-    
     const opt = {
-      margin:       0.5,
-      filename:     `${brandName.replace(/\s+/g, '_')}_Intelligence_Report_007.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      margin: 0.5,
+      filename: `${brandName}_Brief_007.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-
-    if (window.html2pdf) {
-      window.html2pdf().set(opt).from(element).save();
-    } else {
-      alert("PDF Generation Library not loaded.");
-    }
+    if (window.html2pdf) window.html2pdf().set(opt).from(element).save();
+    else alert("PDF Library Offline.");
   };
 
   return (
-    <div className="brand-builder-root">
-      <div className="app-container">
-        
+    <div className="bb-container">
+      {/* Background Overlay */}
+      <div className="bb-background" style={{ backgroundImage: "url('/arch-tool/Gemini_Generated_Image_1igk5j1igk5j1igk.png')" }}></div>
+      <div className="bb-overlay"></div>
+
+      <main className="bb-content">
+        {/* Header */}
+        <header className="bb-header animate-fade-in">
+          <h1 className="bb-title">Brand Builder</h1>
+          <p className="bb-subtitle">Powered by AI Agent 007</p>
+        </header>
+
+        {/* Phase 1: Input Fields */}
         {phase === 'input' && (
-          <div id="input-section" className="card fade-in">
-            <h1 className="logo">BRAND BUILDER <span>007</span></h1>
-            <p className="subtitle">Architect your brand vision in 15 seconds.</p>
-            <div className="input-group">
-              <label>What is your Brand idea?</label>
-              <input 
-                type="text" 
-                value={idea}
-                onChange={(e) => setIdea(e.target.value)}
-                placeholder="e.g. A sustainable coffee brand using recycled materials..."
-              />
-            </div>
-            <div className="input-group">
-              <label>Why do we need your brand?</label>
-              <input 
-                type="text" 
-                value={why}
-                onChange={(e) => setWhy(e.target.value)}
-                placeholder="e.g. Current coffee packaging is wasteful and non-recyclable..."
-              />
-            </div>
-            <button onClick={generateBrandVision} className="btn-generate">Generate Brand Vision</button>
-          </div>
-        )}
-
-        {phase === 'carousel' && (
-          <div id="carousel-section" className="carousel-container fade-in">
-            <div className="analysis-status">
-              <div className="spinner"></div>
-              <h3 id="loading-text">{loadingText}</h3>
-            </div>
-            <div className="image-wrapper">
-              <img 
-                id="carousel-image" 
-                src={imageUrls[currentImageIndex]} 
-                alt="Brand Mockup"
-                style={{ opacity: isFading ? 0 : 1 }}
-              />
-              <div className="image-label" id="carousel-label">
-                {carouselLabels[currentImageIndex]}
+          <section className="bb-input-section animate-slide-up">
+            <div className="bb-input-box">
+              <div className="bb-field">
+                <label>Brand Vision</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Nano Banana - Eco-friendly fruit tech..."
+                  value={idea}
+                  onChange={(e) => setIdea(e.target.value)}
+                />
               </div>
-            </div>
-          </div>
-        )}
-
-        {phase === 'report' && (
-          <div id="email-report-section" className="fade-in">
-            <div className="email-container" id="report-content-to-print">
-              <div className="email-header">
-                <p><strong>To:</strong> You</p>
-                <p><strong>From:</strong> AI Agent 007</p>
-                <p className="subject-line">
-                  <strong>Subject:</strong> Market Intelligence Report: <span id="display-brand-name">{idea}</span>
-                </p>
+              <div className="bb-field">
+                <label>Operational Purpose</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Solving the global snack waste crisis..."
+                  value={why}
+                  onChange={(e) => setWhy(e.target.value)}
+                />
               </div>
-              <div className="email-body">
-                <img id="email-attachment" src={imageUrls[1]} alt="Newspaper Mockup" className="email-attachment-img" />
-                <div id="ai-report-body" dangerouslySetInnerHTML={{ __html: reportHtml }}>
-                </div>
-                <p className="email-signature">Best regards,<br /><strong>AI Agent 007</strong></p>
-              </div>
-            </div>
-
-            <div className="action-buttons">
-              <button onClick={downloadReport} className="btn-download">
-                📥 Download Brand Brief (PDF)
+              <button className="bb-trigger" onClick={generateBrandVision}>
+                <Sparkles size={20} />
+                <span>Initialize Synthesis</span>
               </button>
-              <button onClick={() => setPhase('input')} className="btn-secondary">Build Another Vision</button>
             </div>
-          </div>
+          </section>
         )}
 
-      </div>
-      
+        {/* Phase 2: Processing & Image Display */}
+        {(phase === 'processing' || phase === 'complete') && (
+          <section className="bb-display-section animate-fade-in">
+            {/* Image Box */}
+            <div className="bb-image-box">
+              {loading ? (
+                <div className="bb-loader">
+                  <div className="bb-spinner"></div>
+                  <p>Agent 007 is decrypting visual assets...</p>
+                </div>
+              ) : (
+                <div className="bb-carousel">
+                  <img 
+                    src={imageUrls[currentImageIndex]} 
+                    alt="Visualization" 
+                    className={`bb-img ${isFading ? 'fading' : ''}`}
+                  />
+                  <div className="bb-img-label">{carouselLabels[currentImageIndex]}</div>
+                  
+                  {/* Image Scrollbar/Navigation */}
+                  <div className="bb-img-nav">
+                    {imageUrls.map((_, i) => (
+                      <button 
+                        key={i} 
+                        className={`bb-dot ${i === currentImageIndex ? 'active' : ''}`}
+                        onClick={() => setCurrentImageIndex(i)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Report Box (Shows after processing is done) */}
+            {phase === 'complete' && (
+              <div className="bb-report-area animate-slide-up">
+                <div className="bb-email-card" id="report-content">
+                  <div className="bb-email-header">
+                    <div className="bb-meta">
+                      <p><User size={14} /> <strong>To:</strong> Strategic Partner</p>
+                      <p><Send size={14} /> <strong>From:</strong> AI Agent 007</p>
+                    </div>
+                    <div className="bb-subject">
+                      <strong>Subject:</strong> Market Intelligence // {idea}
+                    </div>
+                  </div>
+                  
+                  <div className="bb-email-body">
+                    {/* Secondary Image showing in report as requested */}
+                    <img src={imageUrls[1]} alt="Report Visual" className="bb-report-img" />
+                    
+                    <div className="bb-report-text" dangerouslySetInnerHTML={{ __html: reportHtml }}></div>
+                    
+                    <div className="bb-signature">
+                      <p>Expertly synthesized by <strong>AI Agent 007</strong></p>
+                      <p className="bb-valediction">"Efficiency is the only constant."</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bb-actions">
+                  <button className="bb-download-btn" onClick={downloadReport}>
+                    <Lightbulb size={20} />
+                    <span>Download PDF Brief</span>
+                  </button>
+                  <button className="bb-reset-btn" onClick={() => setPhase('input')}>
+                    New Synthesis
+                  </button>
+                </div>
+
+                <footer className="bb-footer">
+                  <p>AI Agent 007 says: "It was my pleasure! Have a great day, <span>Strategic Partner</span>!"</p>
+                </footer>
+              </div>
+            )}
+          </section>
+        )}
+      </main>
+
       <style dangerouslySetInnerHTML={{ __html: `
-        .brand-builder-root {
-          font-family: 'Inter', sans-serif;
-          background-color: #0f172a;
-          color: #f8fafc;
-          min-height: 100vh;
-          padding: 2rem;
+        :root {
+          --bb-brown: #3e2723;
+          --bb-red: #d32f2f;
+          --bb-orange: #ff6f00;
+          --bb-orange-light: #ffa000;
+          --bb-glass: rgba(15, 7, 5, 0.85);
+          --bb-border: rgba(255, 111, 0, 0.3);
         }
-        .app-container { max-width: 900px; margin: 0 auto; }
-        .card { background-color: #1e293b; padding: 3rem; border-radius: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .logo { font-weight: 900; font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; }
-        .logo span { background: linear-gradient(to right, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { text-align: center; color: #94a3b8; margin-bottom: 3rem; }
-        .input-group { margin-bottom: 1.5rem; }
-        label { display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.5rem; }
-        input { width: 100%; padding: 1rem 1.5rem; background: #000; border: 1px solid #334155; border-radius: 0.75rem; color: #fff; outline: none; }
-        input:focus { border-color: #10b981; }
-        .btn-generate { width: 100%; padding: 1.25rem; background: #10b981; color: #000; font-weight: 900; text-transform: uppercase; border-radius: 0.75rem; cursor: pointer; border: none; }
-        .spinner { width: 20px; height: 20px; border: 3px solid rgba(16, 185, 129, 0.2); border-top-color: #10b981; border-radius: 50%; animation: spin 1s linear infinite; }
+
+        .bb-container {
+          position: relative;
+          min-height: 100vh;
+          width: 100%;
+          color: #fff;
+          font-family: 'Inter', sans-serif;
+          overflow-x: hidden;
+          background: #000;
+        }
+
+        .bb-background {
+          position: fixed;
+          inset: 0;
+          background-size: cover;
+          background-position: center;
+          z-index: 0;
+          filter: brightness(0.4);
+        }
+
+        .bb-overlay {
+          position: fixed;
+          inset: 0;
+          background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.8));
+          z-index: 1;
+        }
+
+        .bb-content {
+          position: relative;
+          z-index: 10;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 4rem 2rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .bb-header { text-align: center; margin-bottom: 4rem; }
+        .bb-title { 
+          font-size: 4rem; 
+          font-weight: 900; 
+          text-transform: uppercase; 
+          letter-spacing: -2px;
+          background: linear-gradient(to right, #fff, var(--bb-orange));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          margin-bottom: 0.5rem;
+        }
+        .bb-subtitle { 
+          font-size: 1rem; 
+          font-weight: 700; 
+          color: var(--bb-orange); 
+          text-transform: uppercase; 
+          letter-spacing: 4px;
+        }
+
+        /* INPUT BOX */
+        .bb-input-box {
+          background: var(--bb-glass);
+          backdrop-blur: 20px;
+          padding: 3rem;
+          border-radius: 2rem;
+          border: 1px solid var(--bb-border);
+          width: 100%;
+          max-width: 600px;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .bb-field { margin-bottom: 2rem; }
+        .bb-field label {
+          display: block;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          font-weight: 900;
+          color: var(--bb-orange-light);
+          margin-bottom: 0.75rem;
+          letter-spacing: 2px;
+        }
+        .bb-field input {
+          width: 100%;
+          background: rgba(0,0,0,0.4);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 1rem;
+          padding: 1.25rem 1.5rem;
+          color: #fff;
+          font-size: 1rem;
+          outline: none;
+          transition: all 0.3s;
+        }
+        .bb-field input:focus {
+          border-color: var(--bb-orange);
+          background: rgba(0,0,0,0.6);
+          box-shadow: 0 0 20px rgba(255, 111, 0, 0.2);
+        }
+
+        .bb-trigger {
+          width: 100%;
+          background: linear-gradient(45deg, var(--bb-red), var(--bb-orange));
+          border: none;
+          padding: 1.5rem;
+          border-radius: 1rem;
+          color: #fff;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          cursor: pointer;
+          transition: transform 0.2s, filter 0.3s;
+        }
+        .bb-trigger:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        /* IMAGE DISPLAY */
+        .bb-image-box {
+          width: 100%;
+          max-width: 800px;
+          aspect-ratio: 16/9;
+          background: #000;
+          border: 4px solid #333;
+          border-radius: 2rem;
+          overflow: hidden;
+          margin-bottom: 4rem;
+          position: relative;
+          box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .bb-loader {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5rem;
+          background: #050505;
+        }
+        .bb-spinner {
+          width: 50px;
+          height: 50px;
+          border: 4px solid rgba(255,111,0,0.1);
+          border-top-color: var(--bb-orange);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        .bb-carousel { height: 100%; position: relative; }
+        .bb-img { 
+          width: 100%; 
+          height: 100%; 
+          object-fit: cover; 
+          transition: opacity 0.8s ease-in-out;
+        }
+        .bb-img.fading { opacity: 0; }
+
+        .bb-img-label {
+          position: absolute;
+          top: 2rem;
+          right: 2rem;
+          background: rgba(0,0,0,0.7);
+          padding: 0.5rem 1.5rem;
+          border-radius: 2rem;
+          font-size: 0.75rem;
+          font-weight: 900;
+          color: var(--bb-orange);
+          border: 1px solid var(--bb-orange);
+          text-transform: uppercase;
+        }
+
+        .bb-img-nav {
+          position: absolute;
+          bottom: 2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 1rem;
+          background: rgba(0,0,0,0.4);
+          padding: 0.75rem 1.5rem;
+          border-radius: 2rem;
+          backdrop-blur: 10px;
+        }
+        .bb-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.2);
+          border: none;
+          cursor: pointer;
+        }
+        .bb-dot.active { background: var(--bb-orange); box-shadow: 0 0 10px var(--bb-orange); }
+
+        /* REPORT AREA */
+        .bb-report-area { width: 100%; max-width: 850px; }
+        .bb-email-card {
+          background: #fff;
+          color: #333;
+          border-radius: 2rem;
+          overflow: hidden;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        .bb-email-header {
+          background: #f8f9fa;
+          padding: 2.5rem;
+          border-bottom: 2px solid #eee;
+        }
+        .bb-meta { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .bb-meta p { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: #666; }
+        .bb-subject { font-size: 1.25rem; color: #000; padding-top: 1.5rem; border-top: 1px dashed #ddd; }
+
+        .bb-email-body { padding: 3rem; }
+        .bb-report-img { 
+          width: 100%; 
+          border-radius: 1.5rem; 
+          margin-bottom: 3rem; 
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .bb-report-text h3 { 
+          font-size: 1.1rem; 
+          text-transform: uppercase; 
+          color: var(--bb-red); 
+          margin-top: 2rem; 
+          margin-bottom: 0.75rem; 
+          font-weight: 900;
+        }
+        .bb-report-text p { margin-bottom: 1.25rem; line-height: 1.7; color: #444; }
+
+        .bb-signature { margin-top: 4rem; padding-top: 2rem; border-top: 2px solid #f8f9fa; }
+        .bb-valediction { font-style: italic; color: #999; margin-top: 0.5rem; }
+
+        .bb-actions {
+          display: flex;
+          gap: 1.5rem;
+          margin-top: 3rem;
+          width: 100%;
+        }
+        .bb-download-btn {
+          flex: 2;
+          background: #000;
+          color: #fff;
+          border: 2px solid var(--bb-orange);
+          padding: 1.5rem;
+          border-radius: 1.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          cursor: pointer;
+        }
+        .bb-reset-btn {
+          flex: 1;
+          background: transparent;
+          color: var(--bb-orange);
+          border: 1px solid var(--bb-orange);
+          border-radius: 1.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+
+        .bb-footer {
+          margin-top: 5rem;
+          text-align: center;
+          padding-bottom: 4rem;
+          opacity: 0.6;
+        }
+        .bb-footer p { font-size: 0.9rem; font-style: italic; }
+        .bb-footer span { color: var(--bb-orange); font-weight: 700; }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .image-wrapper { position: relative; background: #000; border-radius: 1.5rem; overflow: hidden; border: 4px solid #1e293b; }
-        #carousel-image { width: 100%; display: block; min-height: 400px; object-fit: cover; transition: opacity 0.5s; }
-        .image-label { position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.8); padding: 0.5rem 1.5rem; border-radius: 2rem; font-weight: 900; font-size: 0.75rem; color: #10b981; border: 1px solid #10b981; }
-        .email-container { background: #fff; color: #1e293b; border-radius: 1.5rem; overflow: hidden; margin-top: 2rem; text-align: left; }
-        .email-header { background: #f1f5f9; padding: 2rem; border-bottom: 1px solid #e2e8f0; }
-        .email-body { padding: 2rem; }
-        .email-attachment-img { width: 100%; border-radius: 0.75rem; margin-bottom: 2rem; }
-        .action-buttons { margin-top: 2rem; display: flex; gap: 1rem; }
-        .btn-download { flex: 2; background: #6366f1; color: #fff; padding: 1rem; border-radius: 0.75rem; font-weight: bold; cursor: pointer; border: none; }
-        .btn-secondary { flex: 1; background: transparent; border: 1px solid #334155; color: #94a3b8; border-radius: 0.75rem; cursor: pointer; }
+        .animate-fade-in { animation: fadeIn 1s ease-out; }
+        .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--bb-brown); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--bb-red); }
       ` }} />
     </div>
   );
