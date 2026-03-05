@@ -83,8 +83,31 @@ const BrandBuilderApp = () => {
     }, 7000); // 7 seconds per image
   };
 
-  const triggerKeyError = () => {
-    alert("CRITICAL ERROR: Nexus API Key Corrupted. Export Logic Terminated. The full report remains exclusive to the Portfolio Interface for security reasons.");
+  const downloadReport = () => {
+    const element = document.getElementById('report-content');
+    const brandName = idea || 'Brand';
+    
+    // Ensure the library is available
+    if (!window.html2pdf) {
+      alert("PDF Generation Library is not yet initialized. Please wait a moment.");
+      return;
+    }
+
+    const opt = {
+      margin: [0.5, 0.5],
+      filename: `${brandName.replace(/\s+/g, '_')}_Intelligence_Report_007.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        backgroundColor: '#ffffff', // Force white background for the PDF
+        logging: false
+      },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Execute the download
+    window.html2pdf().from(element).set(opt).save();
   };
 
   return (
@@ -209,7 +232,7 @@ const BrandBuilderApp = () => {
                 </div>
 
                 <div className="bb-actions">
-                  <button className="bb-download-btn" onClick={triggerKeyError}>
+                  <button className="bb-download-btn" onClick={downloadReport}>
                     <Lightbulb size={20} />
                     <span>Download PDF Brief</span>
                   </button>
