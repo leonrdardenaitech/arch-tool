@@ -43,8 +43,11 @@ const BrandBuilderApp = () => {
     const messages = [
       "Establishing Secure Neural Link...",
       "Bypassing Regional Firewalls...",
+      "Fetching Sector 1: Global Billboard Concept...",
       "Analyzing Global Market Vectors...",
+      "Fetching Sector 2: Premier Newspaper Spread...",
       "Synthesizing Visual Assets via Google Imagen 4.0...",
+      "Fetching Sector 3: Dynamic Social Engagement...",
       "Finalizing Intelligence Report..."
     ];
     
@@ -56,15 +59,25 @@ const BrandBuilderApp = () => {
         clearInterval(interval);
         startVisualSequence();
       }
-    }, 2500);
+    }, 1800); // Total ~14.4 seconds
   };
 
   const startVisualSequence = () => {
+    const ts = Date.now();
+    const cleanIdea = encodeURIComponent(idea);
+    // Lower resolution (w=800) for faster loading and distinct keywords for variety
     const urls = [
-      `https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1200&auto=format&fit=crop&text=Billboard_${encodeURIComponent(idea)}`,
-      `https://images.unsplash.com/photo-1585829365294-bb7c63b3ecda?q=80&w=1200&auto=format&fit=crop&text=Newspaper_${encodeURIComponent(idea)}`,
-      `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop&text=Social_${encodeURIComponent(idea)}`
+      `https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop&sig=${ts}_bb&q=${cleanIdea}_billboard`,
+      `https://images.unsplash.com/photo-1585829365294-bb7c63b3ecda?q=80&w=800&auto=format&fit=crop&sig=${ts}_news&q=${cleanIdea}_newspaper`,
+      `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop&sig=${ts}_soc&q=${cleanIdea}_social_media`
     ];
+    
+    // Pre-load images to avoid blank flashes
+    urls.forEach(url => {
+      const img = new Image();
+      img.src = url;
+    });
+
     setImageUrls(urls);
     setMockReport(generateMockReport(idea, why));
     setPhase('display');
@@ -82,7 +95,7 @@ const BrandBuilderApp = () => {
         clearInterval(seqInterval);
         setPhase('complete');
       }
-    }, 7000);
+    }, 6000); // 6s per image to give viewer time
   };
 
   const downloadReport = () => {
@@ -94,25 +107,21 @@ const BrandBuilderApp = () => {
       return;
     }
 
-    // Force black text for export
-    element.classList.add('pdf-export-mode');
-
+    // Clone element to prevent UI artifacts during export
     const opt = {
-      margin: [0.5, 0.5],
+      margin: 0.2,
       filename: `${brandName.replace(/\s+/g, '_')}_Intelligence_Report_007.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { 
         scale: 2, 
         useCORS: true, 
         backgroundColor: '#ffffff',
-        logging: false
+        letterRendering: true
       },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    window.html2pdf().from(element).set(opt).save().then(() => {
-      element.classList.remove('pdf-export-mode');
-    });
+    window.html2pdf().from(element).set(opt).save();
   };
 
   return (
@@ -123,7 +132,7 @@ const BrandBuilderApp = () => {
       <main className="bb-content">
         <header className="bb-header">
           <h1 className="bb-title">Brand Builder</h1>
-          <p className="bb-subtitle">Powered by AI Agent 007</p>
+          <p className="bb-subtitle">Powered by AI Agent 007 <span className="text-[8px] opacity-40 ml-2">v1.3.0</span></p>
         </header>
 
         {/* PHASE 1: INPUT */}

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, Linkedin, Server, Cpu, 
   Terminal, ShieldCheck, ArrowRight, BrainCircuit, Code,
   Crosshair, Layers, Volume2, VolumeX, Github, PlayCircle, X,
-  Video
+  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle
 } from 'lucide-react';
 
 // --- SOUND UTILITY ---
@@ -22,9 +22,25 @@ const playFlipSound = (isMuted) => {
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
     osc.start();
     osc.stop(audioCtx.currentTime + 0.1);
-  } catch (e) {
-    console.error("Audio playback failed", e);
-  }
+  } catch (e) {}
+};
+
+const playSlideSound = (isMuted) => {
+  if (isMuted) return;
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch (e) {}
 };
 
 // --- DATA: CERTIFICATIONS & COURSES ---
@@ -58,7 +74,7 @@ const CERTIFICATIONS = [
   }
 ];
 
-// --- DATA: STRATEGIC CAPABILITIES (Dashboard) ---
+// --- DATA: STRATEGIC CAPABILITIES ---
 const CAPABILITIES = [
   { 
     id: "brand-builder", 
@@ -91,24 +107,11 @@ const CAPABILITIES = [
     description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards for positive inputs and instantly escalates high-risk operational friction to human management.",
     metrics: ["Prompt Chaining", "Sentiment Analysis", "Risk Automation"],
     slides: [
-      { 
-        text: "Node 1 / Ingestion: Continuously scraping and parsing multi-channel customer feedback streams via API endpoints.", 
-        img: "sbslide1.png" 
-      },
-      { 
-        text: "Node 2 / Sentiment Vectoring: LLM evaluates emotional resonance. Trigger activated: Negative friction detected above 0.85 threshold.", 
-        img: "sbslide2.png" 
-      },
-      { 
-        text: "Node 3 / Guardrail Engaged: Standard automation bypassed. Escalation protocol routes high-risk friction to human oversight.", 
-        img: "sbslide3.jpg" 
-      },
-      { 
-        text: "Node 4 / Resolution: Agent pre-generates a personalized mitigation strategy for manager approval. Churn prevented. Latency: 0.", 
-        img: "sbslide4.png" 
-      }
+      { text: "Node 1 / Ingestion: Continuously scraping and parsing multi-channel customer feedback streams via API endpoints.", img: "sbslide1.png" },
+      { text: "Node 2 / Sentiment Vectoring: LLM evaluates emotional resonance. Trigger activated: Negative friction detected above 0.85 threshold.", img: "sbslide2.png" },
+      { text: "Node 3 / Guardrail Engaged: Standard automation bypassed. Escalation protocol routes high-risk friction to human oversight.", img: "sbslide3.jpg" },
+      { text: "Node 4 / Resolution: Agent pre-generates a personalized mitigation strategy for manager approval. Churn prevented. Latency: 0.", img: "sbslide4.png" }
     ]
-
   },
   { 
     id: "chronos-agent", 
@@ -118,26 +121,24 @@ const CAPABILITIES = [
     image: "Gemini_Generated_Image_4v4ckj4v4ckj4v4c.png",
     description: "Agentic workflow utilizing orchestration frameworks to automate supply-chain and personnel scheduling. Handles autonomous decision-making through recursive reasoning loops.",
     metrics: ["Agentic Workflows", "Recursive Reasoning", "Logic Gates"],
-  slides: [
-      { 
-        text: "Phase 1 / State Initialization: Agent interfaces with HR databases to map real-time personnel availability and constraints.", 
-        img: "weekly1.jpg" 
-      },
-      { 
-        text: "Phase 2 / Conflict Identification: Scanning overlapping PTO requests and mandatory training modules to isolate shift vulnerabilities.", 
-        img: "weekly2.jpg" 
-      },
-      { 
-        text: "Phase 3 / Recursive Reasoning Loop: Agent executes multi-step logic to dynamically redistribute resources and maintain operational coverage.", 
-        img: "weekly3.jpg" 
-      },
-{ 
-        text: "Phase 4 / Matrix Finalization: A mathematically optimized, conflict-free monthly schedule is deployed automatically.", 
-        img: "weekly4.jpg" 
-      }
+    slides: [
+      { text: "Phase 1 / State Initialization: Agent interfaces with HR databases to map real-time personnel availability and constraints.", img: "weekly1.jpg" },
+      { text: "Phase 2 / Conflict Identification: Scanning overlapping PTO requests and mandatory training modules to isolate shift vulnerabilities.", img: "weekly2.jpg" },
+      { text: "Phase 3 / Recursive Reasoning Loop: Agent executes multi-step logic to dynamically redistribute resources and maintain operational coverage.", img: "weekly3.jpg" },
+      { text: "Phase 4 / Matrix Finalization: A mathematically optimized, conflict-free monthly schedule is deployed automatically.", img: "weekly4.jpg" }
     ] 
-  } 
-]; 
+  },
+  { 
+    id: "patching-protocol", 
+    title: "Patching Protocol", 
+    type: "INTERACTIVE_NODE",
+    icon: <Activity className="text-cyan-400" size={24} />,
+    image: "cybergirl.jpg",
+    description: "Sector 08: Interactive logic diagnostic and realignment protocol. Requires HITL (Human-in-the-Loop) verification to resolve audio sector friction.",
+    metrics: ["HITL Protocol", "Logic Repair", "Audio Realignment"],
+    isStory: true
+  }
+];
 
 const SKILLS = [
   "AI Solutions Architecture", "Agentic Workflows", "Retrieval-Augmented Gen (RAG)", 
@@ -147,15 +148,175 @@ const SKILLS = [
 
 // --- COMPONENTS ---
 
-const PresentationModal = ({ agent, onClose }) => {
+const OptimizedImage = ({ src, alt, className }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  return (
+    <div className={`relative overflow-hidden bg-slate-900 ${className}`}>
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setIsLoaded(true)}
+        className={`w-full h-full object-cover transition-all duration-1000 ${isLoaded ? 'opacity-100 blur-0' : 'opacity-0 blur-xl scale-110'}`}
+        loading="lazy"
+      />
+      {!isLoaded && <div className="absolute inset-0 flex items-center justify-center text-[10px] text-cyan-500/20 uppercase font-mono animate-pulse">Initializing...</div>}
+    </div>
+  );
+};
+
+const InteractiveStoryNode = ({ isMuted }) => {
+  const [step, setStep] = useState('intro'); // 'intro', 'repairA', 'repairB', 'success', 'rewardLoop'
+  const [loopIdx, setLoopIdx] = useState(0);
+  const [localMute, setLocalMute] = useState(isMuted);
+  const audioRef = useRef(null);
+  const loopImages = ['nebulagazer.jpg', 'nebulagazer1.jpg', 'nebulagazer2.jpg'];
+
+  useEffect(() => { setLocalMute(isMuted); }, [isMuted]);
+
+  useEffect(() => {
+    if (step === 'rewardLoop') {
+      const duration = loopIdx === 0 ? 20000 : 15000;
+      const timer = setTimeout(() => {
+        setLoopIdx(prev => (prev + 1) % loopImages.length);
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [step, loopIdx]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = localMute;
+    }
+  }, [localMute]);
+
+  const handleChoice = (choice) => {
+    setStep(choice === 'A' ? 'repairA' : 'repairB');
+    if (audioRef.current) {
+      audioRef.current.src = choice === 'A' ? '/arch-tool/Nebulabloom.mp3' : '/arch-tool/Starlight_Canopy.mp3';
+      audioRef.current.loop = false;
+      audioRef.current.play().catch(e => console.log(e));
+    }
+
+    setTimeout(() => {
+      setStep('success');
+      setTimeout(() => {
+        setStep('rewardLoop');
+        if (audioRef.current) {
+          audioRef.current.src = '/arch-tool/Cobblestone_Reverie.mp3';
+          audioRef.current.loop = true;
+          audioRef.current.play().catch(e => console.log(e));
+        }
+      }, 5000);
+    }, 15000); // 15 seconds for repair phase
+  };
+
+  return (
+    <div className="w-full h-full bg-black rounded-2xl overflow-hidden flex flex-col items-center justify-center relative">
+      <audio ref={audioRef} />
+      
+      {/* Sound Toggle */}
+      <button onClick={() => setLocalMute(!localMute)} className="absolute top-6 right-6 z-[100] p-4 bg-black/40 border border-cyan-500/30 rounded-full text-cyan-400 backdrop-blur-md hover:bg-cyan-900/20 transition-all">
+        {localMute ? <VolumeX size={24} /> : <Volume2 size={24} className="animate-pulse" />}
+      </button>
+
+      {/* Intro Phase */}
+      {step === 'intro' && (
+        <div className="relative w-full h-full flex flex-col items-center justify-center p-8 text-center animate-fade-in">
+          {/* Background blurred cybergirlheadfix */}
+          <div className="absolute inset-0 z-0 opacity-50">
+            <img src="cybergirlheadfix.jpg" className="w-full h-full object-cover blur-[4px] scale-110" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80"></div>
+          </div>
+          
+          <div className="relative z-10 space-y-12 w-full flex flex-col items-center">
+            <div className="w-48 h-48 rounded-full border-4 border-red-500/50 flex items-center justify-center bg-red-950/20 shadow-[0_0_40px_rgba(239,68,68,0.3)] animate-pulse">
+              <AlertTriangle size={80} className="text-red-500" />
+            </div>
+            
+            {/* Stretched Message Bar */}
+            <div className="w-full bg-slate-900/90 border-y border-cyan-500/30 py-8 backdrop-blur-md overflow-hidden relative">
+              <p className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse">Neural Handshake Required</p>
+              <p className="text-white text-xl font-bold tracking-widest px-8 uppercase italic whitespace-nowrap animate-marquee">
+                "Audio sectors 07-09 report severe logic misalignment. Human-in-the-loop required for sector realignment."
+              </p>
+            </div>
+            
+            {/* Centered Choice Buttons */}
+            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center w-full max-w-2xl mx-auto">
+              <button onClick={() => handleChoice('A')} className="px-12 py-5 bg-cyan-950 border-2 border-cyan-500 text-cyan-300 font-black uppercase text-xs tracking-widest hover:bg-cyan-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy A: Nebula Fix</button>
+              <button onClick={() => handleChoice('B')} className="px-12 py-5 bg-fuchsia-950 border-2 border-fuchsia-500 text-fuchsia-300 font-black uppercase text-xs tracking-widest hover:bg-fuchsia-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy B: Rhythm Core</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Repair Phases (Images as placeholders) */}
+      {(step === 'repairA' || step === 'repairB') && (
+        <div className="w-full h-full absolute inset-0 bg-black animate-fade-in flex items-center justify-center overflow-hidden">
+          <img src={step === 'repairA' ? "cybergirl.jpg" : "cybergirlheadfix.jpg"} className="w-full h-full object-cover opacity-60 scale-105" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center py-10 bg-black/60 backdrop-blur-lg border-y border-white/10 font-mono text-base tracking-[0.5em] text-white animate-pulse uppercase z-10 px-4">
+            {step === 'repairA' ? 'Deploying Nebula Patch v1.5...' : 'Calibrating Rhythm Core Dynamics...'}
+          </div>
+        </div>
+      )}
+
+      {/* Success Phase */}
+      {step === 'success' && (
+        <div className="text-center space-y-8 animate-fade-in p-8">
+          <div className="w-32 h-32 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto border-2 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.6)]">
+            <ShieldCheck size={64} className="text-emerald-400" />
+          </div>
+          <h3 className="text-3xl font-black text-white uppercase tracking-widest">Protocol Successful</h3>
+          <p className="text-emerald-200 text-lg italic uppercase tracking-tighter">"Neural Handshake Complete. Rewriting Sector Audio Stream..."</p>
+        </div>
+      )}
+
+      {/* Reward Loop Phase */}
+      {step === 'rewardLoop' && (
+        <div className="w-full h-full absolute inset-0 overflow-hidden bg-black animate-fade-in">
+          <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-transparent to-black/80"></div>
+          <img 
+            key={loopIdx}
+            src={loopImages[loopIdx]} 
+            className={`w-full h-full object-cover ${loopIdx === 0 ? 'animate-nebula-zoom-20' : 'animate-nebula-fade-15'}`} 
+          />
+          <div className="absolute bottom-12 left-12 z-20 space-y-2">
+            <p className="text-cyan-400 font-mono text-xs tracking-[0.4em] uppercase opacity-60">Synthesis Rewards Active</p>
+            <p className="text-white text-3xl font-black italic uppercase tracking-tighter shadow-black drop-shadow-2xl">Deep Space Reverie</p>
+            <p className="text-slate-400 font-mono text-[10px] tracking-widest">Logic Node: Sector 08 // Cobblestone Loop Active</p>
+          </div>
+          <button onClick={() => { setStep('intro'); if(audioRef.current) { audioRef.current.pause(); audioRef.current.loop = false; } }} className="absolute bottom-12 right-12 z-20 px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-[10px] text-white uppercase tracking-widest transition-all">Restart Protocol</button>
+        </div>
+      )}
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .animate-marquee { animation: marquee 15s linear infinite; }
+        @keyframes nebula-zoom-20 {
+          0% { transform: scale(3); filter: blur(10px); opacity: 0; }
+          5% { opacity: 1; }
+          100% { transform: scale(1); filter: blur(0); }
+        }
+        @keyframes nebula-fade-15 {
+          0% { opacity: 0; filter: blur(10px); }
+          100% { opacity: 1; filter: blur(0); }
+        }
+        .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-nebula-fade-15 { animation: nebula-fade-15 15s ease-in-out forwards; }
+      `}} />
+    </div>
+  );
+};
+
+const PresentationModal = ({ agent, onClose, isMuted }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     let timer;
-    if (agent && agent.slides) {
+    if (agent && agent.slides && !agent.isStory) {
         if (isPlaying && currentSlide < agent.slides.length - 1) {
-        timer = setTimeout(() => setCurrentSlide(prev => prev + 1), 3000);
+        timer = setTimeout(() => setCurrentSlide(prev => prev + 1), 4000);
         } else if (currentSlide === agent.slides.length - 1) {
         setIsPlaying(false);
         }
@@ -166,56 +327,64 @@ const PresentationModal = ({ agent, onClose }) => {
   if (!agent) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-[#0a0314]/95 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="bg-[#0f041e] border border-fuchsia-500/50 w-full max-w-5xl rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(217,70,239,0.2)] flex flex-col h-[85vh]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 md:p-8 bg-[#0a0314]/98 backdrop-blur-xl animate-in fade-in duration-300">
+      <div className="bg-[#0f041e] border border-fuchsia-500/50 w-full max-w-6xl rounded-none sm:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(217,70,239,0.2)] flex flex-col h-full sm:h-[90vh]">
         <div className="p-6 border-b border-cyan-900/50 flex justify-between items-center bg-[#150727]">
           <div className="flex items-center gap-4">
-            <Video className="text-cyan-400" size={28} />
+            {agent.isStory ? <Activity className="text-cyan-400" size={28} /> : <Video className="text-cyan-400" size={28} />}
             <div>
-              <h3 className="text-xl font-black text-white uppercase tracking-wider">{agent.title} // Synthesis Presentation</h3>
-              <p className="text-xs text-fuchsia-400 font-mono tracking-widest">Agentic Workflow Demonstration</p>
+              <h3 className="text-xl font-black text-white uppercase tracking-wider">{agent.title} // {agent.isStory ? 'HITL Protocol' : 'Synthesis Presentation'}</h3>
+              <p className="text-xs text-fuchsia-400 font-mono tracking-widest opacity-70">Sector Designation: 08</p>       
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-fuchsia-900/30 rounded-full transition-colors text-slate-400 hover:text-fuchsia-400">
+          <button onClick={onClose} className="p-2 hover:bg-red-950/30 rounded-full transition-colors text-slate-400 hover:text-red-400">
             <X size={28} />
           </button>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden">
-          <div className="absolute w-full h-full bg-cyan-900/10 blur-[100px] rounded-full pointer-events-none"></div>
-          <div className="w-full max-w-3xl aspect-video bg-[#05010a] border border-cyan-500/30 rounded-2xl shadow-2xl relative flex items-center justify-center overflow-hidden mb-8 group">
-            <img 
-              src={agent.slides[currentSlide].img} 
-              alt={`Slide ${currentSlide + 1}`}
-              className="w-full h-full object-contain relative z-10 transition-opacity duration-300"
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-cyan-500/30 font-mono text-sm border-2 border-dashed border-cyan-900/50 m-4 rounded-xl z-0">
-               <span className="mb-2">Loading Node Data:</span>
-               <strong className="text-fuchsia-500">{agent.slides[currentSlide].img}</strong>
+        <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-[#05010a]">
+          {agent.isStory ? (
+            <InteractiveStoryNode isMuted={isMuted} />
+          ) : (
+            <div className="p-8 w-full h-full flex flex-col items-center justify-center">
+              <div className="absolute w-full h-full bg-cyan-900/10 blur-[100px] rounded-full pointer-events-none"></div>    
+              <div className="w-full max-w-3xl aspect-video bg-[#05010a] border border-cyan-500/30 rounded-2xl shadow-2xl relative flex items-center justify-center overflow-hidden mb-8 group">
+                <OptimizedImage
+                  src={agent.slides[currentSlide].img}
+                  alt={`Slide ${currentSlide + 1}`}
+                  className="w-full h-full transition-opacity duration-300"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-cyan-500/30 font-mono text-sm border-2 border-dashed border-cyan-900/50 m-4 rounded-xl z-0">
+                   <span className="mb-2">Scanning Node Data:</span>
+                   <strong className="text-fuchsia-500">{agent.slides[currentSlide].img}</strong>
+                </div>
+              </div>
+              <div className="h-20 w-full max-w-3xl bg-[#150727] border border-fuchsia-500/30 rounded-xl p-4 flex items-center justify-center text-center shadow-inner">
+                 <p className="text-lg md:text-xl text-cyan-100 font-medium tracking-wide" key={currentSlide}>
+                    {agent.slides[currentSlide].text}
+                 </p>
+              </div>
             </div>
-          </div>
-          <div className="h-20 w-full max-w-3xl bg-[#150727] border border-fuchsia-500/30 rounded-xl p-4 flex items-center justify-center text-center shadow-inner">
-             <p className="text-lg md:text-xl text-cyan-100 font-medium tracking-wide" key={currentSlide}>
-                {agent.slides[currentSlide].text}
-             </p>
-          </div>
+          )}
         </div>
 
-        <div className="p-6 border-t border-cyan-900/50 bg-[#150727] flex justify-between items-center">
-          <div className="flex gap-2">
-            {agent.slides.map((_, idx) => (
-              <div key={idx} className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-fuchsia-500 shadow-[0_0_10px_#d946ef]' : 'w-2 bg-slate-700'}`} />
-            ))}
+        {!agent.isStory && (
+          <div className="p-6 border-t border-cyan-900/50 bg-[#150727] flex justify-between items-center">
+            <div className="flex gap-2">
+              {agent.slides.map((_, idx) => (
+                <div key={idx} className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-fuchsia-500 shadow-[0_0_10px_#d946ef]' : 'w-2 bg-slate-700'}`} />
+              ))}
+            </div>
+            <div className="flex items-center gap-4">
+              <button onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))} disabled={currentSlide === 0} className="text-slate-400 hover:text-cyan-400 disabled:opacity-30 uppercase font-bold text-[10px]">Prev</button>
+              <button onClick={() => { if (currentSlide === agent.slides.length - 1) setCurrentSlide(0); setIsPlaying(!isPlaying); }} className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.4)] uppercase text-[10px]">
+                {isPlaying ? 'Pause' : 'Play Presentation'}
+                <PlayCircle size={16} className={isPlaying ? 'animate-pulse' : ''} />
+              </button>
+              <button onClick={() => setCurrentSlide(prev => Math.min(agent.slides.length - 1, prev + 1))} disabled={currentSlide === agent.slides.length - 1} className="text-slate-400 hover:text-cyan-400 disabled:opacity-30 uppercase font-bold text-[10px]">Next</button>     
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <button onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))} disabled={currentSlide === 0} className="text-slate-400 hover:text-cyan-400 disabled:opacity-30">Previous</button>
-            <button onClick={() => { if (currentSlide === agent.slides.length - 1) setCurrentSlide(0); setIsPlaying(!isPlaying); }} className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-              {isPlaying ? 'Pause' : 'Play Presentation'}
-              <PlayCircle size={20} className={isPlaying ? 'animate-pulse' : ''} />
-            </button>
-            <button onClick={() => setCurrentSlide(prev => Math.min(agent.slides.length - 1, prev + 1))} disabled={currentSlide === agent.slides.length - 1} className="text-slate-400 hover:text-cyan-400 disabled:opacity-30">Next</button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -245,7 +414,7 @@ export default function App() {
   const [presentationAgent, setPresentationAgent] = useState(null);
 
   const handleProjectClick = (project) => {
-    if (project.type === 'AGENT_NODE') {
+    if (project.type === 'AGENT_NODE' || project.isStory) {
       setPresentationAgent(project);
     } else if (project.liveUrl) {
       window.open(project.liveUrl, '_blank', 'noreferrer');
@@ -255,8 +424,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0314] text-slate-200 font-sans pb-20 relative">
-      <PresentationModal agent={presentationAgent} onClose={() => setPresentationAgent(null)} />
+    <div className="min-h-screen bg-[#0a0314] text-slate-200 font-sans pb-20 relative overflow-x-hidden">
+      <PresentationModal agent={presentationAgent} onClose={() => setPresentationAgent(null)} isMuted={isMuted} />
       <header className="sticky top-0 z-50 bg-[#0a0314]/90 backdrop-blur-md border-b border-cyan-500/30">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -267,7 +436,7 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <button onClick={() => setIsMuted(!isMuted)} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 text-xs font-mono text-slate-400 hover:text-cyan-400">
+            <button onClick={() => setIsMuted(!isMuted)} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 text-xs font-mono text-slate-400 hover:text-cyan-400 transition-all">
               {isMuted ? <VolumeX size={14} className="text-red-400"/> : <Volume2 size={14} className="text-cyan-400"/>}
               <span className="hidden sm:inline">{isMuted ? 'Audio Off' : 'Audio On'}</span>
             </button>
@@ -286,8 +455,8 @@ export default function App() {
             <ShieldCheck size={16} className="text-fuchsia-500" />
             <span>Enterprise Automation & Security</span>
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter z-10">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-500">DEVELOPING, BUILDING <br /> AND SECURING</span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tighter z-10 uppercase">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-500 uppercase">DEVELOPING, BUILDING <br /> AND SECURING</span>
             <br /><span className="text-white">AI SOLUTIONS.</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-300 max-w-4xl leading-relaxed z-10 mt-6 bg-[#0a0314]/60 backdrop-blur-sm p-8 rounded-3xl border border-cyan-900/50 shadow-3xl">
@@ -303,9 +472,9 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto relative z-10">
             {CERTIFICATIONS.map(cert => (
               <div key={cert.id} onClick={() => { playFlipSound(isMuted); setActiveCert(cert.id); }} className={`cursor-pointer rounded-2xl border p-6 flex items-center gap-6 ${activeCert === cert.id ? 'border-cyan-400 bg-[#17082e]/90 shadow-[0_0_30px_rgba(0,240,255,0.2)]' : 'border-slate-800 bg-[#0d041a]/80 opacity-60'}`}>
-                <div className="w-24 h-24 bg-white rounded-xl p-1 border border-cyan-500/50"><img src={cert.image} alt={cert.title} className="w-full h-full object-cover rounded-lg" /></div>
+                <div className="w-24 h-24 bg-white rounded-xl p-1 border border-cyan-500/50 flex items-center justify-center shadow-inner"><OptimizedImage src={cert.image} alt={cert.title} className="w-full h-full rounded-lg" /></div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-xl font-bold text-white">{cert.title}</h3>
+                  <h3 className="text-xl font-bold text-white uppercase">{cert.title}</h3>
                   <p className="text-xs text-fuchsia-400 font-mono uppercase tracking-widest">{cert.subtitle}</p>
                 </div>
               </div>
@@ -323,12 +492,12 @@ export default function App() {
           <div className="text-center mb-16"><h2 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-cyan-400 uppercase">Strategic Capabilities</h2></div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {CAPABILITIES.map(project => (
-              <div key={project.id} className="group bg-[#0d041a] border border-cyan-500/40 rounded-2xl p-8 hover:border-cyan-300 transition-all flex flex-col h-full shadow-3xl">
+              <div key={project.id} className="group bg-[#0d041a] border border-cyan-500/40 rounded-2xl p-8 hover:border-cyan-300 transition-all flex flex-col h-full shadow-3xl relative overflow-hidden">
                 {project.image && (
-                  <div onClick={() => handleProjectClick(project)} className="w-full h-48 mb-6 rounded-xl overflow-hidden border border-fuchsia-500/30 relative cursor-pointer">
-                    <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-all" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                       {project.type === 'AGENT_NODE' ? <PlayCircle size={48} className="text-cyan-400" /> : <ArrowRight size={48} className="text-cyan-400" />}
+                  <div onClick={() => handleProjectClick(project)} className="w-full h-48 mb-6 rounded-xl overflow-hidden border border-fuchsia-500/30 relative cursor-pointer shadow-inner">
+                    <OptimizedImage src={project.image} alt={project.title} className="group-hover:scale-105 transition-all" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/60">
+                       <PlayCircle size={48} className="text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
                     </div>
                   </div>
                 )}
@@ -344,7 +513,7 @@ export default function App() {
                       <a href={project.repoUrl} target="_blank" rel="noreferrer" className="px-6 py-4 bg-[#120524] border border-slate-700 rounded-xl text-xs font-bold text-slate-400 uppercase flex items-center justify-center gap-3 hover:text-white transition-colors"><Github size={16} /></a>
                     </div>
                   ) : (
-                    <button onClick={() => setPresentationAgent(project)} className="w-full py-4 bg-[#120524] border border-fuchsia-500/50 rounded-xl text-xs font-bold text-fuchsia-400 uppercase flex items-center justify-center gap-3"><Video size={16} /> Launch Presentation</button>
+                    <button onClick={() => setPresentationAgent(project)} className="w-full py-4 bg-[#120524] border border-fuchsia-500/50 rounded-xl text-xs font-bold text-fuchsia-400 uppercase flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-transform">{project.isStory ? <Activity size={16} className="animate-pulse" /> : <Video size={16} />} Launch Protocol</button>
                   )}
                 </div>
               </div>
@@ -353,14 +522,10 @@ export default function App() {
         </section>
         {/* Massive Consultation CTA */}
         <section className="py-24 border-t border-cyan-900/40 text-center relative overflow-hidden">
-          {/* Intense pulsing background glow for the CTA area */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-gradient-to-r from-fuchsia-900/40 to-cyan-900/40 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse"></div>
-          
           <div className="relative z-10 flex flex-col items-center">
              <div className="relative group">
-               {/* Bright pulsing ring radiating from behind the button */}
                <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-               
                <a 
                  href="mailto:Leonrdarden@gmail.com?subject=AI Consultation Inquiry" 
                  className="relative inline-flex items-center justify-center gap-3 px-12 py-6 bg-gradient-to-r from-fuchsia-600 to-cyan-600 text-white text-xl font-black uppercase tracking-widest rounded-full hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(0,240,255,0.6)] border border-white/40"
@@ -368,7 +533,6 @@ export default function App() {
                  Book a Consultation <ArrowRight size={28} className="group-hover:translate-x-2 transition-transform" />
                </a>
              </div>
-             
              <p className="text-sm text-cyan-400 mt-10 font-mono uppercase tracking-widest drop-shadow-[0_0_10px_rgba(0,240,255,0.5)]">Connect directly to discuss architecture & deployments</p>
           </div>
         </section>
@@ -401,6 +565,24 @@ export default function App() {
           </p>
         </div>
       </footer>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes nebula-zoom-20 {
+          0% { transform: scale(3); filter: blur(10px); opacity: 0; }
+          5% { opacity: 1; }
+          100% { transform: scale(1); filter: blur(0); }
+        }
+        @keyframes nebula-fade-15 {
+          0% { opacity: 0; filter: blur(10px); }
+          10% { opacity: 1; filter: blur(0); }
+          90% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-nebula-fade-15 { animation: nebula-fade-15 15s ease-in-out forwards; }
+        .glow-cyan { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+      `}} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, AlertTriangle, Settings, Droplets, Activity, Volume2, VolumeX, Database, Zap, Power, Circle, CheckCircle2, Waves, Speaker } from 'lucide-react';
+import { Mic, MicOff, AlertTriangle, Settings, Droplets, Activity, Volume2, VolumeX, Database, Zap, Power, Circle, CheckCircle2, Waves, Speaker, ChevronLeft } from 'lucide-react';
 
 // --- DATA: DEHYDRATION VECTORS ---
 const DEHYDRATION_DATA = {
@@ -16,12 +16,12 @@ const PERSONAS = ['Arthur', 'Siri_us', 'Beau', 'Glitch'];
 
 const VoxApp = () => {
   // Phase State: 'cinematic', 'pitch', 'ready', 'transition', 'app'
-  const [phase, setPhase] = useState('cinematic'); 
+  const [phase, setPhase] = useState('cinematic');
   const [hydration, setHydration] = useState(25);
   const [isListening, setIsListening] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [textInput, setTextInput] = useState("");
-  
+
   // Simulation & UI State
   const [isSyncing, setIsSyncing] = useState(false);
   const [persona, setPersona] = useState('Arthur');
@@ -76,10 +76,10 @@ const VoxApp = () => {
   const getSimulatedResponse = (input, currentPersona) => {
     const lower = input.toLowerCase();
     let baseMsg = "";
-    
-    if (lower.includes('water')) baseMsg = "Hydration confirmed. I've updated the micro-DB and synced with your ring.";
-    else if (lower.includes('coffee')) baseMsg = "Caffeine detected. Adjusting hydration bar for diuretic effects.";
-    else if (lower.includes('pickleball')) baseMsg = "Keep your eye on the ball, partner. I'll handle the vitals.";
+
+    if (lower.includes('water')) baseMsg = "Hydration confirmed. I've updated the micro-DB and synced with your ring.";  
+    else if (lower.includes('coffee')) baseMsg = "Caffeine detected. Adjusting hydration bar for diuretic effects.";     
+    else if (lower.includes('pickleball')) baseMsg = "Keep your eye on the ball, partner. I'll handle the vitals.";      
     else baseMsg = "I've logged the entry. Neural link stable.";
 
     // Persona modifiers
@@ -182,10 +182,10 @@ const VoxApp = () => {
               <h1 className="text-xl font-light tracking-widest text-cyan-50">VOX<span className="font-bold text-cyan-400">HYDRO</span></h1>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => setSoundEnabled(!soundEnabled)} className="text-gray-400 hover:text-cyan-400">
+              <button onClick={() => setSoundEnabled(!soundEnabled)} className="text-gray-400 hover:text-cyan-400">      
                 {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5 text-red-400" />}
               </button>
-              <button className={`p-2 rounded-full ${isSyncing ? 'text-green-400 animate-spin' : 'text-gray-500'}`}>
+              <button className={`p-2 rounded-full ${isSyncing ? 'text-green-400 animate-spin' : 'text-gray-500'}`}>     
                 <Activity className="w-5 h-5" />
               </button>
             </div>
@@ -200,7 +200,7 @@ const VoxApp = () => {
                   <stop offset="0%" stopColor="#00f0ff" /><stop offset="100%" stopColor="#0055ff" />
                 </linearGradient>
               </defs>
-              <circle cx="128" cy="128" r={radius} stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />
+              <circle cx="128" cy="128" r={radius} stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />       
               <circle cx="128" cy="128" r={radius} stroke="url(#neonGradient)" strokeWidth="12" fill="none" strokeLinecap="round"
                 style={{ strokeDasharray: circumference, strokeDashoffset: strokeDashoffset, transition: 'stroke-dashoffset 1.5s' }} />
             </svg>
@@ -233,6 +233,13 @@ const VoxApp = () => {
               <p className="text-sm font-light leading-relaxed">{warning ? warning.message : currentTip}</p>
             </div>
           </div>
+
+          {/* Return Home Link - Added to Bottom */}
+          <div className="w-full flex justify-center pb-6">
+            <a href="/arch-tool/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#00f0ff', fontSize: '0.6rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: '0.6', textDecoration: 'none' }}>
+              <ChevronLeft size={12} /> Return to Command Center
+            </a>
+          </div>
         </div>
 
         {showMenu && (
@@ -245,7 +252,7 @@ const VoxApp = () => {
                 </button>
               ))}
             </div>
-            <button onClick={() => setShowMenu(false)} className="mt-8 text-sm text-gray-500">Close Settings</button>
+            <button onClick={() => setShowMenu(false)} className="mt-8 text-sm text-gray-500">Close Settings</button>    
           </div>
         )}
       </main>
@@ -263,7 +270,7 @@ const VoxApp = () => {
         .app-hidden { opacity: 0; }
         .app-ready { opacity: 1; }
         .vox-app-shell { position: relative; width: 100%; max-width: 400px; height: 800px; background: #0a1120; border: 1px solid rgba(0,255,255,0.2); rounded: 40px; display: flex; flex-direction: column; items-center; overflow: hidden; box-shadow: 0 0 40px rgba(0,255,255,0.1); }
-        @keyframes bounceIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }      
         .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .loading-subtext { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.55rem; color: #444; text-transform: uppercase; margin-bottom: 1rem; }
       ` }} />
