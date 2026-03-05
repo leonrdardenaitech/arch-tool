@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle, X, CheckCircle2, ChevronRight, Speaker } from 'lucide-react';
+import { Mic, Waves, Activity, Circle, Bluetooth, ShieldAlert, Info, PlayCircle, X, CheckCircle2, ChevronRight, Volume2 } from 'lucide-react';
 
 const VoxApp = () => {
   const [phase, setPhase] = useState('pitch'); // 'pitch', 'auth', 'app'
@@ -17,20 +17,38 @@ const VoxApp = () => {
   const processVoiceInput = (text) => {
     setStatusText('fRAG Engine: Retrieving biometric context...');
     
-    // Simulating Retrieval-Augmented Generation logic
+    // Simulating Retrieval-Augmented Generation logic with more robust outcomes
     setTimeout(() => {
       let lowerText = text.toLowerCase();
+      let impact = 0;
+      let response = "";
+      let item = "Unknown Beverage";
+
       if (lowerText.includes('water')) {
-        setHydration(prev => Math.min(100, prev + 15));
-        setVoxMessage("Excellent choice. Pure hydration. I've logged 16oz and synchronized it with your prototype ring.");
-        setLogs([{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), item: 'Water Bottle', impact: 15 }, ...logs]);
-      } else if (lowerText.includes('coffee') || lowerText.includes('soda')) {
-        setHydration(prev => Math.max(0, prev - 8));
-        setVoxMessage("Careful now. That caffeine has a diuretic effect. I've adjusted your levels. Drink some water soon, partner.");
-        setLogs([{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), item: 'Caffeinated Drink', impact: -8 }, ...logs]);
+        impact = 15;
+        item = "Pure Water";
+        response = "Excellent choice. Pure hydration. I've logged 16oz and synchronized it with your prototype ring.";
+      } else if (lowerText.includes('coffee') || lowerText.includes('soda') || lowerText.includes('caffeine')) {
+        impact = -8;
+        item = "Caffeinated Drink";
+        response = "Careful now. That caffeine has a diuretic effect. I've adjusted your levels. Drink some water soon, partner.";
+      } else if (lowerText.includes('electrolyte') || lowerText.includes('gatorade') || lowerText.includes('juice')) {
+        impact = 12;
+        item = "Electrolyte Drink";
+        response = "Smart move. Those minerals will help you stay agile on the court. Recovery optimized.";
+      } else if (lowerText.includes('beer') || lowerText.includes('wine') || lowerText.includes('alcohol')) {
+        impact = -15;
+        item = "Alcoholic Beverage";
+        response = "Hold on there, partner. Alcohol is going to tank your hydration levels. We need to counter that with double water, stat.";
       } else {
-        setVoxMessage("I heard you, but I'm not sure how that affects your hydration. Can you tell me if it was water, juice, or something else?");
+        response = "I heard you, but I'm not sure how that affects your hydration. Can you tell me if it was water, juice, or something else?";
       }
+
+      if (impact !== 0) {
+        setHydration(prev => Math.max(0, Math.min(100, prev + impact)));
+        setLogs([{ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), item, impact }, ...logs]);
+      }
+      setVoxMessage(response);
       setStatusText('Standby: Ready for neural handshake.');
     }, 1500);
   };
@@ -117,7 +135,7 @@ const VoxApp = () => {
             </div>
 
             <div className="vox-persona-msg">
-              <Speaker size={20} className="vox-accent-green" />
+              <Volume2 size={20} className="vox-accent-green" />
               <p>"{voxMessage}"</p>
             </div>
           </div>
