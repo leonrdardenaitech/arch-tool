@@ -109,7 +109,7 @@ const playSlimeSound = (type = 'squish') => {
   } catch (e) {}
 };
 
-export default function ArchApp() {
+export default function GadgetApp() {
   const [user, setUser] = useState(null);
   const [savedPrompts, setSavedPrompts] = useState([]);
   const [soundEnabled, setSoundEnabled] = useState(true);

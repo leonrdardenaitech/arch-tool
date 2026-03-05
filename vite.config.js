@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        arch: resolve(__dirname, 'arch-tool.html'),
+        gadget: resolve(__dirname, 'gadget-glob.html'),
       },
     },
   },
