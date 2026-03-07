@@ -3,7 +3,7 @@ import {
   Mail, Linkedin, Server, Cpu, 
   Terminal, ShieldCheck, ArrowRight, BrainCircuit, Code,
   Crosshair, Layers, Volume2, VolumeX, Github, PlayCircle, X,
-  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle
+  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan
 } from 'lucide-react';
 
 // --- SOUND UTILITY ---
@@ -43,7 +43,7 @@ const playSlideSound = (isMuted) => {
   } catch (e) {}
 };
 
-// --- DATA: CERTIFICATIONS & COURSES ---
+// --- DATA: CERTIFICATIONS ---
 const CERTIFICATIONS = [
   {
     id: 'google-ai',
@@ -51,13 +51,13 @@ const CERTIFICATIONS = [
     subtitle: '7-Course Professional Credential',
     image: "button3423.png",
     courses: [
-      { title: "AI Fundamentals", desc: "Mapped core AI capabilities to specific logistical and enterprise workflows to guarantee operational ROI." },
-      { title: "AI for Brainstorming & Planning", desc: "Utilized multi-modal AI to architect, prototype, and pressure-test structural system designs." },
-      { title: "AI for Research and Insights", desc: "Deployed intelligent workflows to extract high-fidelity intelligence from unstructured data sets." },
-      { title: "AI for Writing and Communicating", desc: "Engineered prompt chains to generate scalable, on-brand corporate communications and reports." },
-      { title: "AI for Content Creation", desc: "Leveraged diffusion models to rapidly prototype and generate production assets at scale." },
-      { title: "AI for Data Analysis", desc: "Automated data pipelines to synthesize predictive models and uncover systemic bottlenecks instantly." },
-      { title: "AI for App Building", desc: "Engineered full-stack integrations to deploy functional, AI-native applications for end-users." },
+      { title: "AI Fundamentals", desc: "Mapped core AI capabilities to specific logistical and enterprise workflows." },
+      { title: "AI for Brainstorming & Planning", desc: "Utilized multi-modal AI to architect, prototype, and pressure-test structural systems." },
+      { title: "AI for Research and Insights", desc: "Deployed intelligent workflows to extract high-fidelity intelligence from raw data." },
+      { title: "AI for Writing and Communicating", desc: "Engineered prompt chains to generate scalable, on-brand corporate communications." },
+      { title: "AI for Content Creation", desc: "Leveraged diffusion models to rapidly prototype and generate production assets." },
+      { title: "AI for Data Analysis", desc: "Automated data pipelines to synthesize predictive models and uncover bottlenecks." },
+      { title: "AI for App Building", desc: "Engineered full-stack integrations to deploy functional, AI-native applications." },
     ]
   },
   {
@@ -66,15 +66,15 @@ const CERTIFICATIONS = [
     subtitle: 'Advanced Prompt Engineering',
     image: "button3423.png",
     courses: [
-      { title: "Start Writing Prompts like a Pro", desc: "Engineered strict 5-step prompt frameworks to extract highly specific, business-ready data safely." },
-      { title: "Design Prompts for Everyday Work", desc: "Automated workflow logic to eliminate manual data processing and accelerate deliverables." },
-      { title: "Speed Up Data Analysis", desc: "Designed few-shot prompts to instantly format raw analytics into executive-ready dashboards." },
-      { title: "AI as a Creative/Expert Partner", desc: "Established conversational AI frameworks to pressure-test logic and refine system architecture." },
+      { title: "Start Writing Prompts like a Pro", desc: "Engineered strict 5-step frameworks to extract specific, business-ready data safely." },
+      { title: "Design Prompts for Everyday Work", desc: "Automated workflow logic to eliminate manual processing and accelerate deliverables." },
+      { title: "Speed Up Data Analysis", desc: "Designed few-shot prompts to format raw analytics into executive-ready dashboards." },
+      { title: "AI as a Expert Partner", desc: "Established conversational AI frameworks to pressure-test logic and refine architecture." },
     ]
   }
 ];
 
-// --- DATA: STRATEGIC CAPABILITIES ---
+// --- DATA: STRATEGIC CAPABILITIES (9 Projects) ---
 const CAPABILITIES = [
   { 
     id: "deep-thinking", 
@@ -82,12 +82,26 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <BrainCircuit className="text-cyan-400" size={24} />,
     image: "3d-brain.jpg",
-    description: "Advanced long-form reasoning node utilizing Chain-of-Thought (CoT) prompting to solve multi-step architectural problems. Operates with explicit logic gates to ensure structural integrity.",
+    description: "Advanced long-form reasoning node utilizing Chain-of-Thought (CoT) prompting. Operates with explicit logic gates to ensure structural integrity.",
     metrics: ["Chain-of-Thought", "Logic Gates", "System Synthesis"],
     slides: [
-      { text: "Step 1 / Decomposition: Breaking complex enterprise requests into discrete, manageable sub-tasks for focused analysis.", img: "3d-brain.jpg" },
-      { text: "Step 2 / Iterative Refinement: Agent recursively evaluates its own logic to eliminate hallucinations and optimize output.", img: "chart floating.jpg" },
-      { text: "Step 3 / Synthesis: Recombining verified sub-tasks into a comprehensive, high-fidelity solution with 99.9% reliability.", img: "glowing crystal.png" }
+      { text: "Step 1 / Decomposition: Breaking complex requests into discrete sub-tasks.", img: "3d-brain.jpg" },
+      { text: "Step 2 / Iterative Refinement: Agent recursively evaluates its own logic.", img: "chart floating.jpg" },
+      { text: "Step 3 / Synthesis: Recombining verified sub-tasks into a comprehensive solution.", img: "glowing crystal.png" }
+    ]
+  },
+  { 
+    id: "global-bridge", 
+    title: "Global Logic Bridge", 
+    type: "AGENT_NODE",
+    icon: <Globe className="text-emerald-400" size={24} />,
+    image: "Gemini_Generated_Image_hbwxo3hbwxo3hbwx (1).png",
+    description: "Cross-border AI architecture for multilingual deployment. Ensures semantic consistency across global market vectors and regional logic gates.",
+    metrics: ["Multilingual", "Global Sync", "Regional Gates"],
+    slides: [
+      { text: "Phase 1 / Regional Mapping: Identifying semantic variance across global datasets.", img: "Gemini_Generated_Image_hbwxo3hbwxo3hbwx (1).png" },
+      { text: "Phase 2 / Translation Synthesis: High-fidelity logic translation without intent loss.", img: "Gemini_Generated_Image_z342lcz342lcz342..png" },
+      { text: "Phase 3 / Synchronized Output: Unified global deployment with 0 latency.", img: "Gemini_Generated_Image_1igk5j1igk5j1igk.png" }
     ]
   },
   { 
@@ -96,12 +110,12 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <ShieldCheck className="text-fuchsia-500" size={24} />,
     image: "seqscan1.png",
-    description: "Autonomous evaluation layer governed by strict security protocols. Continuously monitors AI outputs for bias, hallucination, and prompt injection attempts.",
-    metrics: ["Output Validation", "Security Protocols", "Real-time Monitoring"],
+    description: "Autonomous evaluation layer governed by strict security protocols. Continuously monitors AI outputs for bias, hallucination, and prompt injection.",
+    metrics: ["Output Validation", "Security", "Real-time Monitoring"],
     slides: [
-      { text: "Phase 1 / Output Monitoring: Continuous scraping and analysis of LLM generations to ensure alignment with enterprise safety guidelines.", img: "seqscan1.png" },
-      { text: "Phase 2 / Bias Detection: Multi-vector analysis to identify and neutralize unintended bias or political skew in real-time.", img: "seqscan2.png" },
-      { text: "Phase 3 / Security Lock: Automated escalation and block triggered when high-risk prompt injection patterns are detected.", img: "seqscan3.png" }
+      { text: "Phase 1 / Output Monitoring: Continuous analysis of LLM generations.", img: "seqscan1.png" },
+      { text: "Phase 2 / Bias Detection: Identifying and neutralizing unintended bias.", img: "seqscan2.png" },
+      { text: "Phase 3 / Security Lock: Automated escalation triggered by high-risk patterns.", img: "seqscan3.png" }
     ]
   },
   { 
@@ -110,21 +124,21 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <Server className="text-cyan-400" size={24} />,
     image: "3d cloud.png",
-    description: "Enterprise-grade RAG indexing system. Securely stores and retrieves proprietary intelligence with sub-millisecond latency for high-bandwidth AI applications.",
+    description: "Enterprise-grade RAG indexing system. Securely stores and retrieves proprietary intelligence with sub-millisecond latency.",
     metrics: ["Vector Indexing", "RAG Systems", "Unstructured Data"],
     slides: [
-      { text: "Phase 1 / Data Ingestion: High-speed ingestion of unstructured proprietary data (PDFs, Logs, API Streams).", img: "3d cloud.png" },
-      { text: "Phase 2 / Embedding Generation: Logic-aware embeddings transform raw data into multi-dimensional vectors.", img: "glowing crystal.png" },
-      { text: "Phase 3 / Semantic Retrieval: Neural search zaps relevant data points with sub-millisecond precision.", img: "seqscan1.png" }
+      { text: "Phase 1 / Ingestion: High-speed ingestion of unstructured data.", img: "3d cloud.png" },
+      { text: "Phase 2 / Embedding: Logic-aware embeddings transform raw data.", img: "glowing crystal.png" },
+      { text: "Phase 3 / Retrieval: Neural search zaps relevant data points.", img: "seqscan1.png" }
     ]
   },
   { 
     id: "brand-builder", 
-    title: "Brand Builder", 
+    title: "Brand Builder 007", 
     type: "APP_MODULE",
     icon: <Layers className="text-cyan-400" size={24} />,
     image: "Gemini_Generated_Image_2idzz52idzz52idz.png",
-    description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting and automated sanitization to safely generate scalable visual assets.",
+    description: "Multi-modal branding tool governed by a rigorous Eval Pipeline. Uses few-shot prompting to generate scalable visual assets.",
     metrics: ["Imagen 4.0", "Eval Pipelines", "Few-Shot Logic"],
     liveUrl: "brand-builder.html",
     repoUrl: "https://github.com/leonrdardenaitech/brand-builder"
@@ -135,7 +149,7 @@ const CAPABILITIES = [
     type: "APP_MODULE",
     icon: <Crosshair className="text-cyan-400" size={24} />,
     image: "Gemini_Generated_Image_9ycc7y9ycc7y9ycc.png",
-    description: "Full-stack RAG system utilizing vector databases to process biometric telemetry. Transforms irregular voice inputs into structured hydration metrics.",
+    description: "Full-stack RAG system utilizing vector databases to process biometric telemetry into structured hydration metrics.",
     metrics: ["RAG Architecture", "Vector DB", "Tool-Calling"],
     liveUrl: "vox.html",
     repoUrl: "https://github.com/leonrdardenaitech/hydro-scan"
@@ -146,13 +160,13 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <Terminal className="text-fuchsia-500" size={24} />,
     image: "snapback.jpg",
-    description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards for positive inputs and instantly escalates high-risk operational friction.",
+    description: "Sentiment-aware reputation agent utilizing advanced prompt-chaining. Automates rewards and escalates high-risk operational friction.",
     metrics: ["Prompt Chaining", "Sentiment Analysis", "Risk Automation"],
     slides: [
-      { text: "Node 1 / Ingestion: Continuously scraping and parsing multi-channel customer feedback streams via API endpoints.", img: "sbslide1.png" },
-      { text: "Node 2 / Sentiment Vectoring: LLM evaluates emotional resonance. Trigger activated: Negative friction detected above 0.85 threshold.", img: "sbslide2.png" },
-      { text: "Node 3 / Guardrail Engaged: Standard automation bypassed. Escalation protocol routes high-risk friction to human oversight.", img: "sbslide3.jpg" },
-      { text: "Node 4 / Resolution: Agent pre-generates a personalized mitigation strategy for manager approval. Churn prevented. Latency: 0.", img: "sbslide4.png" }
+      { text: "Node 1 / Ingestion: Scraping customer feedback streams.", img: "sbslide1.png" },
+      { text: "Node 2 / Vectoring: LLM evaluates emotional resonance.", img: "sbslide2.png" },
+      { text: "Node 3 / Guardrail: Escalation protocol routes friction to human oversight.", img: "sbslide3.jpg" },
+      { text: "Node 4 / Resolution: Pre-generating mitigation strategies.", img: "sbslide4.png" }
     ]
   },
   { 
@@ -161,13 +175,13 @@ const CAPABILITIES = [
     type: "AGENT_NODE",
     icon: <Cpu className="text-fuchsia-500" size={24} />,
     image: "4in1overlay.png",
-    description: "Agentic workflow utilizing orchestration frameworks to automate supply-chain and personnel scheduling. Handles autonomous decision-making through recursive reasoning loops.",
+    description: "Agentic workflow utilizing orchestration frameworks to automate supply-chain and personnel scheduling through recursive reasoning.",
     metrics: ["Agentic Workflows", "Recursive Reasoning", "Logic Gates"],
     slides: [
-      { text: "Phase 1 / State Initialization: Agent interfaces with HR databases to map real-time personnel availability and constraints.", img: "weekly1.jpg" },
-      { text: "Phase 2 / Conflict Identification: Scanning overlapping PTO requests and mandatory training modules to isolate shift vulnerabilities.", img: "weekly2.jpg" },
-      { text: "Phase 3 / Recursive Reasoning Loop: Agent executes multi-step logic to dynamically redistribute resources and maintain operational coverage.", img: "weekly3.jpg" },
-      { text: "Phase 4 / Matrix Finalization: A mathematically optimized, conflict-free monthly schedule is deployed automatically.", img: "weekly4.jpg" }
+      { text: "Phase 1 / Initialization: Mapping real-time personnel availability.", img: "weekly1.jpg" },
+      { text: "Phase 2 / Conflict Scan: Scanning overlapping PTO requests.", img: "weekly2.jpg" },
+      { text: "Phase 3 / Optimization: Dynamically redistributing resources.", img: "weekly3.jpg" },
+      { text: "Phase 4 / Matrix Finalization: Mathematically optimized monthly schedule.", img: "weekly4.jpg" }
     ] 
   },
   { 
@@ -176,7 +190,7 @@ const CAPABILITIES = [
     type: "INTERACTIVE_NODE",
     icon: <Activity className="text-cyan-400" size={24} />,
     image: "cybergirl.jpg",
-    description: "Sector 08: Interactive logic diagnostic and realignment protocol. Requires HITL (Human-in-the-Loop) verification to resolve audio sector friction.",
+    description: "Sector 08: Interactive logic diagnostic and realignment protocol. Requires HITL verification to resolve audio sector friction.",
     metrics: ["HITL Protocol", "Logic Repair", "Audio Realignment"],
     isStory: true
   }
@@ -206,7 +220,7 @@ const OptimizedImage = ({ src, alt, className }) => {
   );
 };
 
-const InteractiveStoryNode = ({ isMuted, playVideoRequested, onVideoFinish }) => {
+const InteractiveStoryNode = ({ isMuted, playVideoRequested }) => {
   const [step, setStep] = useState('intro'); // 'intro', 'repairA', 'repairB', 'success', 'rewardLoop'
   const [loopIdx, setLoopIdx] = useState(0);
   const [localMute, setLocalMute] = useState(isMuted);
@@ -239,7 +253,7 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested, onVideoFinish }) =>
       audioRef.current.play().catch(e => console.log(e));
     }
 
-    const repairTime = playVideoRequested ? 15000 : 5000; // Longer if video is wanted
+    const repairTime = playVideoRequested ? 15000 : 5000;
 
     setTimeout(() => {
       setStep('success');
@@ -270,22 +284,19 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested, onVideoFinish }) =>
             <img src="cybergirlheadfix.jpg" className="w-full h-full object-cover blur-[2px] scale-110" />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80"></div>
           </div>
-          
           <div className="relative z-10 space-y-12 w-full flex flex-col items-center">
             <div className="w-48 h-48 rounded-full border-4 border-red-500/50 flex items-center justify-center bg-red-950/20 shadow-[0_0_40px_rgba(239,68,68,0.3)] animate-pulse">
               <AlertTriangle size={80} className="text-red-500" />
             </div>
-            
             <div className="w-full bg-slate-900/90 border-y border-cyan-500/30 py-8 backdrop-blur-md overflow-hidden relative">
               <p className="text-cyan-400 font-mono text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse">Neural Handshake Required</p>
               <p className="text-white text-xl font-bold tracking-widest px-8 uppercase italic whitespace-nowrap animate-marquee">
                 "Audio sectors 07-09 report severe logic misalignment. Human-in-the-loop required for sector realignment."
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center w-full max-w-2xl mx-auto">
-              <button onClick={() => handleChoice('A')} className="px-12 py-5 bg-cyan-950 border-2 border-cyan-500 text-cyan-300 font-black uppercase text-xs tracking-widest hover:bg-cyan-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy A: Nebula Fix</button>
-              <button onClick={() => handleChoice('B')} className="px-12 py-5 bg-fuchsia-950 border-2 border-fuchsia-500 text-fuchsia-300 font-black uppercase text-xs tracking-widest hover:bg-fuchsia-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy B: Rhythm Core</button>
+            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center w-full max-w-2xl">
+              <button onClick={() => handleChoice('A')} className="w-full sm:w-auto px-12 py-5 bg-cyan-950 border-2 border-cyan-500 text-cyan-300 font-black uppercase text-xs tracking-widest hover:bg-cyan-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy A: Nebula Fix</button>
+              <button onClick={() => handleChoice('B')} className="w-full sm:w-auto px-12 py-5 bg-fuchsia-950 border-2 border-fuchsia-500 text-fuchsia-300 font-black uppercase text-xs tracking-widest hover:bg-fuchsia-500 hover:text-black transition-all shadow-2xl min-w-[240px]">Strategy B: Rhythm Core</button>
             </div>
           </div>
         </div>
@@ -339,7 +350,7 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested, onVideoFinish }) =>
         .animate-marquee { animation: marquee 15s linear infinite; }
         @keyframes nebula-zoom-20 {
           0% { transform: scale(3); filter: blur(10px); opacity: 0; }
-          100% { transform: scale(1); filter: blur(0); }
+          100% { transform: scale(1); filter: blur(0); opacity: 1; }
         }
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
@@ -385,11 +396,11 @@ const PresentationModal = ({ agent, onClose, isMuted }) => {
           </div>
           <div className="flex items-center gap-4">
             {agent.isStory && (
-              <button onClick={() => setPlayVideo(!playVideo)} className={`p-2 rounded-lg border transition-all ${playVideo ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-slate-900 text-cyan-500 border-cyan-900/50'}`}>
-                <PlayCircle size={20} />
+              <button onClick={() => setPlayVideo(!playVideo)} className={`p-2 rounded-lg border transition-all ${playVideo ? 'bg-cyan-500 text-black border-cyan-400 shadow-[0_0_15px_#00f0ff]' : 'bg-slate-900 text-cyan-500 border-cyan-900/50'}`}>
+                <Video size={20} />
               </button>
             )}
-            <button onClick={() => setLocalMute(!localMute)} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-400">
+            <button onClick={() => setLocalMute(!localMute)} className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-400 hover:text-cyan-400 transition-colors">
               {localMute ? <VolumeX size={20} /> : <Volume2 size={20} className="text-cyan-400" />}
             </button>
             <button onClick={onClose} className="p-2 hover:bg-red-950/30 rounded-full transition-colors text-slate-400 hover:text-red-400 ml-2">
@@ -624,11 +635,14 @@ export default function App() {
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes nebula-zoom-20 {
           0% { transform: scale(3); filter: blur(10px); opacity: 0; }
-          100% { transform: scale(1); filter: blur(0); opacity: 1; }
+          5% { opacity: 1; }
+          100% { transform: scale(1); filter: blur(0); }
         }
         @keyframes nebula-fade-15 {
           0% { opacity: 0; filter: blur(10px); }
           100% { opacity: 1; filter: blur(0); }
+          90% { opacity: 1; }
+          100% { opacity: 0; }
         }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         .animate-nebula-zoom-20 { animation: nebula-zoom-20 20s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

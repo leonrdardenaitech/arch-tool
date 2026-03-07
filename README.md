@@ -1,16 +1,38 @@
-# React + Vite
+# LEON R. DARDEN // NEURAL COMMAND CENTER
+### AI Solutions Architect & Enterprise Automation Specialist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Darden AI Shell](public/timbackground.png)
 
-Currently, two official plugins are available:
+## 🛡️ Strategic Capabilities Matrix
+This portfolio is an immersive **Human-in-the-Loop (HITL)** environment showcasing eight core strategic nodes designed for enterprise-grade AI deployment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🧩 Core Synthesis Nodes
+1. **Deep Thinking Node**: Advanced long-form reasoning utilizing Chain-of-Thought (CoT) logic.
+2. **Eval Sentinel**: Autonomous evaluation layer for bias detection and safety hardening.
+3. **Vector Vault**: Enterprise RAG indexing system for sub-millisecond retrieval of unstructured data.
+4. **Brand Builder 007**: Multi-modal branding engine governed by a rigorous Eval Pipeline.
+5. **Hydro-Scan (Vox)**: Full-stack RAG assistant transforming telemetry into structured hydration metrics.
+6. **SnapBack AI Agent**: Sentiment-aware reputation agent utilizing advanced prompt-chaining.
+7. **Employee Scheduler**: Agentic workflow automating personnel logistics through recursive reasoning.
+8. **Patching Protocol**: Interactive logic diagnostic and realignment protocol (Sector 08).
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Technical Infrastructure
+*   **Logic Core**: Google Gemini 1.5 Flash / Pro (Multimodal)
+*   **Front-End**: React (Vite) + Tailwind CSS + Lucide Icons
+*   **Data Backbone**: Firebase Firestore (Real-time Neural Sync)
+*   **Aesthetics**: Glass-morphism, "Neural Flux" Transitions, Atmospheric Soundscapes
 
-## Expanding the ESLint configuration
+## 🎓 Verified Architecture
+*   **Google AI Specialization**: 7-Course Professional Credential
+*   **Google Prompting Essentials**: Advanced Prompt Engineering & HITL Frameworks
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🔗 Connect with the Architect
+*   **Portfolio**: [Live Site](https://leonrdardenaitech.github.com/arch-tool/)
+*   **LinkedIn**: [Network](https://www.linkedin.com/in/leon-darden-686899a5)
+*   **Email**: Leonrdarden@gmail.com
+
+*"Efficiency is the only constant. Synthesis is the only objective."*
