@@ -3,10 +3,6 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
-const MODEL_NAME = "gemini-1.5-flash"; 
-
-// Local asset path
-const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
 
 const SYSTEM_PROMPT = `You are the backend logic engine for "Watz 4 Dinner".
 Output ONLY raw JSON. No markdown. No conversational text.
@@ -42,23 +38,18 @@ RULES:
 
 // --- Custom Logo Component ---
 const AppLogo = ({ size = 24, className = "", width }) => {
-  if (CUSTOM_LOGO_URL) {
-    return <img src={CUSTOM_LOGO_URL} alt="W4D Logo" className={`object-contain ${className}`} style={{ width: width || size, height: 'auto' }} />;
-  }
-  return <CookingPot size={size} className={className} />;
+  const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
+  return <img src={CUSTOM_LOGO_URL} alt="W4D Logo" className={`object-contain ${className}`} style={{ width: width || size, height: 'auto' }} />;
 };
 
 // --- Stable UI Wrapper with Status Indicator ---
 const PhoneFrame = ({ children, hasKey }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-[400]"></div>
-    
-    {/* NEXUS STATUS LIGHT (TOP LEFT) */}
     <div className="absolute top-2 left-8 z-[400] flex items-center gap-1.5 opacity-80">
        <div className={`w-1.5 h-1.5 rounded-full ${hasKey ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse'}`}></div>
        <span className="text-[7px] font-black uppercase tracking-[0.2em] text-white/40 font-mono">Nexus {hasKey ? 'OK' : 'OFF'}</span>
     </div>
-
     <div className="flex-1 bg-[#FAFAF9] overflow-hidden relative flex flex-col">
       {children}
     </div>
@@ -83,35 +74,48 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- API Utilities ---
+  // --- API Utilities with Triple-Fail-Safe ---
   async function callGemini(payload) {
     if (!apiKey) {
-      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is not detected. Please verify Vercel settings.");
+      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY missing.");
       return null;
     }
 
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data?.error?.message || `API Failure: ${response.status}`);
+    // UPDATED MODEL LIST: Using standard naming conventions for v1beta
+    const models = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-pro-vision"];
+    let lastError = "";
+
+    for (const model of models) {
+      try {
+        console.log(`Nexus Attempt: Handshaking with ${model}...`);
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          lastError = data?.error?.message || `API Error: ${response.status}`;
+          if (lastError.includes("not found") || lastError.includes("not supported")) continue; 
+          throw new Error(lastError);
+        }
+        
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) throw new Error("Empty response from Nexus Core.");
+        
+        const cleanedText = text.replace(/```json|```/g, '').trim();
+        return JSON.parse(cleanedText);
+      } catch (err) {
+        lastError = err.message;
+        console.error(`Attempt failed for ${model}:`, lastError);
       }
-      
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) throw new Error("Empty response from AI Core.");
-      
-      const cleanedText = text.replace(/```json|```/g, '').trim();
-      return JSON.parse(cleanedText);
-    } catch (err) {
-      setAppError(`Nexus Error: ${err.message}`);
-      throw err;
     }
+    
+    // If all models in the loop fail
+    setAppError(`Nexus Final Stand Failed: ${lastError}`);
+    throw new Error(lastError);
   }
 
   useEffect(() => {
@@ -121,9 +125,7 @@ export default function Watz4DinnerApp() {
           const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
-        } catch (err) {
-          console.error("Camera access error:", err);
-        }
+        } catch (err) {}
       }
     };
     const stopCamera = () => {
@@ -141,7 +143,6 @@ export default function Watz4DinnerApp() {
     if (!canvasRef.current || !videoRef.current) return;
     setLoading(true);
     setAppError(null);
-    
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     canvas.width = videoRef.current.videoWidth;
@@ -153,7 +154,7 @@ export default function Watz4DinnerApp() {
       const payload = {
         contents: [{
           parts: [
-            { text: `Identify all food items in this image. Use them to generate the full meal plan JSON with 5 realistic dinner options. Exclude: ${exclusions.join(', ')}.` },
+            { text: `Identify all food items in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
             { inlineData: { mimeType: "image/jpeg", data: base64Image } }
           ]
         }],
@@ -161,7 +162,6 @@ export default function Watz4DinnerApp() {
         generationConfig: { responseMimeType: "application/json" }
       };
       const result = await callGemini(payload);
-      
       if (result && result.dinner_options) {
         setAiData(result);
         const newIngredients = result.scan_results?.detected_ingredients || [];
@@ -178,21 +178,18 @@ export default function Watz4DinnerApp() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
     setLoading(true);
     setAppError(null);
-
     const reader = new FileReader();
     const safeMimeType = (file.type === "image/heic" || file.type === "image/heif" || !file.type) ? "image/jpeg" : file.type;
 
     reader.onloadend = async () => {
       try {
         const base64String = reader.result.split(',')[1];
-        
         const payload = {
           contents: [{
             parts: [
-              { text: `Identify all food items in this image. Use them to generate the full meal plan JSON with 5 realistic dinner options. Exclude: ${exclusions.join(', ')}.` },
+              { text: `Identify all food items in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
               { inlineData: { mimeType: safeMimeType, data: base64String } }
             ]
           }],
@@ -200,7 +197,6 @@ export default function Watz4DinnerApp() {
           generationConfig: { responseMimeType: "application/json" }
         };
         const result = await callGemini(payload);
-        
         if (result && result.dinner_options) {
           setAiData(result);
           const newIngredients = result.scan_results?.detected_ingredients || [];
@@ -221,7 +217,7 @@ export default function Watz4DinnerApp() {
     setLoading(true);
     setAppError(null);
     try {
-      const prompt = `Available ingredients: ${ingredients.join(', ')}. Exclude: ${exclusions.join(', ')}. Generate the full meal plan JSON with 5 realistic dinner options.`;
+      const prompt = `Ingredients: ${ingredients.join(', ')}. Exclude: ${exclusions.join(', ')}. Generate full meal plan JSON.`;
       const payload = {
         contents: [{ parts: [{ text: prompt }] }],
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
@@ -239,19 +235,8 @@ export default function Watz4DinnerApp() {
     }
   };
 
-  const addIngredient = () => {
-    if (inputValue.trim()) {
-      setIngredients(prev => [...new Set([...prev, inputValue.trim()])]);
-      setInputValue('');
-    }
-  };
-
-  const addExclusion = () => {
-    if (exclusionValue.trim()) {
-      setExclusions(prev => [...new Set([...prev, exclusionValue.trim()])]);
-      setExclusionValue('');
-    }
-  };
+  const addIngredient = () => { if (inputValue.trim()) { setIngredients(prev => [...new Set([...prev, inputValue.trim()])]); setInputValue(''); } };
+  const addExclusion = () => { if (exclusionValue.trim()) { setExclusions(prev => [...new Set([...prev, exclusionValue.trim()])]); setExclusionValue(''); } };
 
   return (
     <div className="min-h-screen bg-[#111] flex items-center justify-center p-4">
@@ -263,11 +248,11 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame hasKey={!!apiKey}>
-        {/* ERROR PROTOCOL OVERLAY */}
+        {/* ERROR OVERLAY */}
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
             <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
-            <h3 className="font-black uppercase tracking-widest text-sm mb-2 text-red-400">Error Protocol</h3>
+            <h3 className="font-black uppercase text-sm mb-2 text-red-400">Error Protocol</h3>
             <p className="text-[10px] font-bold opacity-90 mb-6 leading-relaxed px-2">{appError}</p>
             <button onClick={() => setAppError(null)} className="bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">Acknowledge & Reboot</button>
           </div>
@@ -290,9 +275,7 @@ export default function Watz4DinnerApp() {
           <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
-              
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
-              
               <div className="space-y-6 w-full">
                 <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all text-[#78350F]">
                   <Camera className="w-12 h-12 mb-4" />
@@ -314,19 +297,14 @@ export default function Watz4DinnerApp() {
             <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
             <canvas ref={canvasRef} className="hidden" />
             <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
-            
             <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
               <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
             </div>
-            
             <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-8">
               <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
-              
               <div className="flex gap-4">
                 <button onClick={() => setAppStep('welcome')} className="text-white font-black uppercase tracking-[0.4em] text-[10px] bg-black/40 px-6 py-2 rounded-full border border-white/10">Abort</button>
-                <button onClick={() => fileInputRef.current.click()} className="text-white font-black uppercase tracking-[0.2em] text-[10px] bg-[#B45309] px-6 py-2 rounded-full flex items-center gap-2 border border-white/20 shadow-xl active:scale-95 transition-all">
-                  <Upload size={14} /> Upload Photo
-                </button>
+                <button onClick={() => fileInputRef.current.click()} className="text-white font-black uppercase tracking-[0.2em] text-[10px] bg-[#B45309] px-6 py-2 rounded-full flex items-center gap-2 border border-white/20 shadow-xl active:scale-95 transition-all"><Upload size={14} /> Upload Photo</button>
               </div>
             </div>
           </div>
@@ -337,9 +315,7 @@ export default function Watz4DinnerApp() {
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
               <section>
-                <h2 className="text-sm font-black text-[#78350F] uppercase tracking-[0.2em] mb-5 flex items-center gap-2">
-                  <Utensils size={18} /> Master Pantry List
-                </h2>
+                <h2 className="text-sm font-black text-[#78350F] uppercase tracking-[0.2em] mb-5 flex items-center gap-2"><Utensils size={18} /> Master Pantry List</h2>
                 <div className="flex gap-3">
                   <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addIngredient()} placeholder="Salmon, Eggs..." className="flex-1 bg-white border-2 border-[#94A3B8] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#78350F]" />
                   <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl active:scale-90 transition-transform"><Plus size={28}/></button>
@@ -354,27 +330,19 @@ export default function Watz4DinnerApp() {
                 </div>
               </section>
               <section className="pt-6 border-t border-[#94A3B8]/20">
-                <h2 className="text-sm font-black text-red-800 uppercase tracking-[0.2em] mb-5 flex items-center gap-2">
-                  <AlertCircle size={18} /> Exclusion Filters
-                </h2>
+                <h2 className="text-sm font-black text-red-800 uppercase tracking-[0.2em] mb-5 flex items-center gap-2"><AlertCircle size={18} /> Exclusion Filters</h2>
                 <div className="flex gap-3">
                   <input type="text" value={exclusionValue} onChange={e => setExclusionValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addExclusion()} placeholder="Allergies..." className="flex-1 bg-white border-2 border-[#B45309] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#B45309]" />
                   <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90 transition-transform"><Plus size={28}/></button>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-3">
                   {exclusions.map((ex, i) => (
-                    <span key={i} className="bg-red-50 text-red-900 px-4 py-2 rounded-full border border-red-200 text-xs font-black uppercase flex items-center gap-2">
-                      {ex} <X size={14} className="cursor-pointer" onClick={() => setExclusions(exclusions.filter((_, idx) => idx !== i))} />
-                    </span>
+                    <span key={i} className="bg-red-50 text-red-900 px-4 py-2 rounded-full border border-red-200 text-xs font-black uppercase flex items-center gap-2">{ex} <X size={14} className="cursor-pointer" onClick={() => setExclusions(exclusions.filter((_, idx) => idx !== i))} /></span>
                   ))}
                 </div>
               </section>
             </div>
-            <div className="p-8 bg-white border-t-2 border-[#F5F5F4]">
-              <button onClick={generateFromManual} disabled={ingredients.length === 0} className="w-full bg-[#78350F] text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xl shadow-xl active:scale-95 transition-all">
-                Plan Dinner
-              </button>
-            </div>
+            <div className="p-8 bg-white border-t-2 border-[#F5F5F4]"><button onClick={generateFromManual} disabled={ingredients.length === 0} className="w-full bg-[#78350F] text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xl shadow-xl active:scale-95 transition-all">Plan Dinner</button></div>
           </div>
         )}
 
