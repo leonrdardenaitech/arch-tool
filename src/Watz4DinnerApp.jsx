@@ -48,10 +48,17 @@ const AppLogo = ({ size = 24, className = "", width }) => {
   return <CookingPot size={size} className={className} />;
 };
 
-// --- Stable UI Wrapper ---
-const PhoneFrame = ({ children }) => (
+// --- Stable UI Wrapper with Status Indicator ---
+const PhoneFrame = ({ children, hasKey }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-50"></div>
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-[400]"></div>
+    
+    {/* NEXUS STATUS LIGHT (TOP LEFT) */}
+    <div className="absolute top-2 left-8 z-[400] flex items-center gap-1.5 opacity-80">
+       <div className={`w-1.5 h-1.5 rounded-full ${hasKey ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse'}`}></div>
+       <span className="text-[7px] font-black uppercase tracking-[0.2em] text-white/40 font-mono">Nexus {hasKey ? 'OK' : 'OFF'}</span>
+    </div>
+
     <div className="flex-1 bg-[#FAFAF9] overflow-hidden relative flex flex-col">
       {children}
     </div>
@@ -163,7 +170,6 @@ export default function Watz4DinnerApp() {
         setSelectedMeal(result.dinner_options[0]);
       }
     } catch (error) {
-      // Error is now handled inside callGemini and doesn't reset step
     } finally {
       setLoading(false);
     }
@@ -203,7 +209,6 @@ export default function Watz4DinnerApp() {
           setSelectedMeal(result.dinner_options[0]);
         }
       } catch (error) {
-        // Error handled in callGemini
       } finally {
         setLoading(false);
       }
@@ -257,7 +262,7 @@ export default function Watz4DinnerApp() {
         </div>
       )}
 
-      <PhoneFrame>
+      <PhoneFrame hasKey={!!apiKey}>
         {/* ERROR PROTOCOL OVERLAY */}
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
@@ -286,11 +291,6 @@ export default function Watz4DinnerApp() {
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
               
-              <div className="flex items-center gap-2 mb-8">
-                <div className={`w-2 h-2 rounded-full ${apiKey ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' : 'bg-red-500 shadow-[0_0_10px_#ef4444]'}`}></div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">{apiKey ? 'Nexus Link Active' : 'Nexus Key Missing'}</span>
-              </div>
-
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
               
               <div className="space-y-6 w-full">
