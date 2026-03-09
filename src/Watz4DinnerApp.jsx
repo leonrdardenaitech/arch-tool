@@ -74,20 +74,19 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- API Utilities with Triple-Fail-Safe ---
+  // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
       setAppError("Neural Link Offline: VITE_GEMINI_API_KEY missing.");
       return null;
     }
 
-    // UPDATED MODEL LIST: Using standard naming conventions for v1beta
-    const models = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-pro-vision"];
+    // Standardized modern model pool
+    const models = ["gemini-1.5-flash", "gemini-1.5-pro"];
     let lastError = "";
 
     for (const model of models) {
       try {
-        console.log(`Nexus Attempt: Handshaking with ${model}...`);
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -97,24 +96,22 @@ export default function Watz4DinnerApp() {
         const data = await response.json();
         
         if (!response.ok) {
-          lastError = data?.error?.message || `API Error: ${response.status}`;
+          lastError = data?.error?.message || `Status ${response.status}`;
           if (lastError.includes("not found") || lastError.includes("not supported")) continue; 
           throw new Error(lastError);
         }
         
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("Empty response from Nexus Core.");
+        if (!text) throw new Error("Empty response from AI Core.");
         
         const cleanedText = text.replace(/```json|```/g, '').trim();
         return JSON.parse(cleanedText);
       } catch (err) {
         lastError = err.message;
-        console.error(`Attempt failed for ${model}:`, lastError);
       }
     }
     
-    // If all models in the loop fail
-    setAppError(`Nexus Final Stand Failed: ${lastError}`);
+    setAppError(`Nexus Link Failed on all models. Latest error: ${lastError}`);
     throw new Error(lastError);
   }
 
@@ -154,7 +151,7 @@ export default function Watz4DinnerApp() {
       const payload = {
         contents: [{
           parts: [
-            { text: `Identify all food items in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+            { text: `Identify all food items in this image. Generate 5 recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
             { inlineData: { mimeType: "image/jpeg", data: base64Image } }
           ]
         }],
@@ -164,8 +161,7 @@ export default function Watz4DinnerApp() {
       const result = await callGemini(payload);
       if (result && result.dinner_options) {
         setAiData(result);
-        const newIngredients = result.scan_results?.detected_ingredients || [];
-        setIngredients(prev => [...new Set([...prev, ...newIngredients])]);
+        setIngredients(prev => [...new Set([...prev, ...(result.scan_results?.detected_ingredients || [])])]);
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
@@ -189,7 +185,7 @@ export default function Watz4DinnerApp() {
         const payload = {
           contents: [{
             parts: [
-              { text: `Identify all food items in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+              { text: `Identify all food items in this image. Generate 5 recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
               { inlineData: { mimeType: safeMimeType, data: base64String } }
             ]
           }],
@@ -199,8 +195,7 @@ export default function Watz4DinnerApp() {
         const result = await callGemini(payload);
         if (result && result.dinner_options) {
           setAiData(result);
-          const newIngredients = result.scan_results?.detected_ingredients || [];
-          setIngredients(prev => [...new Set([...prev, ...newIngredients])]);
+          setIngredients(prev => [...new Set([...prev, ...(result.scan_results?.detected_ingredients || [])])]);
           setAppStep('results');
           setSelectedMeal(result.dinner_options[0]);
         }
@@ -217,9 +212,8 @@ export default function Watz4DinnerApp() {
     setLoading(true);
     setAppError(null);
     try {
-      const prompt = `Ingredients: ${ingredients.join(', ')}. Exclude: ${exclusions.join(', ')}. Generate full meal plan JSON.`;
       const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
+        contents: [{ parts: [{ text: `Ingredients: ${ingredients.join(', ')}. Generate meal plan JSON.` }] }],
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
         generationConfig: { responseMimeType: "application/json" }
       };
@@ -248,7 +242,6 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame hasKey={!!apiKey}>
-        {/* ERROR OVERLAY */}
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
             <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
@@ -258,7 +251,6 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* HEADER */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
@@ -270,7 +262,6 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* WELCOME */}
         {appStep === 'welcome' && (
           <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
@@ -291,7 +282,6 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* SCANNING */}
         {appStep === 'scanning' && (
           <div className="flex-1 bg-black relative flex flex-col">
             <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
@@ -310,7 +300,6 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* INPUT */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
@@ -346,7 +335,6 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* RESULTS */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
