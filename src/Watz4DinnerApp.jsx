@@ -3,6 +3,10 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
+const MODEL_NAME = "gemini-1.5-flash"; // Locked to the standard high-speed engine
+
+// Local asset path
+const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
 
 const SYSTEM_PROMPT = `You are the backend logic engine for "Watz 4 Dinner".
 Output ONLY raw JSON. No markdown. No conversational text.
@@ -38,7 +42,6 @@ RULES:
 
 // --- Custom Logo Component ---
 const AppLogo = ({ size = 24, className = "", width }) => {
-  const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
   return <img src={CUSTOM_LOGO_URL} alt="W4D Logo" className={`object-contain ${className}`} style={{ width: width || size, height: 'auto' }} />;
 };
 
@@ -74,45 +77,28 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
       setAppError("Neural Link Offline: VITE_GEMINI_API_KEY missing.");
       return null;
     }
 
-    // Standardized modern model pool
-    const models = ["gemini-1.5-flash", "gemini-1.5-pro"];
-    let lastError = "";
-
-    for (const model of models) {
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          lastError = data?.error?.message || `Status ${response.status}`;
-          if (lastError.includes("not found") || lastError.includes("not supported")) continue; 
-          throw new Error(lastError);
-        }
-        
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("Empty response from AI Core.");
-        
-        const cleanedText = text.replace(/```json|```/g, '').trim();
-        return JSON.parse(cleanedText);
-      } catch (err) {
-        lastError = err.message;
-      }
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error?.message || `API Failure: ${response.status}`);
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("Empty response from AI Core.");
+      const cleanedText = text.replace(/```json|```/g, '').trim();
+      return JSON.parse(cleanedText);
+    } catch (err) {
+      setAppError(`Nexus Error: ${err.message}`);
+      throw err;
     }
-    
-    setAppError(`Nexus Link Failed on all models. Latest error: ${lastError}`);
-    throw new Error(lastError);
   }
 
   useEffect(() => {
@@ -151,7 +137,7 @@ export default function Watz4DinnerApp() {
       const payload = {
         contents: [{
           parts: [
-            { text: `Identify all food items in this image. Generate 5 recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+            { text: `Identify ingredients in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
             { inlineData: { mimeType: "image/jpeg", data: base64Image } }
           ]
         }],
@@ -165,8 +151,7 @@ export default function Watz4DinnerApp() {
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
-    } catch (error) {
-    } finally {
+    } catch (error) {} finally {
       setLoading(false);
     }
   };
@@ -185,7 +170,7 @@ export default function Watz4DinnerApp() {
         const payload = {
           contents: [{
             parts: [
-              { text: `Identify all food items in this image. Generate 5 recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+              { text: `Identify ingredients in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
               { inlineData: { mimeType: safeMimeType, data: base64String } }
             ]
           }],
@@ -199,8 +184,7 @@ export default function Watz4DinnerApp() {
           setAppStep('results');
           setSelectedMeal(result.dinner_options[0]);
         }
-      } catch (error) {
-      } finally {
+      } catch (error) {} finally {
         setLoading(false);
       }
     };
@@ -223,8 +207,7 @@ export default function Watz4DinnerApp() {
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
-    } catch (error) {
-    } finally {
+    } catch (error) {} finally {
       setLoading(false);
     }
   };
@@ -235,7 +218,7 @@ export default function Watz4DinnerApp() {
   return (
     <div className="min-h-screen bg-[#111] flex items-center justify-center p-4">
       {loading && (
-        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#FAFAF9]/95 backdrop-blur-md px-10 text-center text-kitchen-woodDark">
+        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#FAFAF9]/95 backdrop-blur-md px-10 text-center text-kitchen-woodDark text-slate-700">
           <RefreshCw className="w-24 h-24 text-[#78350F] animate-spin mb-8" />
           <p className="font-black uppercase tracking-[0.4em] text-lg animate-pulse">Syncing Appliance...</p>
         </div>
@@ -245,7 +228,7 @@ export default function Watz4DinnerApp() {
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
             <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
-            <h3 className="font-black uppercase text-sm mb-2 text-red-400">Error Protocol</h3>
+            <h3 className="font-black uppercase text-sm mb-2 text-red-400 tracking-widest">Error Protocol</h3>
             <p className="text-[10px] font-bold opacity-90 mb-6 leading-relaxed px-2">{appError}</p>
             <button onClick={() => setAppError(null)} className="bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">Acknowledge & Reboot</button>
           </div>
@@ -253,12 +236,8 @@ export default function Watz4DinnerApp() {
 
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
-            <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
-              <AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" />
-            </div>
-            <div className="absolute right-8 bottom-6">
-               <Settings className="text-[#B45309]" size={20} />
-            </div>
+            <div className="cursor-pointer" onClick={() => setAppStep('welcome')}><AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" /></div>
+            <div className="absolute right-8 bottom-6"><Settings className="text-[#B45309]" size={20} /></div>
           </div>
         )}
 
@@ -268,14 +247,8 @@ export default function Watz4DinnerApp() {
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
               <div className="space-y-6 w-full">
-                <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all text-[#78350F]">
-                  <Camera className="w-12 h-12 mb-4" />
-                  <span className="font-black uppercase tracking-widest text-base">Scan Storage</span>
-                </button>
-                <button onClick={() => setAppStep('input')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#94A3B8] rounded-[3rem] shadow-xl hover:border-[#78350F] transition-all text-[#451A03]">
-                  <Plus className="w-12 h-12 mb-4 text-[#94A3B8]" />
-                  <span className="font-black uppercase tracking-widest text-base">Manual List</span>
-                </button>
+                <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all text-[#78350F]"><Camera className="w-12 h-12 mb-4" /><span className="font-black uppercase tracking-widest text-base">Scan Storage</span></button>
+                <button onClick={() => setAppStep('input')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#94A3B8] rounded-[3rem] shadow-xl hover:border-[#78350F] transition-all text-[#451A03]"><Plus className="w-12 h-12 mb-4 text-[#94A3B8]" /><span className="font-black uppercase tracking-widest text-base">Manual List</span></button>
               </div>
               <p className="mt-16 text-[#94A3B8] text-[10px] font-black uppercase tracking-[0.5em]">Appliance OS v1.4</p>
             </div>
@@ -287,9 +260,7 @@ export default function Watz4DinnerApp() {
             <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
             <canvas ref={canvasRef} className="hidden" />
             <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
-            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
-              <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
-            </div>
+            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white"><p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p></div>
             <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-8">
               <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
               <div className="flex gap-4">
@@ -346,9 +317,9 @@ export default function Watz4DinnerApp() {
               ))}
             </div>
             <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar pb-20 text-slate-700">
-              <div className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl animate-in slide-in-from-bottom-4">
+              <div className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl animate-in slide-in-from-bottom-4 text-left">
                 <h2 className="text-2xl font-black text-[#451A03] uppercase tracking-tighter leading-tight mb-8 border-b-2 border-[#F5F5F4] pb-5">{selectedMeal.title}</h2>
-                <div className="space-y-5 mb-10 text-left">
+                <div className="space-y-5 mb-10">
                   <h4 className="text-[11px] font-black text-[#B45309] uppercase tracking-[0.2em]">Required Pantry</h4>
                   {selectedMeal.left_column_ingredients?.map((ing, i) => (
                     <div key={i} className="text-xs font-bold bg-[#F5F5F4] p-4 rounded-xl border border-[#94A3B8]/10 flex justify-between shadow-sm">
@@ -357,7 +328,7 @@ export default function Watz4DinnerApp() {
                     </div>
                   ))}
                 </div>
-                <div className="space-y-4 text-left">
+                <div className="space-y-4">
                   <h4 className="text-[11px] font-black text-[#B45309] uppercase tracking-[0.2em]">Instructions</h4>
                   {selectedMeal.right_column_instructions?.map((step, i) => (
                     <button key={i} onClick={() => setCompletedSteps(prev => prev.includes(i) ? prev.filter(s => s !== i) : [...prev, i])} className={`w-full text-left p-6 rounded-[1.5rem] border-2 flex gap-4 items-start transition-all ${completedSteps.includes(i) ? 'opacity-30 bg-[#F5F5F4] grayscale' : 'bg-white border-[#94A3B8]/20 shadow-md'}`}>
