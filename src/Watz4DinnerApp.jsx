@@ -3,6 +3,7 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
+const MODEL_NAME = "gemini-1.5-flash"; 
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -47,7 +48,7 @@ const AppLogo = ({ size = 24, className = "", width }) => {
   return <CookingPot size={size} className={className} />;
 };
 
-// --- Stable UI Wrapper with Orange Phone Form Factor ---
+// --- Stable UI Wrapper ---
 const PhoneFrame = ({ children }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-50"></div>
@@ -75,45 +76,34 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- API Utilities with NEXUS FALLBACK ---
+  // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
-      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is missing from Vercel variables.");
+      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is not detected. Please verify Vercel settings.");
       return null;
     }
 
-    // Attempting Model Fallback Protocol
-    const models = ["gemini-1.5-flash", "gemini-pro-vision", "gemini-pro"];
-    let lastError = "";
-
-    for (const model of models) {
-      try {
-        console.log(`Attempting Link with Model: ${model}...`);
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          lastError = data?.error?.message || `API Error: ${response.status}`;
-          if (lastError.includes("not found")) continue; // Try next model
-          throw new Error(lastError);
-        }
-        
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("Empty response from AI Core");
-        const cleanedText = text.replace(/```json|```/g, '').trim();
-        return JSON.parse(cleanedText);
-      } catch (err) {
-        lastError = err.message;
-        if (models.indexOf(model) === models.length - 1) {
-           setAppError(`Nexus Link Failed: ${lastError}`);
-           throw err;
-        }
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data?.error?.message || `API Failure: ${response.status}`);
       }
+      
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("Empty response from AI Core.");
+      
+      const cleanedText = text.replace(/```json|```/g, '').trim();
+      return JSON.parse(cleanedText);
+    } catch (err) {
+      setAppError(`Nexus Error: ${err.message}`);
+      throw err;
     }
   }
 
@@ -173,7 +163,7 @@ export default function Watz4DinnerApp() {
         setSelectedMeal(result.dinner_options[0]);
       }
     } catch (error) {
-      setAppStep('welcome');
+      // Error is now handled inside callGemini and doesn't reset step
     } finally {
       setLoading(false);
     }
@@ -213,23 +203,18 @@ export default function Watz4DinnerApp() {
           setSelectedMeal(result.dinner_options[0]);
         }
       } catch (error) {
-        setAppStep('welcome');
+        // Error handled in callGemini
       } finally {
         setLoading(false);
       }
     };
-    
-    reader.onerror = () => {
-      setAppError("Error Protocol: Browser failed to read image file.");
-      setLoading(false);
-    };
-
     reader.readAsDataURL(file);
   };
 
   const generateFromManual = async () => {
     if (ingredients.length === 0) return;
     setLoading(true);
+    setAppError(null);
     try {
       const prompt = `Available ingredients: ${ingredients.join(', ')}. Exclude: ${exclusions.join(', ')}. Generate the full meal plan JSON with 5 realistic dinner options.`;
       const payload = {
@@ -285,7 +270,7 @@ export default function Watz4DinnerApp() {
 
         {/* HEADER */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
-          <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative">
+          <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
               <AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" />
             </div>
@@ -300,7 +285,14 @@ export default function Watz4DinnerApp() {
           <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
+              
+              <div className="flex items-center gap-2 mb-8">
+                <div className={`w-2 h-2 rounded-full ${apiKey ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' : 'bg-red-500 shadow-[0_0_10px_#ef4444]'}`}></div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">{apiKey ? 'Nexus Link Active' : 'Nexus Key Missing'}</span>
+              </div>
+
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
+              
               <div className="space-y-6 w-full">
                 <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all text-[#78350F]">
                   <Camera className="w-12 h-12 mb-4" />
