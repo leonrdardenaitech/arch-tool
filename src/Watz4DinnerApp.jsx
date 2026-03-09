@@ -3,7 +3,7 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
-const MODEL_NAME = "gemini-1.5-flash"; // Using stable high-speed flash
+const MODEL_NAME = "gemini-1.5-flash"; 
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -79,7 +79,7 @@ export default function Watz4DinnerApp() {
   // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
-      setAppError("Error Protocol: Neural Link Offline. API Key is missing from the system.");
+      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is missing from Vercel variables.");
       return null;
     }
 
@@ -100,13 +100,14 @@ export default function Watz4DinnerApp() {
         
         const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("Empty response from Nexus Core");
+        if (!text) throw new Error("Empty response from Google AI Core");
         const cleanedText = text.replace(/```json|```/g, '').trim();
         return JSON.parse(cleanedText);
       } catch (err) {
+        console.error("Link Attempt failed:", err.message);
         retries++;
         if (retries === maxRetries) {
-            setAppError(`Protocol Failure: ${err.message}`);
+            setAppError(`Nexus Link Failed: ${err.message}`);
             throw err;
         }
         await new Promise(r => setTimeout(r, 1000));
@@ -122,7 +123,7 @@ export default function Watz4DinnerApp() {
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
-          console.error("Camera failed:", err);
+          console.error("Camera access error:", err);
         }
       }
     };
@@ -140,6 +141,7 @@ export default function Watz4DinnerApp() {
   const handleFridgeScan = async () => {
     if (!canvasRef.current || !videoRef.current) return;
     setLoading(true);
+    setAppError(null);
     
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
@@ -180,15 +182,22 @@ export default function Watz4DinnerApp() {
     if (!file) return;
 
     setLoading(true);
+    setAppError(null);
+
     const reader = new FileReader();
     
-    const sendToGemini = async (base64Data, mimeType) => {
+    // HEIC/Apple Fallback logic
+    const safeMimeType = (file.type === "image/heic" || file.type === "image/heif" || !file.type) ? "image/jpeg" : file.type;
+
+    reader.onloadend = async () => {
       try {
+        const base64String = reader.result.split(',')[1];
+        
         const payload = {
           contents: [{
             parts: [
               { text: `Identify all food items in this image. Use them to generate the full meal plan JSON with 5 realistic dinner options. Exclude: ${exclusions.join(', ')}.` },
-              { inlineData: { mimeType: mimeType, data: base64Data } }
+              { inlineData: { mimeType: safeMimeType, data: base64String } }
             ]
           }],
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
@@ -209,35 +218,12 @@ export default function Watz4DinnerApp() {
         setLoading(false);
       }
     };
-
-    reader.onloadend = () => {
-      const img = new window.Image();
-      img.onload = () => {
-        const MAX_WIDTH = 1024;
-        const MAX_HEIGHT = 1024;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-        } else {
-          if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width; canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        const base64String = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
-        sendToGemini(base64String, "image/jpeg");
-      };
-      
-      img.onerror = () => {
-        const rawBase64 = reader.result.split(',')[1];
-        sendToGemini(rawBase64, file.type || "image/jpeg");
-      };
-      img.src = reader.result;
+    
+    reader.onerror = () => {
+      setAppError("Error Protocol: Browser failed to read image file.");
+      setLoading(false);
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -291,13 +277,13 @@ export default function Watz4DinnerApp() {
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
             <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
-            <h3 className="font-black uppercase tracking-widest text-sm mb-2">Error Protocol</h3>
-            <p className="text-xs font-bold opacity-90 mb-6 leading-relaxed">{appError}</p>
+            <h3 className="font-black uppercase tracking-widest text-sm mb-2 text-red-400">Error Protocol</h3>
+            <p className="text-[10px] font-bold opacity-90 mb-6 leading-relaxed px-2">{appError}</p>
             <button onClick={() => setAppError(null)} className="bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform">Acknowledge & Reboot</button>
           </div>
         )}
 
-        {/* SHARED HEADER */}
+        {/* HEADER */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
@@ -364,7 +350,7 @@ export default function Watz4DinnerApp() {
                 </h2>
                 <div className="flex gap-3">
                   <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addIngredient()} placeholder="Salmon, Eggs..." className="flex-1 bg-white border-2 border-[#94A3B8] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#78350F]" />
-                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
+                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl active:scale-90 transition-transform"><Plus size={28}/></button>
                 </div>
                 <div className="mt-8 space-y-3">
                   {ingredients.map((ing, i) => (
@@ -381,7 +367,7 @@ export default function Watz4DinnerApp() {
                 </h2>
                 <div className="flex gap-3">
                   <input type="text" value={exclusionValue} onChange={e => setExclusionValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addExclusion()} placeholder="Allergies..." className="flex-1 bg-white border-2 border-[#B45309] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#B45309]" />
-                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
+                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90 transition-transform"><Plus size={28}/></button>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-3">
                   {exclusions.map((ex, i) => (
