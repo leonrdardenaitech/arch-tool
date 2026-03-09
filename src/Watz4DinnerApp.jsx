@@ -3,7 +3,7 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
-const MODEL_NAME = "gemini-1.5-flash"; // Locked to the standard high-speed engine
+const MODEL_NAME = "gemini-1.5-flash-latest"; // Updated to use the latest stable flash engine
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -49,10 +49,13 @@ const AppLogo = ({ size = 24, className = "", width }) => {
 const PhoneFrame = ({ children, hasKey }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-[400]"></div>
+    
+    {/* NEXUS STATUS LIGHT (TOP LEFT) */}
     <div className="absolute top-2 left-8 z-[400] flex items-center gap-1.5 opacity-80">
        <div className={`w-1.5 h-1.5 rounded-full ${hasKey ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse'}`}></div>
        <span className="text-[7px] font-black uppercase tracking-[0.2em] text-white/40 font-mono">Nexus {hasKey ? 'OK' : 'OFF'}</span>
     </div>
+
     <div className="flex-1 bg-[#FAFAF9] overflow-hidden relative flex flex-col">
       {children}
     </div>
@@ -77,9 +80,10 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
-      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY missing.");
+      setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is not detected. Please verify Vercel settings.");
       return null;
     }
 
@@ -89,10 +93,16 @@ export default function Watz4DinnerApp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      
       const data = await response.json();
-      if (!response.ok) throw new Error(data?.error?.message || `API Failure: ${response.status}`);
+      
+      if (!response.ok) {
+        throw new Error(data?.error?.message || `API Failure: ${response.status}`);
+      }
+      
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) throw new Error("Empty response from AI Core.");
+      
       const cleanedText = text.replace(/```json|```/g, '').trim();
       return JSON.parse(cleanedText);
     } catch (err) {
@@ -108,7 +118,9 @@ export default function Watz4DinnerApp() {
           const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
-        } catch (err) {}
+        } catch (err) {
+          console.error("Camera access error:", err);
+        }
       }
     };
     const stopCamera = () => {
@@ -126,6 +138,7 @@ export default function Watz4DinnerApp() {
     if (!canvasRef.current || !videoRef.current) return;
     setLoading(true);
     setAppError(null);
+    
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     canvas.width = videoRef.current.videoWidth;
@@ -137,7 +150,7 @@ export default function Watz4DinnerApp() {
       const payload = {
         contents: [{
           parts: [
-            { text: `Identify ingredients in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+            { text: `Identify all food items in this image. Use them to generate the full meal plan JSON with 5 realistic dinner options. Exclude: ${exclusions.join(', ')}.` },
             { inlineData: { mimeType: "image/jpeg", data: base64Image } }
           ]
         }],
@@ -145,13 +158,15 @@ export default function Watz4DinnerApp() {
         generationConfig: { responseMimeType: "application/json" }
       };
       const result = await callGemini(payload);
+      
       if (result && result.dinner_options) {
         setAiData(result);
         setIngredients(prev => [...new Set([...prev, ...(result.scan_results?.detected_ingredients || [])])]);
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
-    } catch (error) {} finally {
+    } catch (error) {
+    } finally {
       setLoading(false);
     }
   };
@@ -159,18 +174,21 @@ export default function Watz4DinnerApp() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
+
     setLoading(true);
     setAppError(null);
+
     const reader = new FileReader();
     const safeMimeType = (file.type === "image/heic" || file.type === "image/heif" || !file.type) ? "image/jpeg" : file.type;
 
     reader.onloadend = async () => {
       try {
         const base64String = reader.result.split(',')[1];
+        
         const payload = {
           contents: [{
             parts: [
-              { text: `Identify ingredients in this image. Generate 5 realistic recipes in JSON format. Exclude: ${exclusions.join(', ')}.` },
+              { text: `Identify all food items in this image. Use them to generate the full meal plan JSON with 5 realistic dinner options. Exclude: ${exclusions.join(', ')}.` },
               { inlineData: { mimeType: safeMimeType, data: base64String } }
             ]
           }],
@@ -178,13 +196,15 @@ export default function Watz4DinnerApp() {
           generationConfig: { responseMimeType: "application/json" }
         };
         const result = await callGemini(payload);
+        
         if (result && result.dinner_options) {
           setAiData(result);
           setIngredients(prev => [...new Set([...prev, ...(result.scan_results?.detected_ingredients || [])])]);
           setAppStep('results');
           setSelectedMeal(result.dinner_options[0]);
         }
-      } catch (error) {} finally {
+      } catch (error) {
+      } finally {
         setLoading(false);
       }
     };
@@ -207,7 +227,8 @@ export default function Watz4DinnerApp() {
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
-    } catch (error) {} finally {
+    } catch (error) {
+    } finally {
       setLoading(false);
     }
   };
@@ -225,6 +246,7 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame hasKey={!!apiKey}>
+        {/* ERROR PROTOCOL OVERLAY */}
         {appError && (
           <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center animate-in slide-in-from-top-8">
             <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
@@ -234,6 +256,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
+        {/* HEADER */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}><AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" /></div>
@@ -241,6 +264,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
+        {/* WELCOME */}
         {appStep === 'welcome' && (
           <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
@@ -255,6 +279,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
+        {/* SCANNING */}
         {appStep === 'scanning' && (
           <div className="flex-1 bg-black relative flex flex-col">
             <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
@@ -271,6 +296,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
+        {/* INPUT */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
@@ -306,6 +332,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
+        {/* RESULTS */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
