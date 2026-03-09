@@ -5,6 +5,7 @@ import {
   Crosshair, Layers, Volume2, VolumeX, Github, PlayCircle, X,
   Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan, CookingPot
 } from 'lucide-react';
+import NexusChat from './components/NexusChat';
 
 // --- SOUND UTILITY ---
 const playFlipSound = (isMuted) => {
