@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
-// https://vite.dev/config/
+// Detect if we are on Vercel or GitHub Pages
+const isVercel = process.env.VERCEL === 'true';
+
 export default defineConfig({
-  base: '/arch-tool/',
+  base: isVercel ? '/' : '/arch-tool/',
   plugins: [react()],
   build: {
     rollupOptions: {
@@ -13,6 +15,7 @@ export default defineConfig({
         gadget: resolve(__dirname, 'gadget-glob.html'),
         brand: resolve(__dirname, 'brand-builder.html'),
         vox: resolve(__dirname, 'vox.html'),
+        watz: resolve(__dirname, 'watz-dinner.html'),
       },
     },
   },

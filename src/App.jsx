@@ -3,7 +3,7 @@ import {
   Mail, Linkedin, Server, Cpu, 
   Terminal, ShieldCheck, ArrowRight, BrainCircuit, Code,
   Crosshair, Layers, Volume2, VolumeX, Github, PlayCircle, X,
-  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan
+  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan, CookingPot
 } from 'lucide-react';
 
 // --- SOUND UTILITY ---
@@ -131,6 +131,17 @@ const CAPABILITIES = [
       { text: "Phase 2 / Embedding: Logic-aware embeddings transform raw data.", img: "glowing crystal.png" },
       { text: "Phase 3 / Retrieval: Neural search zaps relevant data points.", img: "seqscan1.png" }
     ]
+  },
+  { 
+    id: "watz-4-dinner", 
+    title: "Watz 4 Dinner", 
+    type: "APP_MODULE",
+    icon: <CookingPot className="text-cyan-400" size={24} />,
+    image: "whats4dinner.png",
+    description: "AI-powered kitchen utility agent. Uses vision-to-logic synthesis to identify storage contents and generate high-fidelity meal plans with nutritional projections.",
+    metrics: ["Computer Vision", "Meal Synthesis", "HITL Nutrition"],
+    liveUrl: "watz-dinner.html",
+    repoUrl: "https://github.com/leonrdardenaitech/watz-4-dinner"
   },
   { 
     id: "brand-builder", 

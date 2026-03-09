@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/vox", "destination": "/vox.html" },
+    { "source": "/brand-builder", "destination": "/brand-builder.html" },
+    { "source": "/gadget-glob", "destination": "/gadget-glob.html" },
+    { "source": "/watz-dinner", "destination": "/watz-dinner.html" }
+  ]
+}
