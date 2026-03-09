@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save } from 'lucide-react';
+import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Upload } from 'lucide-react';
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
@@ -48,7 +48,7 @@ const AppLogo = ({ size = 24, className = "", width }) => {
   return <CookingPot size={size} className={className} />;
 };
 
-// --- Stable UI Wrapper ---
+// --- Stable UI Wrapper with Orange Phone Form Factor ---
 const PhoneFrame = ({ children }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-50"></div>
@@ -69,16 +69,17 @@ export default function Watz4DinnerApp() {
   const [aiData, setAiData] = useState(null);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [completedSteps, setCompletedSteps] = useState([]);
+  const [appError, setAppError] = useState(null);
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // --- API Utilities ---
   async function callGemini(payload) {
     if (!apiKey) {
-      alert("⚠️ API Key is missing in Vercel! Please add VITE_GEMINI_API_KEY to your environment variables.");
-      setLoading(false);
+      setAppError("Error Protocol: Neural Link Offline. API Key is missing from the system.");
       return null;
     }
 
@@ -100,7 +101,7 @@ export default function Watz4DinnerApp() {
       } catch (err) {
         retries++;
         if (retries === maxRetries) {
-            alert("Protocol Error: Neural link unstable. Please try again.");
+            setAppError("Protocol Failure: Neural link unstable. Signal lost.");
             throw err;
         }
         await new Promise(r => setTimeout(r, 1000));
@@ -116,8 +117,8 @@ export default function Watz4DinnerApp() {
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
-          alert("Camera access denied. Please ensure you are using HTTPS.");
-          setAppStep('welcome');
+          console.error("Camera failed:", err);
+          // Don't alert immediately, user can still use the Upload fallback
         }
       }
     };
@@ -154,7 +155,6 @@ export default function Watz4DinnerApp() {
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
         generationConfig: { responseMimeType: "application/json" }
       };
-      
       const result = await callGemini(payload);
       
       if (result && result.dinner_options) {
@@ -169,6 +169,44 @@ export default function Watz4DinnerApp() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result.split(',')[1];
+      
+      try {
+        const payload = {
+          contents: [{
+            parts: [
+              { text: `Identify all food items in this image. List them as a master pantry list. Exclude: ${exclusions.join(', ')}.` },
+              { inlineData: { mimeType: file.type || "image/jpeg", data: base64String } }
+            ]
+          }],
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
+          generationConfig: { responseMimeType: "application/json" }
+        };
+        const result = await callGemini(payload);
+        
+        if (result && result.dinner_options) {
+          setAiData(result);
+          const newIngredients = result.scan_results?.detected_ingredients || [];
+          setIngredients(prev => [...new Set([...prev, ...newIngredients])]);
+          setAppStep('results');
+          setSelectedMeal(result.dinner_options[0]);
+        }
+      } catch (error) {
+        setAppStep('welcome');
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const generateFromManual = async () => {
@@ -217,6 +255,16 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame>
+        {/* ERROR OVERLAY */}
+        {appError && (
+          <div className="absolute inset-x-6 top-24 z-[300] bg-[#451A03] border-4 border-red-600 text-white p-6 rounded-3xl shadow-2xl flex flex-col items-center text-center">
+            <ShieldAlert size={36} className="mb-3 text-red-500 animate-pulse" />
+            <h3 className="font-black uppercase tracking-widest text-sm mb-2">Error Protocol</h3>
+            <p className="text-xs font-bold opacity-90 mb-6">{appError}</p>
+            <button onClick={() => setAppError(null)} className="bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest">Reboot Link</button>
+          </div>
+        )}
+
         {/* SHARED HEADER - Centered Logo */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative">
@@ -250,7 +298,31 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* INPUT */}
+        {/* SCANNING (ROBOTIC GRAYSCALE + UPLOAD FALLBACK) */}
+        {appStep === 'scanning' && (
+          <div className="flex-1 bg-black relative flex flex-col">
+            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
+            <canvas ref={canvasRef} className="hidden" />
+            <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
+            
+            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
+              <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
+            </div>
+            
+            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-8">
+              <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
+              
+              <div className="flex gap-4">
+                <button onClick={() => setAppStep('welcome')} className="text-white font-black uppercase tracking-[0.4em] text-[10px] bg-black/40 px-6 py-2 rounded-full border border-white/10">Abort</button>
+                <button onClick={() => fileInputRef.current.click()} className="text-white font-black uppercase tracking-[0.2em] text-[10px] bg-[#B45309] px-6 py-2 rounded-full flex items-center gap-2 border border-white/20 shadow-xl active:scale-95">
+                  <Upload size={14} /> Upload Photo
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* INPUT PAGE */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
@@ -259,8 +331,8 @@ export default function Watz4DinnerApp() {
                   <Utensils size={18} /> Master Pantry List
                 </h2>
                 <div className="flex gap-3">
-                  <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addIngredient()} placeholder="e.g. Salmon, Spinach..." className="flex-1 bg-white border-2 border-[#94A3B8] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#78350F]" />
-                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
+                  <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addIngredient()} placeholder="Salmon, Eggs..." className="flex-1 bg-white border-2 border-[#94A3B8] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#78350F]" />
+                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl active:scale-90"><Plus size={28}/></button>
                 </div>
                 <div className="mt-8 space-y-3">
                   {ingredients.map((ing, i) => (
@@ -276,8 +348,8 @@ export default function Watz4DinnerApp() {
                   <AlertCircle size={18} /> Exclusion Filters
                 </h2>
                 <div className="flex gap-3">
-                  <input type="text" value={exclusionValue} onChange={e => setExclusionValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addExclusion()} placeholder="Allergies, Diet..." className="flex-1 bg-white border-2 border-[#B45309] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#B45309]" />
-                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
+                  <input type="text" value={exclusionValue} onChange={e => setExclusionValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addExclusion()} placeholder="Allergies..." className="flex-1 bg-white border-2 border-[#B45309] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#B45309]" />
+                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl active:scale-90"><Plus size={28}/></button>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-3">
                   {exclusions.map((ex, i) => (
@@ -289,29 +361,14 @@ export default function Watz4DinnerApp() {
               </section>
             </div>
             <div className="p-8 bg-white border-t-2 border-[#F5F5F4]">
-              <button onClick={generateFromManual} disabled={ingredients.length === 0} className="w-full bg-[#78350F] text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xl shadow-xl active:scale-95 transition-all disabled:opacity-30">
+              <button onClick={generateFromManual} disabled={ingredients.length === 0} className="w-full bg-[#78350F] text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xl shadow-xl active:scale-95 transition-all">
                 Plan Dinner
               </button>
             </div>
           </div>
         )}
 
-        {/* SCANNING (ROBOTIC GRAYSCALE RESTORED) */}
-        {appStep === 'scanning' && (
-          <div className="flex-1 bg-black relative flex flex-col">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
-            <canvas ref={canvasRef} className="hidden" />
-            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
-              <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
-            </div>
-            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-10">
-              <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
-              <button onClick={() => setAppStep('welcome')} className="text-white font-black uppercase tracking-[0.4em] text-xs bg-black/40 px-6 py-2 rounded-full">Abort Scan</button>
-            </div>
-          </div>
-        )}
-
-        {/* RESULTS */}
+        {/* RESULTS PAGE */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
@@ -323,7 +380,7 @@ export default function Watz4DinnerApp() {
               ))}
             </div>
             <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar pb-20 text-slate-700">
-              <div className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl">
+              <div className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl animate-in slide-in-from-bottom-4">
                 <h2 className="text-2xl font-black text-[#451A03] uppercase tracking-tighter leading-tight mb-8 border-b-2 border-[#F5F5F4] pb-5">{selectedMeal.title}</h2>
                 <div className="space-y-5 mb-10 text-left">
                   <h4 className="text-[11px] font-black text-[#B45309] uppercase tracking-[0.2em]">Required Pantry</h4>
