@@ -3,7 +3,6 @@ import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, Che
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
-const MODEL_NAME = "gemini-1.5-flash"; 
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -76,41 +75,44 @@ export default function Watz4DinnerApp() {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // --- API Utilities ---
+  // --- API Utilities with NEXUS FALLBACK ---
   async function callGemini(payload) {
     if (!apiKey) {
       setAppError("Neural Link Offline: VITE_GEMINI_API_KEY is missing from Vercel variables.");
       return null;
     }
 
-    let retries = 0;
-    const maxRetries = 3;
-    while (retries < maxRetries) {
+    // Attempting Model Fallback Protocol
+    const models = ["gemini-1.5-flash", "gemini-pro-vision", "gemini-pro"];
+    let lastError = "";
+
+    for (const model of models) {
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
+        console.log(`Attempting Link with Model: ${model}...`);
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
         
+        const data = await response.json();
+        
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData?.error?.message || `API Error: ${response.status}`);
+          lastError = data?.error?.message || `API Error: ${response.status}`;
+          if (lastError.includes("not found")) continue; // Try next model
+          throw new Error(lastError);
         }
         
-        const data = await response.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) throw new Error("Empty response from Google AI Core");
+        if (!text) throw new Error("Empty response from AI Core");
         const cleanedText = text.replace(/```json|```/g, '').trim();
         return JSON.parse(cleanedText);
       } catch (err) {
-        console.error("Link Attempt failed:", err.message);
-        retries++;
-        if (retries === maxRetries) {
-            setAppError(`Nexus Link Failed: ${err.message}`);
-            throw err;
+        lastError = err.message;
+        if (models.indexOf(model) === models.length - 1) {
+           setAppError(`Nexus Link Failed: ${lastError}`);
+           throw err;
         }
-        await new Promise(r => setTimeout(r, 1000));
       }
     }
   }
@@ -185,8 +187,6 @@ export default function Watz4DinnerApp() {
     setAppError(null);
 
     const reader = new FileReader();
-    
-    // HEIC/Apple Fallback logic
     const safeMimeType = (file.type === "image/heic" || file.type === "image/heif" || !file.type) ? "image/jpeg" : file.type;
 
     reader.onloadend = async () => {
