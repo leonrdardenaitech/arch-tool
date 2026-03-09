@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save } from 'lucide-react';
+import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Search } from 'lucide-react';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const MODEL_NAME = "gemini-1.5-flash"; 
@@ -72,6 +72,7 @@ export default function Watz4DinnerApp() {
   const [exclusions, setExclusions] = useState([]);
   const [exclusionValue, setExclusionValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isScanning, setIsScanning] = useState(false); // Tracking the capture phase
   const [aiData, setAiData] = useState(null);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -106,7 +107,13 @@ export default function Watz4DinnerApp() {
     const startCamera = async () => {
       if (appStep === 'scanning') {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+          const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+              facingMode: 'environment',
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
+            } 
+          });
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
@@ -128,7 +135,9 @@ export default function Watz4DinnerApp() {
 
   const handleFridgeScan = async () => {
     if (!canvasRef.current || !videoRef.current) return;
+    setIsScanning(true); // Start "Infrared" logic
     setLoading(true);
+    
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     canvas.width = videoRef.current.videoWidth;
@@ -157,6 +166,7 @@ export default function Watz4DinnerApp() {
       setAppStep('welcome');
     } finally {
       setLoading(false);
+      setIsScanning(false);
     }
   };
 
@@ -193,7 +203,7 @@ export default function Watz4DinnerApp() {
 
   return (
     <div className="min-h-screen bg-[#111] flex items-center justify-center p-4">
-      {loading && (
+      {loading && !isScanning && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#FAFAF9]/95 backdrop-blur-md px-10 text-center text-kitchen-woodDark">
           <RefreshCw className="w-24 h-24 text-[#78350F] animate-spin mb-8" />
           <p className="font-black uppercase tracking-[0.4em] text-lg animate-pulse">Syncing Appliance...</p>
@@ -201,11 +211,10 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame>
-        {/* SHARED HEADER - Logo Only, Centered */}
+        {/* SHARED HEADER - Clean Integrated Logo */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
-              {/* Slightly larger logo on input page per request */}
               <AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" />
             </div>
             <div className="absolute right-8 bottom-6">
@@ -214,15 +223,12 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* STEP 1: WELCOME - Pure Logo Hub */}
+        {/* STEP 1: WELCOME */}
         {appStep === 'welcome' && (
           <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto custom-scrollbar animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
-              {/* hero logo centered, no text title */}
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
-              
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
-              
               <div className="space-y-6 w-full">
                 <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all active:scale-95 text-[#78350F]">
                   <Camera className="w-12 h-12 mb-4" />
@@ -233,13 +239,12 @@ export default function Watz4DinnerApp() {
                   <span className="font-black uppercase tracking-widest text-base">Manual List</span>
                 </button>
               </div>
-              
               <p className="mt-16 text-[#94A3B8] text-[10px] font-black uppercase tracking-[0.5em]">Appliance OS v1.4</p>
             </div>
           </div>
         )}
 
-        {/* STEP 2: MANUAL INPUT & EXCLUSIONS */}
+        {/* STEP 2: MANUAL INPUT */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
@@ -285,22 +290,58 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* SCANNING */}
+        {/* STEP 3: SCANNING (INFRARED HUD ADDED) */}
         {appStep === 'scanning' && (
-          <div className="flex-1 bg-black relative flex flex-col">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover opacity-90" />
+          <div className="flex-1 bg-black relative flex flex-col overflow-hidden">
+            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover opacity-80" />
             <canvas ref={canvasRef} className="hidden" />
-            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
-              <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
+            
+            {/* INFRARED HUD OVERLAY */}
+            <div className="absolute inset-0 pointer-events-none border-[20px] border-red-600/10">
+               {/* Animated Infrared Scanning Line */}
+               <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-infrared-scan z-20"></div>
+               
+               {/* HUD Corners */}
+               <div className="absolute top-10 left-10 w-8 h-8 border-t-4 border-l-4 border-red-500 opacity-60"></div>
+               <div className="absolute top-10 right-10 w-8 h-8 border-t-4 border-r-4 border-red-500 opacity-60"></div>
+               <div className="absolute bottom-10 left-10 w-8 h-8 border-b-4 border-l-4 border-red-500 opacity-60"></div>
+               <div className="absolute bottom-10 right-10 w-8 h-8 border-b-4 border-r-4 border-red-500 opacity-60"></div>
+               
+               {/* Digital Static Effect */}
+               <div className="absolute inset-0 bg-red-900/5 opacity-20 mix-blend-overlay"></div>
             </div>
-            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-10">
-              <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
-              <button onClick={() => setAppStep('welcome')} className="text-white font-black uppercase tracking-[0.4em] text-xs bg-black/40 px-6 py-2 rounded-full">Abort Scan</button>
+
+            <div className="absolute top-16 left-8 right-8 text-center z-30">
+              <div className="bg-red-950/80 backdrop-blur-md border border-red-500/50 p-4 rounded-xl shadow-2xl">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-red-400 flex items-center justify-center gap-3">
+                  <Search size={14} className="animate-pulse" /> Infrared Spectrum Active
+                </p>
+                {loading && (
+                  <p className="text-[8px] font-mono text-white/60 mt-2 uppercase tracking-widest animate-pulse">Extracting Neural Signatures...</p>
+                )}
+              </div>
+            </div>
+
+            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-10 z-30">
+              <button 
+                onClick={handleFridgeScan} 
+                disabled={loading}
+                className={`w-28 h-28 rounded-full flex items-center justify-center border-[12px] transition-all shadow-[0_0_60px_rgba(220,38,38,0.4)] ${loading ? 'bg-red-900/50 border-red-900/20' : 'bg-white border-white/20 active:scale-90'}`}
+              >
+                {loading ? (
+                  <RefreshCw size={42} className="text-red-500 animate-spin" />
+                ) : (
+                  <div className="w-20 h-20 rounded-full border-2 border-black/10 flex items-center justify-center">
+                    <Camera size={42} className="text-black" />
+                  </div>
+                )}
+              </button>
+              <button onClick={() => setAppStep('welcome')} className="text-red-400 font-black uppercase tracking-[0.4em] text-[10px] bg-black/60 px-6 py-2 rounded-full border border-red-500/30">Abort Protocol</button>
             </div>
           </div>
         )}
 
-        {/* RESULTS */}
+        {/* STEP 4: RESULTS */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
@@ -355,6 +396,14 @@ export default function Watz4DinnerApp() {
       </PhoneFrame>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes infrared-scan {
+          0% { top: 0; }
+          50% { top: 100%; }
+          100% { top: 0; }
+        }
+        .animate-infrared-scan {
+          animation: infrared-scan 3s linear infinite;
+        }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
