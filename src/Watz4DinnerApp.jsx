@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Search } from 'lucide-react';
+import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save } from 'lucide-react';
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-const MODEL_NAME = "gemini-1.5-flash"; 
+// Securely access the Vercel/Vite environment variable
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
+const MODEL_NAME = "gemini-1.5-flash";
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -42,19 +43,12 @@ RULES:
 // --- Custom Logo Component ---
 const AppLogo = ({ size = 24, className = "", width }) => {
   if (CUSTOM_LOGO_URL) {
-    return (
-      <img 
-        src={CUSTOM_LOGO_URL} 
-        alt="W4D Logo" 
-        className={`object-contain ${className}`} 
-        style={{ width: width || size, height: 'auto' }} 
-      />
-    );
+    return <img src={CUSTOM_LOGO_URL} alt="W4D Logo" className={`object-contain ${className}`} style={{ width: width || size, height: 'auto' }} />;
   }
   return <CookingPot size={size} className={className} />;
 };
 
-// --- Stable UI Wrapper with Orange Phone Form Factor ---
+// --- Stable UI Wrapper ---
 const PhoneFrame = ({ children }) => (
   <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-50"></div>
@@ -72,14 +66,9 @@ export default function Watz4DinnerApp() {
   const [exclusions, setExclusions] = useState([]);
   const [exclusionValue, setExclusionValue] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isScanning, setIsScanning] = useState(false); // Tracking the capture phase
   const [aiData, setAiData] = useState(null);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [completedSteps, setCompletedSteps] = useState([]);
-  
-  const [savedProfiles, setSavedProfiles] = useState([]);
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
-  const [profileName, setProfileName] = useState('');
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -87,19 +76,35 @@ export default function Watz4DinnerApp() {
 
   // --- API Utilities ---
   async function callGemini(payload) {
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) throw new Error("Empty response");
-      return JSON.parse(text.replace(/```json|```/g, '').trim());
-    } catch (err) {
-      console.error(err);
+    if (!apiKey) {
+      alert("⚠️ API Key is missing in Vercel! Please add VITE_GEMINI_API_KEY to your environment variables.");
+      setLoading(false);
       return null;
+    }
+
+    let retries = 0;
+    const maxRetries = 3;
+    while (retries < maxRetries) {
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('API Error');
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) throw new Error("Empty response");
+        const cleanedText = text.replace(/```json|```/g, '').trim();
+        return JSON.parse(cleanedText);
+      } catch (err) {
+        retries++;
+        if (retries === maxRetries) {
+            alert("Protocol Error: Neural link unstable. Please try again.");
+            throw err;
+        }
+        await new Promise(r => setTimeout(r, 1000));
+      }
     }
   }
 
@@ -107,17 +112,11 @@ export default function Watz4DinnerApp() {
     const startCamera = async () => {
       if (appStep === 'scanning') {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-              facingMode: 'environment',
-              width: { ideal: 1920 },
-              height: { ideal: 1080 }
-            } 
-          });
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
           streamRef.current = stream;
           if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
-          console.error("Camera failed:", err);
+          alert("Camera access denied. Please ensure you are using HTTPS.");
           setAppStep('welcome');
         }
       }
@@ -135,7 +134,6 @@ export default function Watz4DinnerApp() {
 
   const handleFridgeScan = async () => {
     if (!canvasRef.current || !videoRef.current) return;
-    setIsScanning(true); // Start "Infrared" logic
     setLoading(true);
     
     const canvas = canvasRef.current;
@@ -152,9 +150,13 @@ export default function Watz4DinnerApp() {
             { text: `Identify all food items in this image. List them as a master pantry list. Exclude: ${exclusions.join(', ')}.` },
             { inlineData: { mimeType: "image/png", data: base64Image } }
           ]
-        }]
+        }],
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
+        generationConfig: { responseMimeType: "application/json" }
       };
+      
       const result = await callGemini(payload);
+      
       if (result && result.dinner_options) {
         setAiData(result);
         const newIngredients = result.scan_results?.detected_ingredients || [];
@@ -166,7 +168,6 @@ export default function Watz4DinnerApp() {
       setAppStep('welcome');
     } finally {
       setLoading(false);
-      setIsScanning(false);
     }
   };
 
@@ -175,14 +176,19 @@ export default function Watz4DinnerApp() {
     setLoading(true);
     try {
       const prompt = `Available ingredients: ${ingredients.join(', ')}. Exclude: ${exclusions.join(', ')}. Generate the full meal plan JSON with 5 realistic dinner options.`;
-      const payload = { contents: [{ parts: [{ text: prompt }] }] };
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT + exclusions.join(', ') }] },
+        generationConfig: { responseMimeType: "application/json" }
+      };
       const result = await callGemini(payload);
       if (result && result.dinner_options) {
         setAiData(result);
         setAppStep('results');
         setSelectedMeal(result.dinner_options[0]);
       }
-    } catch (error) {} finally {
+    } catch (error) {
+    } finally {
       setLoading(false);
     }
   };
@@ -203,7 +209,7 @@ export default function Watz4DinnerApp() {
 
   return (
     <div className="min-h-screen bg-[#111] flex items-center justify-center p-4">
-      {loading && !isScanning && (
+      {loading && (
         <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#FAFAF9]/95 backdrop-blur-md px-10 text-center text-kitchen-woodDark">
           <RefreshCw className="w-24 h-24 text-[#78350F] animate-spin mb-8" />
           <p className="font-black uppercase tracking-[0.4em] text-lg animate-pulse">Syncing Appliance...</p>
@@ -211,7 +217,7 @@ export default function Watz4DinnerApp() {
       )}
 
       <PhoneFrame>
-        {/* SHARED HEADER - Clean Integrated Logo */}
+        {/* SHARED HEADER - Centered Logo */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
           <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative">
             <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
@@ -223,18 +229,18 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* STEP 1: WELCOME */}
+        {/* WELCOME */}
         {appStep === 'welcome' && (
-          <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto custom-scrollbar animate-in fade-in duration-500">
+          <div className="flex-1 flex flex-col items-center justify-start p-8 text-center bg-[#F5F5F4] overflow-y-auto animate-in fade-in duration-500">
             <div className="w-full max-w-[320px] flex flex-col items-center pt-16 pb-12">
               <AppLogo width={320} className="mb-12 drop-shadow-2xl" />
               <div className="h-2 w-24 bg-[#78350F] rounded-full mb-12"></div>
               <div className="space-y-6 w-full">
-                <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all active:scale-95 text-[#78350F]">
+                <button onClick={() => setAppStep('scanning')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#78350F] rounded-[3rem] shadow-xl hover:bg-[#78350F] hover:text-white transition-all text-[#78350F]">
                   <Camera className="w-12 h-12 mb-4" />
                   <span className="font-black uppercase tracking-widest text-base">Scan Storage</span>
                 </button>
-                <button onClick={() => setAppStep('input')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#94A3B8] rounded-[3rem] shadow-xl hover:border-[#78350F] transition-all active:scale-95 text-[#451A03]">
+                <button onClick={() => setAppStep('input')} className="w-full flex flex-col items-center p-8 bg-[#FAFAF9] border-4 border-[#94A3B8] rounded-[3rem] shadow-xl hover:border-[#78350F] transition-all text-[#451A03]">
                   <Plus className="w-12 h-12 mb-4 text-[#94A3B8]" />
                   <span className="font-black uppercase tracking-widest text-base">Manual List</span>
                 </button>
@@ -244,7 +250,7 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* STEP 2: MANUAL INPUT */}
+        {/* INPUT */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
@@ -254,7 +260,7 @@ export default function Watz4DinnerApp() {
                 </h2>
                 <div className="flex gap-3">
                   <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addIngredient()} placeholder="e.g. Salmon, Spinach..." className="flex-1 bg-white border-2 border-[#94A3B8] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#78350F]" />
-                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90 transition-transform"><Plus size={28}/></button>
+                  <button onClick={addIngredient} className="bg-[#78350F] text-white w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
                 </div>
                 <div className="mt-8 space-y-3">
                   {ingredients.map((ing, i) => (
@@ -271,7 +277,7 @@ export default function Watz4DinnerApp() {
                 </h2>
                 <div className="flex gap-3">
                   <input type="text" value={exclusionValue} onChange={e => setExclusionValue(e.target.value)} onKeyDown={e => e.key === 'Enter' && addExclusion()} placeholder="Allergies, Diet..." className="flex-1 bg-white border-2 border-[#B45309] rounded-2xl px-5 py-4 font-bold text-base outline-none focus:border-[#B45309]" />
-                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90 transition-transform"><Plus size={28}/></button>
+                  <button onClick={addExclusion} className="border-2 border-[#78350F] text-[#78350F] w-14 h-14 flex items-center justify-center rounded-2xl shadow-md active:scale-90"><Plus size={28}/></button>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-3">
                   {exclusions.map((ex, i) => (
@@ -290,58 +296,22 @@ export default function Watz4DinnerApp() {
           </div>
         )}
 
-        {/* STEP 3: SCANNING (INFRARED HUD ADDED) */}
+        {/* SCANNING (ROBOTIC GRAYSCALE RESTORED) */}
         {appStep === 'scanning' && (
-          <div className="flex-1 bg-black relative flex flex-col overflow-hidden">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover opacity-80" />
+          <div className="flex-1 bg-black relative flex flex-col">
+            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale opacity-60 contrast-125" />
             <canvas ref={canvasRef} className="hidden" />
-            
-            {/* INFRARED HUD OVERLAY */}
-            <div className="absolute inset-0 pointer-events-none border-[20px] border-red-600/10">
-               {/* Animated Infrared Scanning Line */}
-               <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-infrared-scan z-20"></div>
-               
-               {/* HUD Corners */}
-               <div className="absolute top-10 left-10 w-8 h-8 border-t-4 border-l-4 border-red-500 opacity-60"></div>
-               <div className="absolute top-10 right-10 w-8 h-8 border-t-4 border-r-4 border-red-500 opacity-60"></div>
-               <div className="absolute bottom-10 left-10 w-8 h-8 border-b-4 border-l-4 border-red-500 opacity-60"></div>
-               <div className="absolute bottom-10 right-10 w-8 h-8 border-b-4 border-r-4 border-red-500 opacity-60"></div>
-               
-               {/* Digital Static Effect */}
-               <div className="absolute inset-0 bg-red-900/5 opacity-20 mix-blend-overlay"></div>
+            <div className="absolute top-16 left-8 right-8 text-center bg-[#451A03]/90 backdrop-blur-md p-5 rounded-[1.5rem] text-white">
+              <p className="text-xs font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3 animate-pulse"><RefreshCw size={14} className="animate-spin" /> Analyzing Storage</p>
             </div>
-
-            <div className="absolute top-16 left-8 right-8 text-center z-30">
-              <div className="bg-red-950/80 backdrop-blur-md border border-red-500/50 p-4 rounded-xl shadow-2xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-red-400 flex items-center justify-center gap-3">
-                  <Search size={14} className="animate-pulse" /> Infrared Spectrum Active
-                </p>
-                {loading && (
-                  <p className="text-[8px] font-mono text-white/60 mt-2 uppercase tracking-widest animate-pulse">Extracting Neural Signatures...</p>
-                )}
-              </div>
-            </div>
-
-            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-10 z-30">
-              <button 
-                onClick={handleFridgeScan} 
-                disabled={loading}
-                className={`w-28 h-28 rounded-full flex items-center justify-center border-[12px] transition-all shadow-[0_0_60px_rgba(220,38,38,0.4)] ${loading ? 'bg-red-900/50 border-red-900/20' : 'bg-white border-white/20 active:scale-90'}`}
-              >
-                {loading ? (
-                  <RefreshCw size={42} className="text-red-500 animate-spin" />
-                ) : (
-                  <div className="w-20 h-20 rounded-full border-2 border-black/10 flex items-center justify-center">
-                    <Camera size={42} className="text-black" />
-                  </div>
-                )}
-              </button>
-              <button onClick={() => setAppStep('welcome')} className="text-red-400 font-black uppercase tracking-[0.4em] text-[10px] bg-black/60 px-6 py-2 rounded-full border border-red-500/30">Abort Protocol</button>
+            <div className="absolute inset-x-0 bottom-20 flex flex-col items-center gap-10">
+              <button onClick={handleFridgeScan} className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-[12px] border-white/20 shadow-[0_0_60px_rgba(255,255,255,0.4)] active:scale-90 transition-transform"><Camera size={42} className="text-black" /></button>
+              <button onClick={() => setAppStep('welcome')} className="text-white font-black uppercase tracking-[0.4em] text-xs bg-black/40 px-6 py-2 rounded-full">Abort Scan</button>
             </div>
           </div>
         )}
 
-        {/* STEP 4: RESULTS */}
+        {/* RESULTS */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
             <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
@@ -396,14 +366,6 @@ export default function Watz4DinnerApp() {
       </PhoneFrame>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes infrared-scan {
-          0% { top: 0; }
-          50% { top: 100%; }
-          100% { top: 0; }
-        }
-        .animate-infrared-scan {
-          animation: infrared-scan 3s linear infinite;
-        }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
