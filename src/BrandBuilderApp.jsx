@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Lightbulb, Download, Send, Sparkles, User, Mail, ShieldCheck, Lock, Globe, Zap, AlertTriangle, Cpu, Activity } from 'lucide-react';
 
 const BrandBuilderApp = () => {
@@ -9,7 +9,6 @@ const BrandBuilderApp = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [mockReport, setMockReport] = useState(null);
   const [loadingText, setLoadingText] = useState('Initializing Handshake...');
-  const [isSynthesizing, setIsSynthesizing] = useState(false);
 
   const steps = [
     { label: "Global Billboard Concept", query: "billboard futuristic holographic", message: "Synthesizing Sector 1: Global Presence..." },
@@ -75,15 +74,32 @@ const BrandBuilderApp = () => {
 
   const downloadReport = () => {
     const element = document.getElementById('report-content');
+    if (!element) return;
     if (!window.html2pdf) return alert("PDF Engine Offline.");
+    
+    // Unsplash proxy to avoid CORS issues in PDF generation
+    const images = element.getElementsByTagName('img');
+    for (let img of images) {
+      img.crossOrigin = "anonymous";
+    }
+
     const opt = {
       margin: 0.2,
       filename: `${idea.replace(/\s+/g, '_')}_Intelligence_Report.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        allowTaint: true,
+        backgroundColor: '#ffffff' 
+      },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-    window.html2pdf().from(element).set(opt).save();
+    
+    // Force a small delay to allow images to potentially re-trigger with anonymous crossOrigin
+    setTimeout(() => {
+      window.html2pdf().from(element).set(opt).save();
+    }, 500);
   };
 
   return (

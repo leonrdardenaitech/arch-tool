@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Upload } from 'lucide-react';
+import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Upload, Download } from 'lucide-react';
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
 
 // Using the exact, explicit model version to bypass generic routing bugs
-const MODEL_NAME = "gemini-1.5-flash-002";
+const MODEL_NAME = "gemini-flash-latest";
 
 // Local asset path
 const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
@@ -36,11 +36,14 @@ REQUIRED JSON SCHEMA:
   }
 }
 
-RULES:
-1. Provide exactly 5 distinct dinner options.
-2. Ensure each meal is a complete, realistic recipe using 5 to 12 ingredients.
-3. Provide 2 dessert ideas and 1 breakfast idea.
-4. Strictly respect these exclusions: `;
+RULES (Neural Backbone v1.5):
+1. MANDATORY: Provide EXACTLY 5 distinct, high-fidelity dinner options. No more, no less.
+2. NUTRITION: Ensure each meal is balanced and realistic (5-12 core ingredients).
+3. EXCLUSIONS: Strictly filter out all items listed in the "Strict Exclusions" vector.
+4. VARIETY: Provide 2 dessert ideas and 1 breakfast strategy.
+5. FORMAT: Pure JSON only. No prose.
+
+Strict Exclusions: `;
 
 // --- Custom Logo Component ---
 const AppLogo = ({ size = 24, className = "", width }) => {
@@ -49,38 +52,85 @@ const AppLogo = ({ size = 24, className = "", width }) => {
 
 // --- Stable UI Wrapper with Status Indicator ---
 const PhoneFrame = ({ children, hasKey }) => (
-  <div className="relative mx-auto w-full max-w-[420px] h-[820px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
-    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-36 h-7 bg-[#333] rounded-b-[1.5rem] z-[400]"></div>
+  <div className="relative mx-auto w-full max-w-[500px] h-[880px] bg-[#1a1a1a] rounded-[3.5rem] border-[14px] border-[#B45309] shadow-[0_60px_120px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col transition-all duration-300">
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-8 bg-[#333] rounded-b-[1.5rem] z-[400]"></div>
     
     {/* NEXUS STATUS LIGHT (TOP LEFT) */}
-    <div className="absolute top-2 left-8 z-[400] flex items-center gap-1.5 opacity-80">
-       <div className={`w-1.5 h-1.5 rounded-full ${hasKey ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse'}`}></div>
-       <span className="text-[7px] font-black uppercase tracking-[0.2em] text-white/40 font-mono">Nexus {hasKey ? 'OK' : 'OFF'}</span>
+    <div className="absolute top-3 left-10 z-[400] flex items-center gap-1.5 opacity-80">
+       <div className={`w-2 h-2 rounded-full ${hasKey ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' : 'bg-red-500 shadow-[0_0_10px_#ef4444] animate-pulse'}`}></div>
+       <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/40 font-mono">Nexus {hasKey ? 'OK' : 'OFF'}</span>
     </div>
 
     <div className="flex-1 bg-[#FAFAF9] overflow-hidden relative flex flex-col">
       {children}
     </div>
-    <div className="h-1.5 w-28 bg-[#666] rounded-full mx-auto my-3 shrink-0"></div>
+    <div className="h-1.5 w-28 bg-[#666] rounded-full mx-auto my-4 shrink-0"></div>
+  </div>
+);
+
+const RulesOverlay = ({ onClose, rules }) => (
+  <div className="absolute inset-0 z-[600] bg-black/60 backdrop-blur-sm flex items-center justify-center p-8 animate-in fade-in duration-300">
+    <div className="bg-white rounded-[2.5rem] w-full max-w-[400px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+      <div className="bg-[#451A03] p-8 text-white flex justify-between items-center">
+        <div>
+          <h3 className="text-xl font-black uppercase tracking-tighter">System Rules</h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Neural Backbone v1.5</p>
+        </div>
+        <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors"><X size={24} /></button>
+      </div>
+      <div className="p-8 space-y-6 max-h-[500px] overflow-y-auto custom-scrollbar">
+        {rules.map((rule, i) => (
+          <div key={i} className="flex gap-4 items-start">
+            <div className="w-2 h-2 rounded-full bg-[#B45309] mt-2 shrink-0 shadow-[0_0_10px_#B45309]"></div>
+            <p className={`text-sm font-bold leading-relaxed ${i === 0 ? 'text-[#B45309] uppercase tracking-widest' : 'text-[#451A03]'}`}>{rule}</p>
+          </div>
+        ))}
+      </div>
+      <div className="p-8 bg-[#F5F5F4]">
+        <button onClick={onClose} className="w-full bg-[#451A03] text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg active:scale-95 transition-all">Acknowledge</button>
+      </div>
+    </div>
   </div>
 );
 
 export default function Watz4DinnerApp() {
   const [appStep, setAppStep] = useState('welcome'); 
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState(['Eggs', 'Milk', 'Cheese', 'Flour', 'Salt', 'Onions', 'Garlic']);
   const [inputValue, setInputValue] = useState('');
   const [exclusions, setExclusions] = useState([]);
   const [exclusionValue, setExclusionValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [aiData, setAiData] = useState(null);
   const [selectedMeal, setSelectedMeal] = useState(null);
-  const [completedSteps, setCompletedSteps] = useState([]);
   const [appError, setAppError] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showRules, setShowRules] = useState(false);
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
+  const settingsRef = useRef(null);
+  
+  const rules = [
+    "NEURAL BACKBONE V1.5 ACTIVATED",
+    "1. Provide exactly 5 distinct dinner options.",
+    "2. Each meal must be complete and realistic (5-12 ingredients).",
+    "3. Provide 2 dessert ideas and 1 breakfast strategy.",
+    "4. Exclusions are strictly respected in the AI prompt.",
+    "5. PDF generation supports single and group export."
+  ];
+
+  // Close settings when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+        setShowSettings(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // --- API Utilities ---
   async function callGemini(payload) {
@@ -112,6 +162,53 @@ export default function Watz4DinnerApp() {
       throw err;
     }
   }
+
+  const handleDownloadPDF = () => {
+    const element = document.getElementById('recipe-content');
+    if (!element) return;
+    if (!window.html2pdf) return alert("PDF Engine Offline.");
+    
+    const opt = {
+      margin: 0.5,
+      filename: `Watz4Dinner_${selectedMeal?.title.replace(/\s+/g, '_')}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    window.html2pdf().from(element).set(opt).save();
+    setShowSettings(false);
+  };
+
+  const handleGroupSave = () => {
+    const element = document.getElementById('all-recipes-content');
+    if (!element) return;
+    if (!window.html2pdf) return alert("PDF Engine Offline.");
+
+    const opt = {
+      margin: 0.5,
+      filename: `Watz4Dinner_Full_Meal_Plan.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    window.html2pdf().from(element).set(opt).save();
+    setShowSettings(false);
+  };
+
+  const handleQuickScan = () => {
+    // This button takes a "screenshot" of the current view and downloads it
+    const element = document.querySelector('.flex-1.bg-\\[\\#FAFAF9\\]');
+    if (!element || !window.html2pdf) return;
+    
+    const opt = {
+      margin: 0,
+      filename: `Watz4Dinner_Scan_${Date.now()}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+    window.html2pdf().from(element).set(opt).save();
+  };
 
   useEffect(() => {
     const startCamera = async () => {
@@ -261,15 +358,70 @@ export default function Watz4DinnerApp() {
 
         {/* HEADER */}
         {appStep !== 'welcome' && appStep !== 'scanning' && (
-          <div className="bg-[#451A03] pt-12 pb-5 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
-            <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
-              <AppLogo size={appStep === 'input' ? 52 : 40} className="drop-shadow-lg" />
+          <div className="bg-[#451A03] pt-14 pb-8 px-8 flex justify-center items-center shrink-0 border-b-4 border-[#78350F] z-10 relative text-white">
+            <div className="absolute left-8 bottom-7 flex items-center gap-2">
+              <button onClick={handleQuickScan} className="bg-[#78350F]/40 p-2 rounded-xl border border-white/10 hover:bg-[#78350F]/60 transition-all text-white/60 hover:text-white" title="Quick Scan Snapshot">
+                <Camera size={20} />
+              </button>
             </div>
-            <div className="absolute right-8 bottom-6">
-               <Settings className="text-[#B45309]" size={20} />
+            
+            <div className="cursor-pointer" onClick={() => setAppStep('welcome')}>
+              <AppLogo size={appStep === 'input' ? 64 : 52} className="drop-shadow-lg" />
+            </div>
+            
+            <div className="absolute right-8 bottom-7 relative" ref={settingsRef}>
+               <Settings 
+                className={`cursor-pointer transition-all ${showSettings ? 'text-[#fbbf24] rotate-90' : 'text-[#B45309] hover:text-[#fbbf24]'}`} 
+                size={24} 
+                onClick={() => setShowSettings(!showSettings)}
+               />
+               
+               {showSettings && (
+                 <div className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl border-2 border-[#78350F] overflow-hidden z-[500] animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                   <div className="bg-[#451A03] px-4 py-3 border-b border-[#78350F]">
+                     <p className="text-[10px] font-black uppercase tracking-widest text-white/60">System Controls</p>
+                   </div>
+                   <div className="p-2 space-y-1">
+                     <button onClick={() => { setShowRules(true); setShowSettings(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-left text-xs font-black uppercase text-[#451A03] hover:bg-[#F5F5F4] rounded-xl transition-colors">
+                       <Info size={16} className="text-[#B45309]" /> System Rules & Logic
+                     </button>
+                     <div className="h-px bg-[#F5F5F4] mx-2" />
+                     {aiData && (
+                       <>
+                        <button onClick={handleDownloadPDF} className="w-full flex items-center gap-3 px-4 py-3 text-left text-xs font-black uppercase text-[#451A03] hover:bg-[#F5F5F4] rounded-xl transition-colors">
+                          <Save size={16} className="text-[#B45309]" /> Save Current PDF
+                        </button>
+                        <button onClick={handleGroupSave} className="w-full flex items-center gap-3 px-4 py-3 text-left text-xs font-black uppercase text-[#451A03] hover:bg-[#F5F5F4] rounded-xl transition-colors">
+                          <Download size={16} className="text-[#B45309]" /> Group Save (All 5)
+                        </button>
+                        <div className="h-px bg-[#F5F5F4] mx-2" />
+                       </>
+                     )}
+                     <div className="px-4 py-2">
+                       <p className="text-[9px] font-black uppercase text-[#94A3B8] mb-2">Active Exclusions</p>
+                       <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto custom-scrollbar">
+                         {exclusions.length > 0 ? exclusions.map((ex, i) => (
+                           <span key={i} className="bg-red-50 text-red-900 px-2 py-1 rounded-md text-[8px] font-black uppercase flex items-center gap-1 border border-red-100">
+                             {ex} <X size={8} className="cursor-pointer" onClick={() => setExclusions(prev => prev.filter((_, idx) => idx !== i))} />
+                           </span>
+                         )) : <p className="text-[8px] italic text-[#94A3B8]">No strict filters active.</p>}
+                       </div>
+                     </div>
+                     <button onClick={() => { setExclusions([]); setShowSettings(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-left text-xs font-black uppercase text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                       <Trash2 size={16} /> Clear All Filters
+                     </button>
+                     <button onClick={() => { setIngredients([]); setAiData(null); setAppStep('input'); setShowSettings(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-left text-xs font-black uppercase text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                       <RefreshCw size={16} /> Reset Kitchen Node
+                     </button>
+                   </div>
+                 </div>
+               )}
             </div>
           </div>
         )}
+
+        {/* OVERLAYS */}
+        {showRules && <RulesOverlay onClose={() => setShowRules(false)} rules={rules} />}
 
         {/* WELCOME */}
         {appStep === 'welcome' && (
@@ -319,7 +471,7 @@ export default function Watz4DinnerApp() {
         {/* INPUT */}
         {appStep === 'input' && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
-            <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar pb-32">
               <section>
                 <h2 className="text-sm font-black text-[#78350F] uppercase tracking-[0.2em] mb-5 flex items-center gap-2">
                   <Utensils size={18} /> Master Pantry List
@@ -354,7 +506,7 @@ export default function Watz4DinnerApp() {
                 </div>
               </section>
             </div>
-            <div className="p-8 bg-white border-t-2 border-[#F5F5F4]">
+            <div className="p-8 pb-12 bg-white border-t-4 border-[#F5F5F4] absolute bottom-0 left-0 right-0 z-20">
               <button onClick={generateFromManual} disabled={ingredients.length === 0} className="w-full bg-[#78350F] text-white py-6 rounded-[2rem] font-black uppercase tracking-[0.2em] text-xl shadow-xl active:scale-95 transition-all">
                 Plan Dinner
               </button>
@@ -365,16 +517,19 @@ export default function Watz4DinnerApp() {
         {/* RESULTS */}
         {appStep === 'results' && aiData && selectedMeal && (
           <div className="flex-1 flex flex-col h-full bg-[#FAFAF9]">
-            <div className="p-5 flex gap-4 overflow-x-auto scrollbar-hide snap-x bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0">
-              {aiData.dinner_options?.map((meal) => (
-                <button key={meal.id} onClick={() => { setSelectedMeal(meal); setCompletedSteps([]); }} className={`flex-shrink-0 w-52 p-5 rounded-3xl border-4 transition-all text-left snap-start ${selectedMeal.id === meal.id ? 'bg-[#78350F] text-white border-[#B45309]' : 'bg-white text-[#451A03] border-[#94A3B8]/30'}`}>
-                  <p className="text-[10px] font-black uppercase opacity-60 mb-1">{meal.prep_time_minutes} min</p>
-                  <h3 className="font-black text-sm uppercase leading-tight line-clamp-2">{meal.title}</h3>
-                </button>
-              ))}
+            <div className="p-5 flex items-center gap-4 bg-[#F5F5F4] border-b-2 border-[#94A3B8]/20 shrink-0 overflow-hidden">
+              <div className="flex gap-4 overflow-x-auto scrollbar-hide snap-x flex-1">
+                {aiData.dinner_options?.map((meal) => (
+                  <button key={meal.id} onClick={() => { setSelectedMeal(meal); setCompletedSteps([]); }} className={`flex-shrink-0 w-48 p-5 rounded-3xl border-4 transition-all text-left snap-start ${selectedMeal.id === meal.id ? 'bg-[#78350F] text-white border-[#B45309]' : 'bg-white text-[#451A03] border-[#94A3B8]/30'}`}>
+                    <p className="text-[10px] font-black uppercase opacity-60 mb-1">{meal.prep_time_minutes} min</p>
+                    <h3 className="font-black text-xs uppercase leading-tight line-clamp-2">{meal.title}</h3>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar pb-20 text-slate-700">
-              <div className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl animate-in slide-in-from-bottom-4 text-left">
+
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar pb-32 text-slate-700">
+              <div id="recipe-content" className="bg-white rounded-[2.5rem] p-8 border-4 border-[#78350F] shadow-xl animate-in slide-in-from-bottom-4 text-left">
                 <h2 className="text-2xl font-black text-[#451A03] uppercase tracking-tighter leading-tight mb-8 border-b-2 border-[#F5F5F4] pb-5">{selectedMeal.title}</h2>
                 <div className="space-y-5 mb-10">
                   <h4 className="text-[11px] font-black text-[#B45309] uppercase tracking-[0.2em]">Required Pantry</h4>
@@ -388,13 +543,47 @@ export default function Watz4DinnerApp() {
                 <div className="space-y-4">
                   <h4 className="text-[11px] font-black text-[#B45309] uppercase tracking-[0.2em]">Instructions</h4>
                   {selectedMeal.right_column_instructions?.map((step, i) => (
-                    <button key={i} onClick={() => setCompletedSteps(prev => prev.includes(i) ? prev.filter(s => s !== i) : [...prev, i])} className={`w-full text-left p-6 rounded-[1.5rem] border-2 flex gap-4 items-start transition-all ${completedSteps.includes(i) ? 'opacity-30 bg-[#F5F5F4] grayscale' : 'bg-white border-[#94A3B8]/20 shadow-md'}`}>
-                      <div className={`w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-xs ${completedSteps.includes(i) ? 'bg-[#94A3B8]' : 'bg-[#78350F]'} text-white`}>{completedSteps.includes(i) ? <CheckCircle2 size={16} /> : i + 1}</div>
-                      <p className={`text-base font-bold leading-snug tracking-tight ${completedSteps.includes(i) ? 'line-through' : 'text-[#451A03]'}`}>{step}</p>
-                    </button>
+                    <div key={i} className="w-full text-left p-6 rounded-[1.5rem] border-2 flex gap-4 items-start transition-all bg-white border-[#94A3B8]/20 shadow-md">
+                      <div className="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-xs bg-[#78350F] text-white">{i + 1}</div>
+                      <p className="text-base font-bold leading-snug tracking-tight text-[#451A03]">{step}</p>
+                    </div>
                   ))}
                 </div>
               </div>
+
+              {/* HIDDEN CONTENT FOR GROUP SAVE */}
+              <div id="all-recipes-content" className="hidden">
+                <div className="p-10 text-center border-b-8 border-[#78350F] mb-10">
+                   <h1 className="text-6xl font-black uppercase text-[#451A03]">Watz 4 Dinner</h1>
+                   <p className="text-xl font-bold uppercase tracking-[0.5em] text-[#B45309] mt-4">Full Weekly Protocol</p>
+                </div>
+                {aiData.dinner_options?.map((meal, idx) => (
+                  <div key={meal.id} className="mb-20 p-10 border-b-4 border-gray-200 page-break-after">
+                    <h1 className="text-4xl font-black uppercase mb-10">{idx + 1}. {meal.title}</h1>
+                    <div className="grid grid-cols-2 gap-10">
+                      <div>
+                        <h2 className="text-xl font-bold uppercase mb-4 text-[#B45309]">Ingredients</h2>
+                        {meal.left_column_ingredients?.map((ing, i) => (
+                          <div key={i} className="py-2 border-b border-gray-100 flex justify-between">
+                            <span>{ing.item}</span>
+                            <span className="font-bold">{ing.amount}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold uppercase mb-4 text-[#B45309]">Instructions</h2>
+                        {meal.right_column_instructions?.map((step, i) => (
+                          <div key={i} className="mb-4 flex gap-4">
+                            <span className="font-black text-[#78350F]">{i+1}.</span>
+                            <p className="text-sm leading-relaxed">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div className="bg-[#451A03] rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden text-left">
                 <h4 className="text-xs font-black uppercase tracking-[0.3em] mb-8 flex items-center gap-3 border-b border-white/10 pb-4"><Info size={16} /> Projections</h4>
                 <div className="space-y-8">
