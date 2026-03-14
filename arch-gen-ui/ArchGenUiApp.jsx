@@ -21,7 +21,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyClApAYTE1J2zQC15jGqlyOCnOrRT9fNbc";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyDhZyn-k35Y-fLlXIaueNq-yh5JZrONrOk";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // --- AUDIO ENGINE ---
