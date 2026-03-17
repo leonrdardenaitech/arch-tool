@@ -260,7 +260,7 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested }) => {
   const handleChoice = (choice) => {
     setStep(choice === 'A' ? 'repairA' : 'repairB');
     if (audioRef.current) {
-      audioRef.current.src = choice === 'A' ? '/arch-tool/Nebulabloom.mp3' : '/arch-tool/hiphopjazz.mp3';
+      audioRef.current.src = choice === 'A' ? '/Nebulabloom.mp3' : '/hiphopjazz.mp3';
       audioRef.current.loop = false;
       audioRef.current.play().catch(e => console.log(e));
     }
@@ -272,7 +272,7 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested }) => {
       setTimeout(() => {
         setStep('rewardLoop');
         if (audioRef.current) {
-          audioRef.current.src = '/arch-tool/Cobblestone_Reverie.mp3';
+          audioRef.current.src = '/Cobblestone_Reverie.mp3';
           audioRef.current.loop = true;
           audioRef.current.play().catch(e => console.log(e));
         }
@@ -318,7 +318,7 @@ const InteractiveStoryNode = ({ isMuted, playVideoRequested }) => {
       {(step === 'repairA' || step === 'repairB') && (
         <div className="w-full h-full absolute inset-0 bg-black animate-fade-in flex items-center justify-center overflow-hidden">
           {playVideoRequested ? (
-            <video src={step === 'repairA' ? "/arch-tool/patching1.mp4" : "/arch-tool/patching2.mp4"} autoPlay muted playsInline className="w-full h-full object-cover" />
+            <video src={step === 'repairA' ? "/patching1.mp4" : "/patching2.mp4"} autoPlay muted playsInline className="w-full h-full object-cover" />
           ) : (
             <img src={step === 'repairA' ? "cybergirl.jpg" : "cybergirlheadfix.jpg"} className="w-full h-full object-cover opacity-60 scale-105" />
           )}
