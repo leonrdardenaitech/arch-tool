@@ -6,7 +6,7 @@ import { resolve } from 'path'
 const isVercel = process.env.VERCEL === 'true';
 
 export default defineConfig({
-  base: isVercel ? '/' : '/arch-tool/',
+  base: '/',
   plugins: [react()],
   build: {
     rollupOptions: {
