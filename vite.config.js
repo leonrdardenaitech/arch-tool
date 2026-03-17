@@ -13,11 +13,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         portfolio: resolve(__dirname, 'portfolio.html'),
-        gadget: resolve(__dirname, 'gadget-glob.html'),
         brand: resolve(__dirname, 'brand-builder.html'),
         vox: resolve(__dirname, 'vox.html'),
         watz: resolve(__dirname, 'watz-dinner.html'),
-        slime: resolve(__dirname, 'slime-mobile-proto/index.html'),
         archGenUi: resolve(__dirname, 'arch-gen-ui/index.html'),
         wavesync: resolve(__dirname, 'wavesync.html'),
       },
