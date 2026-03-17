@@ -12,6 +12,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        portfolio: resolve(__dirname, 'portfolio.html'),
         gadget: resolve(__dirname, 'gadget-glob.html'),
         brand: resolve(__dirname, 'brand-builder.html'),
         vox: resolve(__dirname, 'vox.html'),
