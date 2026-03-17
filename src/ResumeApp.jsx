@@ -16,7 +16,8 @@ import {
   CheckCircle2,
   ChevronRight,
   ArrowLeft,
-  Download
+  Download,
+  Activity
 } from 'lucide-react';
 
 // --- CUSTOM STYLES & ANIMATIONS ---
