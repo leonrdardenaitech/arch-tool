@@ -161,9 +161,9 @@ export default function ResumeApp() {
           <ArrowLeft size={14} /> Back to Portfolio
         </a>
         <div className="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase">Neural Resume v2.0</div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+        <a href="/LEON R. DARDEN RESUME.pdf" download className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]">
           <Download size={14} /> Download PDF
-        </button>
+        </a>
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-32 flex flex-col gap-24 relative z-10">
@@ -175,8 +175,8 @@ export default function ResumeApp() {
               {/* Front Side */}
               <div className="absolute backface-hidden w-full h-full bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col justify-between shadow-2xl transition-all duration-500 group-hover:border-blue-500/50">
                 <div className="flex justify-between items-start">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-                    🤖
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(59,130,246,0.3)] overflow-hidden">
+                    <img src="/my-picture.png" alt="Leon R. Darden" className="w-full h-full object-cover" />
                   </div>
                   <div className="px-3 py-1 bg-zinc-800 rounded-full text-[10px] uppercase tracking-widest text-zinc-400 border border-zinc-700">
                     Active Architect
@@ -193,8 +193,11 @@ export default function ResumeApp() {
               </div>
 
               {/* Back Side (Expansion) */}
-              <div className="absolute my-rotate-y-180 backface-hidden w-full h-full bg-blue-600 rounded-3xl p-8 flex flex-col justify-between shadow-2xl shadow-blue-500/40 border-2 border-blue-400">
-                <div className="space-y-4">
+              <div className="absolute my-rotate-y-180 backface-hidden w-full h-full bg-blue-600 rounded-3xl p-8 flex flex-col justify-between shadow-2xl shadow-blue-500/40 border-2 border-blue-400 overflow-hidden">
+                <div className="absolute inset-0 z-0 opacity-20">
+                   <img src="/my-picture.png" className="w-full h-full object-cover grayscale blur-[2px]" />
+                </div>
+                <div className="relative z-10 space-y-4">
                   <div className="flex items-center gap-2 text-white/60 text-[10px] uppercase font-black tracking-widest">
                     <Activity size={12} /> Summary Init
                   </div>
@@ -203,7 +206,7 @@ export default function ResumeApp() {
                     High-output AI Architect bridging complex LLM logic with human-centric design. I build visionary systems that turn raw data into strategic assets.
                   </p>
                 </div>
-                <div className="space-y-3">
+                <div className="relative z-10 space-y-3">
                   <div className="flex items-center gap-3 text-sm text-blue-100 bg-black/20 p-3 rounded-xl border border-white/10">
                     <Mail size={16} /> leonrdarden@gmail.com
                   </div>
