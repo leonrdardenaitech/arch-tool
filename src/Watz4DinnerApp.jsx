@@ -8,7 +8,7 @@ const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const MODEL_NAME = "gemini-flash-latest";
 
 // Local asset path
-const CUSTOM_LOGO_URL = "/arch-tool/whats4dinner.png"; 
+const CUSTOM_LOGO_URL = "/whats4dinner.png"; 
 
 const SYSTEM_PROMPT = `You are the backend logic engine for "Watz 4 Dinner".
 Output ONLY raw JSON. No markdown. No conversational text.
