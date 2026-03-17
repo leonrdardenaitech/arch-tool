@@ -604,6 +604,17 @@ export default function App() {
         <section className="py-24 border-t border-cyan-900/40 text-center relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-gradient-to-r from-fuchsia-900/40 to-cyan-900/40 blur-[120px] rounded-full pointer-events-none z-0 animate-pulse"></div>
           <div className="relative z-10 flex flex-col items-center">
+             
+             {/* NEW: NEURAL RESUME BUTTON */}
+             <div className="mb-16">
+                <a href="/resume" className="group relative inline-flex items-center gap-4 px-10 py-5 bg-[#0a0314] border-2 border-blue-500/50 rounded-2xl text-blue-400 font-black uppercase tracking-[0.3em] text-xs hover:border-blue-400 hover:text-white transition-all shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                  <div className="absolute -inset-1 bg-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                  <Sparkles size={18} className="animate-pulse" />
+                  Initialize Neural Resume
+                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </a>
+             </div>
+
              <div className="relative group">
                <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
                <a 

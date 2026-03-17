@@ -18,6 +18,7 @@ export default defineConfig({
         watz: resolve(__dirname, 'watz-dinner.html'),
         archGenUi: resolve(__dirname, 'arch-gen-ui/index.html'),
         wavesync: resolve(__dirname, 'wavesync.html'),
+        resume: resolve(__dirname, 'resume.html'),
       },
     },
   },
