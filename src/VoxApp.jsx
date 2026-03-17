@@ -238,7 +238,7 @@ const VoxApp = () => {
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center font-sans relative overflow-hidden text-slate-200">
       {/* Return Home Link */}
-      <a href="/arch-tool/" className="absolute top-6 left-6 z-50 flex items-center gap-2 text-cyan-500 hover:text-cyan-300 transition-colors uppercase tracking-widest text-xs font-bold drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] bg-slate-900/50 px-4 py-2 rounded-full border border-cyan-500/30 backdrop-blur-sm">
+      <a href="/portfolio" className="absolute top-6 left-6 z-50 flex items-center gap-2 text-cyan-500 hover:text-cyan-300 transition-colors uppercase tracking-widest text-xs font-bold drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] bg-slate-900/50 px-4 py-2 rounded-full border border-cyan-500/30 backdrop-blur-sm">
         <ChevronLeft size={16} /> Return to Command Center
       </a>
 
