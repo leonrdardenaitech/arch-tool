@@ -47,6 +47,11 @@ const styles = `
   .preserve-3d { transform-style: preserve-3d; }
   .backface-hidden { backface-visibility: hidden; }
   .my-rotate-y-180 { transform: rotateY(180deg); }
+
+  /* Ensure the flip works on hover */
+  .group:hover .preserve-3d {
+    transform: rotateY(180deg);
+  }
   
   .typewriter {
     overflow: hidden;
