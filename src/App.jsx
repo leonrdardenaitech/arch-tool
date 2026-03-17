@@ -588,7 +588,9 @@ export default function App() {
                   {project.type === 'APP_MODULE' ? (
                     <div className="flex gap-4">
                       <a href={project.liveUrl} target="_blank" rel="noreferrer" className="flex-1 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 border border-cyan-500/50 rounded-xl text-xs font-bold text-white uppercase flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(0,240,255,0.3)]">Launch App</a>
-                      <a href={project.repoUrl} target="_blank" rel="noreferrer" className="px-6 py-4 bg-[#120524] border border-slate-700 rounded-xl text-xs font-bold text-slate-400 uppercase flex items-center justify-center gap-3 hover:text-white transition-colors"><Github size={16} /></a>
+                      <a href={project.id === 'watz-4-dinner' ? 'instructions-watz4dinner.html' : project.id === 'brand-builder' ? 'instructions-genui.html' : project.id === 'hydro-scan' ? 'instructions-vox.html' : 'instructions-wavesync.html'} target="_blank" rel="noreferrer" className="px-6 py-4 bg-[#120524] border border-slate-700 rounded-xl text-[10px] font-bold text-slate-400 uppercase flex items-center justify-center gap-2 hover:text-cyan-400 transition-colors">
+                        <Info size={14} /> Instructions
+                      </a>
                     </div>
                   ) : (
                     <button onClick={() => setPresentationAgent(project)} className="w-full py-4 bg-[#120524] border border-fuchsia-500/50 rounded-xl text-xs font-bold text-fuchsia-400 uppercase flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-transform">{project.isStory ? <Activity size={16} className="animate-pulse" /> : <Video size={16} />} Launch Protocol</button>
