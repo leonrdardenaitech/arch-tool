@@ -20,6 +20,7 @@ export default defineConfig({
         wavesync: resolve(__dirname, 'wavesync.html'),
         resume: resolve(__dirname, 'resume.html'),
         slimeNexus: resolve(__dirname, 'slime-nexus/index.html'),
+        watzV2: resolve(__dirname, 'watz-v2.html'),
       },
     },
   },
