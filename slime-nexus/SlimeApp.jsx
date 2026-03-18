@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -68,7 +68,10 @@ const callGemini = async (prompt, systemInstruction) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!response.ok) throw new Error(`API_${response.status}`);
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`API_${response.status}: ${errorData.error?.message || 'Unknown Error'}`);
+    }
     const data = await response.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text;
   } catch (err) {
@@ -81,6 +84,9 @@ export default function SlimeApp() {
   const [morphState, setMorphState] = useState('idle'); // idle, processing, output, vision
   const [inputIntent, setInputIntent] = useState("");
   const [refinedOutput, setRefinedOutput] = useState("");
+  const [isListening, setIsInitializing] = useState(false);
+  const videoRef = useRef(null);
+  const [stream, setStream] = useState(null);
 
   // Generate drips ONLY on the far left and right edges
   const drips = useMemo(() => {
@@ -105,22 +111,62 @@ export default function SlimeApp() {
   const triggerSound = (type) => playSlimeSound(type);
 
   // --- REFINER LOGIC ---
-  const executeRefiner = async () => {
-    if (!inputIntent) return;
+  const executeRefiner = async (overrideInput = null) => {
+    const finalInput = overrideInput || inputIntent;
+    if (!finalInput) return;
     setMorphState('processing');
     triggerSound('splash');
     setRefinedOutput("");
     
     try {
       const sysInstruction = "You are the Slime Tool Prompt Refiner. Take the user's raw, messy input and expand it into a highly structured, professional 'Master Prompt'. Add necessary context, define strict execution rules, and format it clearly so it can be copied directly into an LLM.";
-      const result = await callGemini(`Raw Input: ${inputIntent}`, sysInstruction);
+      const result = await callGemini(`Raw Input: ${finalInput}`, sysInstruction);
       setRefinedOutput(result);
       setMorphState('output');
       triggerSound('droplet');
     } catch (e) {
-      setRefinedOutput("⚠️ Refinement Failed. Check API Connection.");
+      setRefinedOutput(`⚠️ Refinement Failed: ${e.message}`);
       setMorphState('output');
     }
+  };
+
+  // --- HARDWARE: MIC ---
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice not supported on this browser.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.onstart = () => { triggerSound('droplet'); setMorphState('processing'); };
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInputIntent(transcript);
+      executeRefiner(transcript);
+    };
+    recognition.onerror = () => { setMorphState('idle'); };
+    recognition.start();
+  };
+
+  // --- HARDWARE: CAMERA ---
+  const startCamera = async () => {
+    setMorphState('vision');
+    triggerSound('splash');
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      setStream(mediaStream);
+      if (videoRef.current) videoRef.current.srcObject = mediaStream;
+    } catch (err) {
+      alert("Camera access denied or unavailable.");
+      setMorphState('idle');
+    }
+  };
+
+  const stopCamera = () => {
+    if (stream) stream.getTracks().forEach(track => track.stop());
+    setStream(null);
+    setMorphState('idle');
   };
 
   const copyToClipboard = () => {
@@ -129,6 +175,7 @@ export default function SlimeApp() {
   };
 
   const resetArch = () => {
+    stopCamera();
     setMorphState('idle');
     setRefinedOutput("");
     setInputIntent("");
@@ -139,7 +186,6 @@ export default function SlimeApp() {
     <div className="flex items-center justify-center min-h-screen bg-[#020105] p-0 sm:p-4 font-mono select-none overflow-hidden text-emerald-400">
       <CustomStyles />
       
-      {/* MOBILE FORM FACTOR */}
       <div className="relative w-full h-screen sm:h-auto sm:max-w-[380px] sm:aspect-[9/19] bg-zinc-900 sm:rounded-[3.5rem] border-0 sm:border-[12px] border-zinc-900 shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col">
         
         {/* SIDE OOZE PHYSICS */}
@@ -189,30 +235,27 @@ export default function SlimeApp() {
             }`}>
             <div className="w-full h-full bg-black/80 border border-green-500/20 rounded-3xl p-5 relative shadow-2xl backdrop-blur-xl flex flex-col">
               
-              {/* Output Header */}
               <div className="flex justify-between items-center border-b border-green-500/20 pb-3 mb-3">
                 <span className="text-[9px] text-green-500 font-black uppercase tracking-widest flex items-center gap-2">
                   {morphState === 'processing' ? <Activity className="animate-spin" size={12}/> : <Sparkles size={12}/>}
-                  {morphState === 'processing' ? 'Synthesizing...' : morphState === 'vision' ? 'Camera Feed' : 'Refined Output'}
+                  {morphState === 'processing' ? 'Synthesizing...' : morphState === 'vision' ? 'Lens Active' : 'Refined Output'}
                 </span>
                 <button onClick={resetArch} className="text-slate-600 hover:text-red-400 transition-colors"><X size={16} /></button>
               </div>
 
-              {/* Output Content */}
               <div className="flex-grow overflow-y-auto custom-scrollbar pr-2 text-[10px] text-emerald-100/90 leading-relaxed whitespace-pre-wrap">
                 {morphState === 'vision' && (
-                  <div className="h-full flex flex-col items-center justify-center text-green-500/20">
-                    <Camera size={40} className="mb-2 animate-pulse" />
-                    <span className="uppercase tracking-widest text-[8px]">Awaiting Lens Data</span>
+                  <div className="h-full w-full relative bg-black rounded-xl overflow-hidden">
+                    <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 border-2 border-green-500/20 pointer-events-none" />
                   </div>
                 )}
                 {morphState === 'output' && refinedOutput}
               </div>
 
-              {/* Action Buttons */}
               {morphState === 'output' && (
                 <div className="pt-4 border-t border-green-500/20 mt-2 flex gap-2">
-                  <button onClick={executeRefiner} className="flex-1 py-3 bg-zinc-900 border border-green-500/20 rounded-xl flex justify-center items-center text-green-500 active:scale-95 transition-all"><RefreshCw size={14} /></button>
+                  <button onClick={() => executeRefiner()} className="flex-1 py-3 bg-zinc-900 border border-green-500/20 rounded-xl flex justify-center items-center text-green-500 active:scale-95 transition-all"><RefreshCw size={14} /></button>
                   <button onClick={copyToClipboard} className="flex-[3] py-3 bg-green-500 text-black font-black text-[9px] uppercase tracking-widest rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-all shadow-[0_0_15px_rgba(34,197,94,0.3)]"><Copy size={12}/> Copy Master Prompt</button>
                 </div>
               )}
@@ -224,7 +267,6 @@ export default function SlimeApp() {
         {/* BOTTOM WAVES & CONTROLS */}
         <div className="relative z-30 min-h-[160px] flex flex-col justify-end">
           
-          {/* Slime Waves */}
           <div className={`absolute inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-700 ${morphState !== 'idle' ? 'opacity-30' : 'opacity-100'}`}>
             <svg className="absolute bottom-0 w-[200%] h-full animate-wave translate-y-2" viewBox="0 0 1000 100" preserveAspectRatio="none">
               <path d="M0,30 C150,80 350,-20 500,30 C650,80 850,-20 1000,30 L1000,100 L0,100 Z" fill="#052e16" />
@@ -234,16 +276,15 @@ export default function SlimeApp() {
             </svg>
           </div>
 
-          {/* Buttons */}
           <div className="relative z-10 pb-12 pt-4 flex justify-around items-center px-16">
-            <button onClick={executeRefiner} className="group relative p-2 transition-all hover:scale-105 active:scale-95">
+            <button onClick={startListening} className="group relative p-2 transition-all hover:scale-105 active:scale-95">
               <div className="absolute inset-0 bg-green-400/20 blur-xl rounded-full transition-all" />
               <div className="relative w-16 h-16 rounded-full bg-black/80 border-2 border-green-500 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.2)]">
                 <Mic className="text-green-400 w-6 h-6" />
               </div>
             </button>
 
-            <button onClick={() => { setMorphState('vision'); triggerSound('splash'); }} className="group relative p-2 transition-all hover:scale-105 active:scale-95">
+            <button onClick={startCamera} className="group relative p-2 transition-all hover:scale-105 active:scale-95">
               <div className="absolute inset-0 bg-green-400/10 blur-xl rounded-full transition-all" />
               <div className="relative w-14 h-14 rounded-full bg-black/60 border border-green-500/40 flex items-center justify-center">
                 <Camera className="text-green-500/60 w-5 h-5" />
