@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Upload, Download, Pizza, Beef, Carrot, Fish, Croissant, Coffee, Egg, Video, PlayCircle } from 'lucide-react';
+import { Camera, Plus, Trash2, X, ChevronRight, CookingPot, Utensils, Apple, CheckCircle2, Info, AlertCircle, Mic, RefreshCw, Settings, ShieldAlert, Home, Save, Upload, Download, Pizza, Beef, Carrot, Fish, Croissant, Coffee, Egg, Video, PlayCircle, ShieldCheck } from 'lucide-react';
 
 // Securely access the Vercel/Vite environment variable
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
