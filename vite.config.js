@@ -19,6 +19,7 @@ export default defineConfig({
         archGenUi: resolve(__dirname, 'arch-gen-ui/index.html'),
         wavesync: resolve(__dirname, 'wavesync.html'),
         resume: resolve(__dirname, 'resume.html'),
+        slimeNexus: resolve(__dirname, 'slime-nexus/index.html'),
       },
     },
   },

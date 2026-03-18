@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>L.D. NEURAL AGENT // OFFLINE DEPLOYMENT</title>
+    <style>
+        :root { --neon-cyan: #00f3ff; --neon-purple: #b026ff; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; padding: 2rem; display: flex; justify-content: center; }
+        .agent-container { background: var(--card); border: 1px solid var(--neon-purple); border-radius: 20px; padding: 2rem; width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(176, 38, 255, 0.2); }
+        h1 { color: var(--neon-cyan); font-size: 1rem; letter-spacing: 0.3em; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.7rem; text-transform: uppercase; color: #888; margin-bottom: 0.5rem; letter-spacing: 0.1em; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; border-radius: 8px; padding: 0.8rem; color: #fff; box-sizing: border-box; }
+        input:focus { border-color: var(--neon-cyan); outline: none; }
+        .btn-deploy { width: 100%; padding: 1rem; background: linear-gradient(to right, var(--neon-purple), var(--neon-cyan)); border: none; border-radius: 10px; color: #000; font-weight: 900; text-transform: uppercase; cursor: pointer; margin-top: 1rem; }
+        .btn-deploy:hover { filter: brightness(1.2); box-shadow: 0 0 20px var(--neon-cyan); }
+        .preview-area { margin-top: 2rem; background: #000; padding: 1rem; border-radius: 10px; font-size: 0.8rem; color: #aaa; border: 1px dashed #444; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="agent-container">
+        <h1>Neural Agent: Cover Letter Synthesis</h1>
+        
+        <div class="input-group">
+            <label>Hiring Manager Name</label>
+            <input type="text" id="manager" placeholder="e.g., Jane Doe" oninput="updatePreview()">
+        </div>
+
+        <div class="input-group">
+            <label>Target Company</label>
+            <input type="text" id="company" placeholder="e.g., Google AI" oninput="updatePreview()">
+        </div>
+
+        <div class="input-group">
+            <label>Persona Selection</label>
+            <select id="persona" onchange="updatePreview()">
+                <option value="tech">AI Solutions Architect (Technical/ROI)</option>
+                <option value="creative">Creative Strategist (Visionary/Artistic)</option>
+            </select>
+        </div>
+
+        <div class="preview-area" id="preview">
+            Preview will generate here...
+        </div>
+
+        <button class="btn-deploy" onclick="deployEmail()">Generate & Open Email</button>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const manager = document.getElementById('manager').value || "[Hiring Manager]";
+            const company = document.getElementById('company').value || "[Company]";
+            const persona = document.getElementById('persona').value;
+            
+            let body = "";
+            if(persona === 'tech') {
+                body = `Dear ${manager},\n\nI am writing to express my interest in the AI Solutions Architect position at ${company}. \n\nAt leonrdarden.com, I demonstrate the practical application of the Gemini 1.5 Pro ecosystem. My flagship project, Brand Builder, is a demonstration of sophisticated prompt chaining and structured data output. I bridge the gap between LLM potential and production-ready applications for ${company}.`;
+            } else {
+                body = `Dear ${manager},\n\nCode is my medium, and creativity is my fuel. I am excited to apply for the Creative Strategist role at ${company}. \n\nI spent years mastering the art of the 'draw'—from building successful artistic ventures to architecting visual brand identities. I bring a unique visionary edge to the AI systems I build at leonrdarden.com.`;
+            }
+            
+            document.getElementById('preview').innerText = body;
+        }
+
+        function deployEmail() {
+            const manager = document.getElementById('manager').value;
+            const company = document.getElementById('company').value;
+            const body = document.getElementById('preview').innerText;
+            const subject = `Application: AI Solutions Architect - Leon R. Darden - ${company}`;
+            
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+        
+        updatePreview();
+    </script>
+</body>
+</html>
