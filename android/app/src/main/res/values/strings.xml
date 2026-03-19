@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Watz 4 Dinner</string>
+    <string name="title_activity_main">Watz 4 Dinner</string>
+    <string name="package_name">com.leonrdarden.watz4dinner</string>
+    <string name="custom_url_scheme">com.leonrdarden.watz4dinner</string>
+</resources>

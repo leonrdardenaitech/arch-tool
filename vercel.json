@@ -9,6 +9,7 @@
     { "source": "/vox", "destination": "/vox.html" },
     { "source": "/brand-builder", "destination": "/brand-builder.html" },
     { "source": "/neural-agent", "destination": "/LD-Neural-Agent.html" },
+    { "source": "/watz-privacy", "destination": "/watz-privacy.html" },
     { "source": "/watz-dinner", "destination": "/watz-dinner.html" }
   ]
 }
