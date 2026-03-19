@@ -5,6 +5,7 @@ const BrandBuilderApp = () => {
   const [phase, setPhase] = useState('input'); // 'input', 'auth', 'loading', 'display', 'complete'
   const [idea, setIdea] = useState('');
   const [why, setWhy] = useState('');
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [stepIndex, setStepIndex] = useState(0); // 0: Billboard, 1: Newspaper, 2: Social
   const [imageUrls, setImageUrls] = useState([]);
   const [mockReport, setMockReport] = useState(null);

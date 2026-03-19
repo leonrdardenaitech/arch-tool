@@ -5,8 +5,10 @@
     { "source": "/resume", "destination": "/resume.html" },
     { "source": "/slime-nexus", "destination": "/slime-nexus/index.html" },
     { "source": "/watz-v2", "destination": "/watz-v2.html" },
+    { "source": "/arch-gen-ui", "destination": "/arch-gen-ui/index.html" },
     { "source": "/vox", "destination": "/vox.html" },
     { "source": "/brand-builder", "destination": "/brand-builder.html" },
+    { "source": "/neural-agent", "destination": "/LD-Neural-Agent.html" },
     { "source": "/watz-dinner", "destination": "/watz-dinner.html" }
   ]
 }
