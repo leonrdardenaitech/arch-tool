@@ -185,13 +185,32 @@ export default function WatzV2App() {
   };
 
   const handleBetaSubmit = (e) => {
+    e.preventDefault(); // Stop the page from reloading/submitting normally
     setIsSyncing(true);
-    // The form submits to the hidden iframe naturally. 
-    // We just trigger the visual "experience" here.
-    setTimeout(() => {
+
+    // Using a "Hidden Submission" technique that works with Google Forms
+    const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfB_-IaE1i3DCw4XsxLW0zaY211_cHJTYAk1zHjC8ROZ56zvA/formResponse";
+    const formData = new FormData();
+    formData.append("entry.1520536225", betaEmail);
+
+    // We send the request via fetch with 'no-cors' since Google doesn't send CORS headers
+    fetch(formUrl, {
+      method: 'POST',
+      body: formData,
+      mode: 'no-cors'
+    })
+    .then(() => {
+      // Even with no-cors, this triggers once the browser sends the request
+      setTimeout(() => {
+        setIsSyncing(false);
+        setIsSynced(true);
+      }, 2500);
+    })
+    .catch(() => {
+      // Fallback in case of network issues
       setIsSyncing(false);
       setIsSynced(true);
-    }, 2500);
+    });
   };
 
   const callGemini = async (payload) => {
