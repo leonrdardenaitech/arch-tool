@@ -48,7 +48,7 @@ STRICT RULES:
 // --- GLOBAL COMPONENTS ---
 
 const TextLogo = ({ className = "" }) => (
-  <div className={`flex items-center justify-center font-black tracking-tighter leading-none italic select-none ${className}`}>
+  <div className={`flex items-center justify-center font-mono font-black tracking-tighter leading-none italic select-none ${className}`}>
     <span className="text-orange-500">?</span>
     <span className="text-white">4DINNER</span>
     <span className="text-orange-500">?</span>
@@ -162,6 +162,11 @@ export default function WatzV2App() {
   const [imageTimer, setImageTimer] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [exclusionValue, setExclusionValue] = useState('');
+  
+  // --- BETA FORM STATE ---
+  const [betaEmail, setBetaEmail] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSynced, setIsSynced] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -177,6 +182,16 @@ export default function WatzV2App() {
   const handleHandshake = () => {
     setIsHandshaken(true);
     setIsMuted(false);
+  };
+
+  const handleBetaSubmit = (e) => {
+    setIsSyncing(true);
+    // The form submits to the hidden iframe naturally. 
+    // We just trigger the visual "experience" here.
+    setTimeout(() => {
+      setIsSyncing(false);
+      setIsSynced(true);
+    }, 2500);
   };
 
   const callGemini = async (payload) => {
@@ -290,12 +305,56 @@ export default function WatzV2App() {
               Help us refine the vision-to-logic synthesis and hardware-accelerated recipe generation.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10 pt-4">
-            <a href="mailto:Leonrdarden@gmail.com?subject=Watz V2 Beta Application" className="px-10 py-5 bg-orange-600 hover:bg-orange-500 rounded-full font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:scale-105 active:scale-95">
-              Apply to Beta <ArrowRight size={16} />
-            </a>
-            <a href="/instructions-watz-v2.html" target="_blank" className="px-10 py-5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-full font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all">
-              Read Manual <ExternalLink size={16} />
+          <div className="flex flex-col items-center justify-center gap-8 relative z-10 pt-4">
+            {!isSynced ? (
+              <div className="w-full max-w-md space-y-4">
+                <form 
+                  action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfB_-IaE1i3DCw4XsxLW0zaY211_cHJTYAk1zHjC8ROZ56zvA/formResponse" 
+                  method="POST" 
+                  target="hidden_iframe" 
+                  onSubmit={handleBetaSubmit}
+                  className="flex flex-col sm:flex-row gap-3"
+                >
+                  <div className="flex-1 relative group">
+                    <input 
+                      type="email" 
+                      name="entry.1520536225" 
+                      value={betaEmail}
+                      onChange={(e) => setBetaEmail(e.target.value)}
+                      placeholder="Enter Play Store Gmail" 
+                      required
+                      disabled={isSyncing}
+                      className="w-full px-6 py-5 bg-black/40 border-2 border-white/10 rounded-full font-bold text-sm outline-none focus:border-orange-500 transition-all placeholder:text-zinc-600"
+                    />
+                    <div className="absolute inset-0 rounded-full bg-orange-500/5 opacity-0 group-focus-within:opacity-100 pointer-events-none transition-opacity"></div>
+                  </div>
+                  <button 
+                    type="submit"
+                    disabled={isSyncing}
+                    className="px-10 py-5 bg-orange-600 hover:bg-orange-500 disabled:bg-zinc-800 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:scale-105 active:scale-95 min-w-[180px]"
+                  >
+                    {isSyncing ? (
+                      <>Syncing... <RefreshCw size={16} className="animate-spin" /></>
+                    ) : (
+                      <>Apply to Beta <ArrowRight size={16} /></>
+                    )}
+                  </button>
+                </form>
+                <iframe name="hidden_iframe" id="hidden_iframe" style={{ display: 'none' }} />
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em]">Credential Sync via Secure Neural Link</p>
+              </div>
+            ) : (
+              <div className="bg-orange-500/10 border border-orange-500/20 px-10 py-8 rounded-[2rem] flex flex-col items-center gap-4 animate-in zoom-in duration-500">
+                <CheckCircle2 size={48} className="text-orange-500" />
+                <div className="text-center">
+                  <h3 className="text-xl font-black uppercase italic tracking-tighter">Level 1 Complete</h3>
+                  <p className="text-xs text-orange-500/80 font-bold uppercase tracking-widest mt-1">Uplink Established. Stand by for invite.</p>
+                </div>
+              </div>
+            )}
+            
+            <a href="/instructions-watz-v2.html" target="_blank" className="text-zinc-500 hover:text-white font-black uppercase tracking-[0.3em] text-[10px] flex items-center gap-2 transition-all">
+              <ExternalLink size={14} /> Open Tech Manual
             </a>
           </div>
         </section>
