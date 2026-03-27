@@ -65,6 +65,19 @@
         }
         .phone-mockup:hover { transform: translateY(-10px); }
 
+        /* Sync Spinner */
+        .sync-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         /* Glowing Outlines */
         #phone-4dinner { outline: 2px solid #FF8C00; outline-offset: -2px; box-shadow: 0 10px 40px rgba(255,140,0,0.2); }
         #phone-24dinner { outline: 2px solid #2E8B57; outline-offset: -2px; box-shadow: 0 10px 40px rgba(46,139,87,0.2); }
@@ -158,7 +171,10 @@
             <div class="phone-wrapper">
                 <div class="phone-mockup" id="phone-24dinner" onclick="openModal('24dinner')">
                     <div class="phone-header" id="header-24dinner">?2.4.DINNER?</div>
-                    <img src="assets/gradeApizza.gif" class="phone-screen-media" id="center-phone-gif" alt="Pizza Grade">
+                    <video autoplay loop muted playsinline class="phone-screen-media" id="center-phone-video">
+                        <source src="assets/gradeApizza.gif" type="video/mp4">
+                        <img src="assets/gradeApizza.gif" class="phone-screen-media" alt="Pizza Grade">
+                    </video>
                 </div>
                 <p class="under-phone-desc">Coming Soon: A luxury dining concierge powered entirely by foot traffic, tenure, and uncheatable trust metrics.</p>
             </div>
@@ -234,14 +250,9 @@
         }
 
         /* --- CENTER PHONE GIF SWAP LOGIC --- */
+        // Removed swap logic to prevent black screen issues
         const centerGif = document.getElementById('center-phone-gif');
-        const gifs = ['assets/gradeApizza.gif', 'assets/2eatpage.gif'];
-        let gifIndex = 0;
-        setInterval(() => {
-            gifIndex = (gifIndex + 1) % gifs.length;
-            centerGif.src = gifs[gifIndex];
-        }, 5000); // Swaps every 5 seconds
-
+        
         /* --- RANDOM BACKGROUND GIF LOGIC --- */
         const bgOverlay = document.getElementById('random-bg-gif');
         setInterval(() => {
