@@ -2,9 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
-// Detect if we are on Vercel or GitHub Pages
-const isVercel = process.env.VERCEL === 'true';
-
 export default defineConfig({
   base: '/',
   plugins: [react()],
@@ -21,6 +18,7 @@ export default defineConfig({
         resume: resolve(__dirname, 'resume.html'),
         slimeNexus: resolve(__dirname, 'slime-nexus/index.html'),
         watzV2: resolve(__dirname, 'watz-v2.html'),
+        what2eat: resolve(__dirname, 'what2eat/index.html'),
       },
     },
   },
