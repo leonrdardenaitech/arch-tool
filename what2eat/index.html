@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?2EAT? | Trust Infrastructure</title>
+    <style>
+        /* BASE STYLES */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        body { background-color: #050505; color: #fff; overflow-x: hidden; }
+
+        /* LAYER 1 & 2: BACKGROUND VIDEO & SCRIM */
+        .video-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; object-fit: cover;
+        }
+        .bg-gif-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1.5; object-fit: cover; opacity: 0; transition: opacity 1s ease;
+        }
+        .scrim-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); z-index: -1;
+        }
+
+        /* AUDIO TOGGLE */
+        .audio-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 50;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; padding: 10px 15px; border-radius: 30px; cursor: pointer;
+            backdrop-filter: blur(5px); transition: 0.3s;
+        }
+        .audio-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* CONTENT WRAPPER */
+        .content-layer {
+            position: relative; z-index: 1; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 60px 20px; text-align: center;
+        }
+
+        /* HEADERS */
+        h1.main-title { font-size: 4rem; color: #fff; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; }
+        h1.main-title span.q { color: #FF8C00; }
+        h2.main-subtitle { font-size: 1.3rem; font-weight: 300; max-width: 800px; margin-bottom: 60px; color: #ccc; line-height: 1.5; }
+
+        /* --- THE PHONE GRID --- */
+        .phone-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px; width: 100%; max-width: 1200px; margin-bottom: 60px;
+        }
+
+        /* PHONE CONTAINER & DESCRIPTIONS */
+        .phone-wrapper { display: flex; flex-direction: column; align-items: center; }
+        .under-phone-desc {
+            margin-top: 20px; font-size: 0.95rem; color: #bbb; max-width: 280px; line-height: 1.4;
+        }
+
+        /* PHONE MOCKUP (Hardware) */
+        .phone-mockup {
+            background-color: #111; border: 4px solid #000; border-radius: 40px;
+            width: 300px; height: 600px; position: relative; cursor: pointer;
+            overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            transition: transform 0.3s ease; display: flex; flex-direction: column;
+        }
+        .phone-mockup:hover { transform: translateY(-10px); }
+
+        /* Glowing Outlines */
+        #phone-4dinner { outline: 2px solid #FF8C00; outline-offset: -2px; box-shadow: 0 10px 40px rgba(255,140,0,0.2); }
+        #phone-24dinner { outline: 2px solid #2E8B57; outline-offset: -2px; box-shadow: 0 10px 40px rgba(46,139,87,0.2); }
+        #phone-2go { outline: 2px solid #ddd; outline-offset: -2px; box-shadow: 0 10px 40px rgba(255,255,255,0.1); }
+
+        /* PHONE HEADERS (Top Section) */
+        .phone-header {
+            width: 100%; padding: 15px 0; text-align: center; font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; z-index: 2;
+        }
+        #header-4dinner { background-color: #FF8C00; color: #000; }
+        #header-24dinner { background-color: #2E8B57; color: #fff; }
+        #header-2go { background-color: #ddd; color: #000; }
+
+        /* PHONE MEDIA (Inner Screen) */
+        .phone-screen-media { width: 100%; flex-grow: 1; object-fit: cover; background: #000; }
+
+        /* --- THE TRUST API SECTION --- */
+        .trust-section {
+            max-width: 900px; padding: 50px; background: linear-gradient(145deg, #0a192f, #020c1b);
+            border-radius: 20px; border: 1px solid #1f4068; text-align: center; margin-bottom: 60px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .trust-section h3 { color: #4da8da; margin-bottom: 20px; font-size: 2rem; letter-spacing: -1px; }
+        .trust-section p { color: #a8b2d1; line-height: 1.8; font-size: 1.15rem; margin-bottom: 20px; text-align: justify; }
+        .trust-section strong { color: #FF8C00; }
+        .trust-gif { max-width: 200px; margin-top: 30px; border-radius: 10px; }
+
+        /* --- DARK THEME ELITE MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 100;
+            display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: linear-gradient(145deg, #111, #0a0a0a); border: 1px solid #333;
+            color: #fff; padding: 50px; border-radius: 24px; width: 90%; max-width: 500px;
+            position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+        }
+        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; color: #666; transition: 0.3s; }
+        .close-modal:hover { color: #FF8C00; }
+
+        .modal-brand { font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; color: #fff; }
+        .modal-description { font-size: 1.1rem; line-height: 1.6; color: #aaa; margin-bottom: 30px; }
+
+        /* Themed Input Form */
+        .form-group { display: flex; flex-direction: column; gap: 15px; }
+        .form-group input { 
+            padding: 16px; background: #1a1a1a; border: 1px solid #444; color: #fff;
+            border-radius: 8px; font-size: 1rem; transition: 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: #FF8C00; background: #222; }
+        .form-group button {
+            padding: 18px; color: #000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 800;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay loop muted playsinline class="video-background">
+        <source src="assets/atlloop3.mp4" type="video/mp4">
+    </video>
+    
+    <img src="assets/2eatpage.gif" class="bg-gif-overlay" id="random-bg-gif" alt="">
+
+    <div class="scrim-overlay"></div>
+
+    <button class="audio-toggle" onclick="toggleAudio()" id="audio-btn">🔇 Turn Audio On</button>
+    <audio id="ambient-audio" loop>
+        <source src="assets/calmtraffic.wav" type="audio/wav">
+    </audio>
+
+    <div class="content-layer">
+        
+        <h1 class="main-title"><span class="q">?</span>2EAT<span class="q">?</span></h1>
+        <h2 class="main-subtitle">When you make a choice, you assume the brand is on the up-and-up. We replace assumptions with verified truth. Choose the elite standard.</h2>
+
+        <div class="phone-grid">
+            
+            <div class="phone-wrapper">
+                <div class="phone-mockup" id="phone-4dinner" onclick="openModal('4dinner')">
+                    <div class="phone-header" id="header-4dinner">?4DINNER?</div>
+                    <video autoplay loop muted playsinline class="phone-screen-media">
+                        <source src="assets/salmonfork.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p class="under-phone-desc">Need Testers: Help us pilot the algorithm that verifies daily health inspections before you ever sit at the table.</p>
+            </div>
+
+            <div class="phone-wrapper">
+                <div class="phone-mockup" id="phone-24dinner" onclick="openModal('24dinner')">
+                    <div class="phone-header" id="header-24dinner">?2.4.DINNER?</div>
+                    <img src="assets/gradeApizza.gif" class="phone-screen-media" id="center-phone-gif" alt="Pizza Grade">
+                </div>
+                <p class="under-phone-desc">Coming Soon: A luxury dining concierge powered entirely by foot traffic, tenure, and uncheatable trust metrics.</p>
+            </div>
+
+            <div class="phone-wrapper">
+                <div class="phone-mockup" id="phone-2go" onclick="openModal('2go')">
+                    <div class="phone-header" id="header-2go">?2GO?</div>
+                    <img src="assets/where2go5.gif" class="phone-screen-media" alt="2GO Delivery">
+                </div>
+                <p class="under-phone-desc">Coming Soon: The same uncompromising health and safety standards applied to delivery logistics.</p>
+            </div>
+
+        </div>
+
+        <div class="trust-section">
+            <h3>The Standard of Transparency</h3>
+            <p>Why continue to settle for a lower standard simply because the truth is hidden? For too long, consumers and businesses have had to guess if a facility is truly operating safely. There is a better way.</p>
+            <p>We supply a Trust Infrastructure that puts verified data at your fingertips. We deliver the highest standards through a secure, efficient data pipeline. Powered by the <strong>?2Trust? Darden Trust API</strong> and MCP, this is your trusted agentic flow pipeline connecting the consumer to absolute certainty.</p>
+            
+            <img src="assets/5star.gif" class="trust-gif" alt="5 Star Darden Grade">
+        </div>
+
+    </div>
+
+    <footer class="branding-footer">
+        <div class="footer-logo">LEON R. DARDEN</div>
+        <div class="footer-tagline">Secure AI Solutions // Darden Trust API</div>
+        <p class="copyright">&copy; 2026 <strong>LEON R. DARDEN</strong>. ALL RIGHTS RESERVED. POWERED BY DARDEN TRUST INFRASTRUCTURE.</p>
+    </footer>
+
+    <style>
+        /* --- FOOTER --- */
+        footer.branding-footer {
+            padding: 80px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            width: 100%;
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; color: #fff; margin-bottom: 10px; }
+        .footer-tagline { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 25px; }
+        .copyright { font-size: 0.65rem; color: #444; text-transform: uppercase; letter-spacing: 2px; }
+        .copyright strong { color: #888; }
+    </style>
+
+    <div class="modal" id="data-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-brand" id="modal-brand-header"></div>
+            <p class="modal-description" id="modal-desc"></p>
+
+            <form class="form-group" id="elite-lead-form">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Preferred Email Address" required>
+                <button type="submit" id="modal-form-button"></button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /* --- AUDIO LOGIC --- */
+        const audio = document.getElementById('ambient-audio');
+        const audioBtn = document.getElementById('audio-btn');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) { audio.pause(); audioBtn.innerText = "🔇 Turn Audio On"; } 
+            else { audio.play(); audioBtn.innerText = "🔊 Audio Playing"; }
+            isPlaying = !isPlaying;
+        }
+
+        /* --- CENTER PHONE GIF SWAP LOGIC --- */
+        const centerGif = document.getElementById('center-phone-gif');
+        const gifs = ['assets/gradeApizza.gif', 'assets/2eatpage.gif'];
+        let gifIndex = 0;
+        setInterval(() => {
+            gifIndex = (gifIndex + 1) % gifs.length;
+            centerGif.src = gifs[gifIndex];
+        }, 5000); // Swaps every 5 seconds
+
+        /* --- RANDOM BACKGROUND GIF LOGIC --- */
+        const bgOverlay = document.getElementById('random-bg-gif');
+        setInterval(() => {
+            bgOverlay.style.opacity = '0.3'; // Fade in gif over Atlanta traffic
+            setTimeout(() => { bgOverlay.style.opacity = '0'; }, 3000); // Fade out after 3s
+        }, 15000); // Triggers every 15 seconds
+
+        /* --- MODAL & SPREADSHEET LOGIC --- */
+        const brandData = {
+            '4dinner': {
+                title: '<span style="color:#FF8C00">?</span>4DINNER<span style="color:#FF8C00">?</span>',
+                desc: 'Become an exclusive Alpha Tester. Help us validate the algorithm that ensures every meal is a safe one. Join the inner circle.',
+                btnText: 'Request Tester Access',
+                btnColor: '#FF8C00'
+            },
+            '24dinner': {
+                title: '<span style="color:#2E8B57">?</span>2.4.DINNER<span style="color:#2E8B57">?</span>',
+                desc: 'Invest your time in the future of elite dining. Be the first to access our luxury concierge data pipeline when we launch.',
+                btnText: 'Join Luxury Waitlist',
+                btnColor: '#2E8B57'
+            },
+            '2go': {
+                title: '?2GO?',
+                desc: 'We are mapping the safest routes for the cleanest food. Reserve your spot for the launch of our delivery ecosystem.',
+                btnText: 'Join Delivery Waitlist',
+                btnColor: '#ddd'
+            }
+        };
+
+        const modal = document.getElementById('data-modal');
+        const mBrand = document.getElementById('modal-brand-header');
+        const mDesc = document.getElementById('modal-desc');
+        const mBtn = document.getElementById('modal-form-button');
+        const leadForm = document.getElementById('elite-lead-form');
+
+        function openModal(brand) {
+            const data = brandData[brand];
+            mBrand.innerHTML = data.title;
+            mDesc.innerHTML = data.desc;
+            mBtn.innerHTML = data.btnText;
+            mBtn.style.backgroundColor = data.btnColor;
+            modal.classList.add('active');
+        }
+
+        function closeModal() { modal.classList.remove('active'); }
+        window.onclick = function(e) { if (e.target == modal) closeModal(); }
+
+        /* --- SPREADSHEET SUBMISSION --- */
+        leadForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const originalBtnText = mBtn.innerHTML;
+            mBtn.innerHTML = "SYNCING... <span class='sync-spinner'></span>";
+            mBtn.disabled = true;
+
+            // Google Form Backend
+            const formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfB_-IaE1i3DCw4XsxLW0zaY211_cHJTYAk1zHjC8ROZ56zvA/formResponse";
+            const formData = new FormData(leadForm);
+            
+            // Consolidate info into the single known Google Form entry field
+            // Format: Name [Brand] <email>
+            const emailValue = formData.get('email');
+            const nameValue = formData.get('name');
+            const brandValue = mBrand.innerText.replace(/\?/g, ''); // Clean up the brand name
+            
+            const consolidatedEntry = `${nameValue} [${brandValue}] <${emailValue}>`;
+            
+            const gFormData = new FormData();
+            gFormData.append("entry.1520536225", consolidatedEntry);
+
+            try {
+                // Send via fetch with no-cors to bypass Google Form restrictions
+                fetch(formUrl, {
+                    method: 'POST',
+                    body: gFormData,
+                    mode: 'no-cors'
+                });
+
+                // Simulate the "Sync" delay for experience
+                setTimeout(() => {
+                    mBtn.innerHTML = "UPLINK COMPLETE";
+                    mBtn.style.backgroundColor = "#22c55e"; // Success Green
+                    
+                    setTimeout(() => {
+                        closeModal();
+                        leadForm.reset();
+                        mBtn.innerHTML = originalBtnText;
+                        mBtn.disabled = false;
+                        mBtn.style.backgroundColor = brandData[mBrand.dataset.brand]?.btnColor || '#FF8C00';
+                    }, 2000);
+                }, 2500);
+
+            } catch (error) {
+                console.error("Sync Error:", error);
+                alert('Neural Link Interrupted. Please try again.');
+                mBtn.innerHTML = originalBtnText;
+                mBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
