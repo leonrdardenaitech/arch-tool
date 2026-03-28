@@ -605,6 +605,12 @@ export default function Watz4DinnerApp() {
         )}
       </PhoneFrame>
 
+      <footer className="fixed bottom-4 text-center w-full max-w-[500px] z-50">
+        <div className="flex justify-center gap-6">
+          <a href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white transition-colors underline decoration-white/10 underline-offset-4">Privacy Policy</a>
+        </div>
+      </footer>
+
       <style dangerouslySetInnerHTML={{ __html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

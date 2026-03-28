@@ -12,6 +12,7 @@
     { "source": "/watz-privacy", "destination": "/watz-privacy.html" },
     { "source": "/watz-dinner", "destination": "/watz-dinner.html" },
     { "source": "/what2eat", "destination": "/what2eat/index.html" },
-    { "source": "/wavesync", "destination": "/wavesync.html" }
+    { "source": "/wavesync", "destination": "/wavesync.html" },
+    { "source": "/privacy", "destination": "/privacy.html" }
   ]
 }

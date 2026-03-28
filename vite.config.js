@@ -19,6 +19,7 @@ export default defineConfig({
         slimeNexus: resolve(__dirname, 'slime-nexus/index.html'),
         watzV2: resolve(__dirname, 'watz-v2.html'),
         what2eat: resolve(__dirname, 'what2eat/index.html'),
+        privacy: resolve(__dirname, 'privacy.html'),
       },
     },
   },

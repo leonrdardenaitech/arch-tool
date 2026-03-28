@@ -426,6 +426,13 @@ const VoxApp = () => {
 
       </div>
 
+      <footer className="mt-12 text-center space-y-4 relative z-10 pb-12">
+        <p className="text-slate-600 text-[10px] font-mono tracking-[0.4em] uppercase opacity-50">VOX HYDRATION ARCHITECTURE // v1.2.5</p>
+        <div className="flex justify-center gap-6">
+          <a href="/privacy" className="text-[10px] font-bold text-cyan-700 hover:text-cyan-400 uppercase tracking-widest transition-colors underline decoration-cyan-900 underline-offset-4">Privacy Policy</a>
+        </div>
+      </footer>
+
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }

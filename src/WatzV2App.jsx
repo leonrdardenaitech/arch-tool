@@ -571,6 +571,9 @@ export default function WatzV2App() {
       <footer className="py-20 border-t border-white/5 text-center">
         <div className="max-w-7xl mx-auto px-6 space-y-8 text-zinc-600 text-center flex flex-col items-center">
           <TextLogo className="text-4xl opacity-20" />
+          <div className="flex justify-center gap-8">
+             <a href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-orange-500 transition-colors underline decoration-orange-950 underline-offset-4">Privacy Policy</a>
+          </div>
           <p className="text-[10px] font-black uppercase tracking-[0.5em] text-center">© 2026 LEON R DARDEN // SECURE AI SYSTEMS</p>
         </div>
       </footer>

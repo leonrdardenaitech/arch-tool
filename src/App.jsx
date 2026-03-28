@@ -650,6 +650,7 @@ export default function App() {
           <div className="flex justify-center gap-8">
              <a href="mailto:Leonrdarden@gmail.com" className="text-xs font-bold uppercase tracking-widest text-cyan-500 hover:text-fuchsia-400 transition-colors">Contact Log</a>
              <a href="https://www.linkedin.com/in/leon-darden-686899a5" target="_blank" rel="noreferrer" className="text-xs font-bold uppercase tracking-widest text-cyan-500 hover:text-fuchsia-400 transition-colors">LinkedIn Network</a>
+             <a href="/privacy" className="text-xs font-bold uppercase tracking-widest text-cyan-500 hover:text-fuchsia-400 transition-colors">Privacy Policy</a>
           </div>
           <p className="text-[9px] text-slate-600 uppercase font-mono tracking-[0.3em] pt-4">
             © 2026 LEON R DARDEN / SECURE AI SYSTEMS

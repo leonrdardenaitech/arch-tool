@@ -398,10 +398,13 @@ export default function ResumeApp() {
         </section>
 
         {/* Footer */}
-        <footer className="text-center py-20 border-t border-white/5">
-           <p className="text-zinc-600 text-[10px] uppercase font-black tracking-[0.5em] mb-4">
+        <footer className="text-center py-20 border-t border-white/5 space-y-6">
+           <p className="text-zinc-600 text-[10px] uppercase font-black tracking-[0.5em]">
              Architect: Leon R. Darden // Stonecrest GA
            </p>
+           <div className="flex justify-center gap-8">
+              <a href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-blue-400 transition-colors underline decoration-blue-500/30 underline-offset-4">Privacy Policy</a>
+           </div>
            <p className="text-zinc-800 text-[8px] uppercase tracking-widest">
              Sourced via Gemini 1.5 Pro // Neural Resume Protocol v2.0.26
            </p>

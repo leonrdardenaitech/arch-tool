@@ -223,6 +223,13 @@ const BrandBuilderApp = () => {
         )}
       </main>
 
+      <footer className="bb-footer relative z-10 py-12 text-center space-y-4">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-600/50">Neural Asset Synthesis Engine // v1.4.0</p>
+        <div className="flex justify-center gap-6">
+          <a href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-orange-500 transition-colors underline decoration-orange-950 underline-offset-4">Privacy Policy</a>
+        </div>
+      </footer>
+
       <style dangerouslySetInnerHTML={{ __html: `
         .bb-container { min-height: 100vh; background: #000; color: #fff; font-family: 'Inter', sans-serif; position: relative; overflow-x: hidden; }
         .bb-background { position: fixed; inset: 0; background-size: cover; background-position: center; filter: brightness(0.3); opacity: 0.5; }
