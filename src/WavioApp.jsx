@@ -14,29 +14,30 @@ const GlobalNav = () => {
   const location = useLocation();
   const { isSonarActive, isEcoMode } = useWavio();
   
-  if (location.pathname === '/focus') return null; // Hide for immersive focus mode
+  if (location.pathname === '/focus') return null;
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 p-6 flex justify-between items-center pointer-events-none">
-      <div className="flex gap-2 items-center pointer-events-auto bg-black/40 backdrop-blur-xl px-6 py-2.5 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-cyan-400">
-        <Link to="/" className="hover:text-white transition-colors px-2">Home</Link>
-        <span className="opacity-20">/</span>
-        <Link to="/dashboard" className="hover:text-white transition-colors px-2">Tank</Link>
-        <span className="opacity-20">/</span>
-        <Link to="/gestures" className="hover:text-white transition-colors px-2">Gestures</Link>
-        <span className="opacity-20">/</span>
-        <Link to="/about" className="hover:text-white transition-colors px-2">About</Link>
+    <nav className="fixed top-0 left-0 w-full z-[100] bg-[#001f3f] border-b border-white/5 h-16 flex items-center px-8">
+      {/* Logo Area */}
+      <div className="flex-1 flex items-center gap-4">
+        <div className="text-xl font-black italic tracking-tighter text-white">WaVio</div>
+      </div>
+
+      {/* Center Navigation */}
+      <div className="flex-[2] flex justify-center items-center gap-8">
+        <Link to="/" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Home</Link>
+        <Link to="/dashboard" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Dashboard</Link>
+        <Link to="/gestures" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Gestures</Link>
+        <Link to="/about" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">About</Link>
       </div>
       
-      <div className="flex gap-3 pointer-events-auto items-center">
-        {isEcoMode && (
-          <span className="bg-green-900/40 text-green-400 border border-green-500/30 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest backdrop-blur-md">
-            Eco_Mode
-          </span>
-        )}
-        <div className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest uppercase border backdrop-blur-md transition-all ${isSonarActive ? 'bg-red-900/40 text-red-400 border-red-500/50 animate-pulse' : 'bg-slate-900/40 text-slate-400 border-white/10'}`}>
-          Sonar: {isSonarActive ? 'Engaged' : 'Standby'}
+      {/* Settings / Status Area */}
+      <div className="flex-1 flex justify-end items-center gap-6">
+        <div className="flex items-center gap-2">
+          {isEcoMode && <span className="text-[8px] font-black text-green-400 border border-green-500/30 px-2 py-0.5 rounded">ECO</span>}
+          <div className={`w-2 h-2 rounded-full ${isSonarActive ? 'bg-red-500 animate-pulse' : 'bg-white/20'}`} />
         </div>
+        <Settings size={18} className="text-white/40 hover:text-white cursor-pointer transition-colors" />
       </div>
     </nav>
   );
