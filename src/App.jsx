@@ -197,14 +197,34 @@ const CAPABILITIES = [
     ] 
   },
   { 
-    id: "patching-protocol", 
-    title: "Patching Protocol", 
-    type: "INTERACTIVE_NODE",
+    id: "wavio", 
+    title: "WaVio // Acoustic Sensing", 
+    type: "APP_MODULE",
+    icon: <Radar className="text-cyan-400" size={24} />,
+    image: "/WavioWorld/images/placidplace-fish-18858.gif",
+    description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
+    metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
+    liveUrl: "/wavio"
+  },
+  { 
+    id: "wavio", 
+    title: "WaVio // Acoustic Sensing", 
+    type: "APP_MODULE",
     icon: <Activity className="text-cyan-400" size={24} />,
-    image: "cybergirl.jpg",
-    description: "Sector 08: Interactive logic diagnostic and realignment protocol. Requires HITL verification to resolve audio sector friction.",
-    metrics: ["HITL Protocol", "Logic Repair", "Audio Realignment"],
-    isStory: true
+    image: "/WavioWorld/images/placidplace-fish-18858.gif",
+    description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
+    metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
+    liveUrl: "/wavio"
+  },
+  { 
+    id: "wavio", 
+    title: "WaVio // Acoustic Sensing", 
+    type: "APP_MODULE",
+    icon: <Activity className="text-cyan-400" size={24} />,
+    image: "/WavioWorld/images/placidplace-fish-18858.gif",
+    description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
+    metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
+    liveUrl: "/wavio"
   }
 ];
 

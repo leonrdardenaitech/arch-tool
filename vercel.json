@@ -13,6 +13,7 @@
     { "source": "/watz-dinner", "destination": "/watz-dinner.html" },
     { "source": "/what2eat", "destination": "/what2eat/index.html" },
     { "source": "/wavesync", "destination": "/wavesync.html" },
-    { "source": "/privacy", "destination": "/privacy.html" }
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/wavio", "destination": "/wavio.html" }
   ]
 }

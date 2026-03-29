@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WaVio | Acoustic Sensing Instructions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000814;
+            --neon-cyan: #22d3ee;
+            --text-primary: #e0e0e0;
+            --text-muted: #8892b0;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 60px;
+            border-radius: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin: 30px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        p, li {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        ul { margin-left: 20px; margin-bottom: 20px; }
+
+        .step-card {
+            background: rgba(34, 211, 238, 0.05);
+            border: 1px solid rgba(34, 211, 238, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--neon-cyan);
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-cyan);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WaVio // Pilot Guide</h1>
+        <span class="subtitle">Acoustic Sensing Protocol v1.5</span>
+
+        <p>WaVio transforms your microphone into a localized 19kHz ultrasonic radar field. Follow these steps to initialize the touchless interface.</p>
+
+        <div class="step-card">
+            <span class="step-number">STEP 01</span>
+            <h2>Enable Hardware Permissions</h2>
+            <p>Upon initialization, your browser will request <strong>Microphone Access</strong>. This is required to broadcast and listen for the 19kHz ultrasonic pulse. WaVio does not record or store audio data.</p>
+        </div>
+
+        <div class="step-card">
+            <span class="step-number">STEP 02</span>
+            <h2>Establish Baseline</h2>
+            <p>Place your device on a flat, stable surface. The system requires a quiet environment for the first 3 seconds to establish an acoustic baseline.</p>
+        </div>
+
+        <div class="step-card">
+            <span class="step-number">STEP 03</span>
+            <h2>Hand Gesture: The Swipe</h2>
+            <p>Perform a broad horizontal motion 4-6 inches directly over the microphone. The system detects the Doppler shift to trigger the <strong>Rewind (15s)</strong> command.</p>
+        </div>
+
+        <div class="step-card">
+            <span class="step-number">STEP 04</span>
+            <h2>Physical Impact: The Bump</h2>
+            <p>Deliver a firm tap or "bump" to the table surface near the device. The accelerometer detects the Z-axis force (> 8.5g) to <strong>Toggle Play/Pause</strong>.</p>
+        </div>
+
+        <h2>Environment Recommendations</h2>
+        <ul>
+            <li><strong>Optimal Distance:</strong> 4-10 inches from the microphone.</li>
+            <li><strong>Surface:</strong> Solid wood or stone tables provide the best acoustic reflection and telemetry conduction.</li>
+            <li><strong>Eco-Mode:</strong> If battery drops below 20%, high-fidelity visuals will swap to static placeholders to preserve power.</li>
+        </ul>
+
+        <a href="javascript:window.close()" class="back-link">← Close Guide</a>
+    </div>
+</body>
+</html>

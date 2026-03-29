@@ -1,0 +1,107 @@
+:root {
+  --wavio-dark-blue: #001f3f;       
+  --wavio-vivid-blue: #007bff;      
+  --wavio-cyan: #22d3ee;            
+  --wavio-red-active: #ff0000;      
+  --wavio-green-ok: #22c55e;        
+}
+
+.wavio-font-thin {
+  font-family: 'Arial', sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.15em;
+}
+
+.btn-wavio-primary {
+  background-color: var(--wavio-vivid-blue);
+  color: white;
+  transition: all 0.3s ease;
+  border-radius: 9999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.btn-wavio-primary:hover {
+  background-color: var(--wavio-red-active);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+.btn-wavio-outline {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.3s ease;
+  border-radius: 9999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.btn-wavio-outline:hover {
+  border-color: var(--wavio-red-active);
+  background: rgba(255, 0, 0, 0.1);
+}
+
+@keyframes fish-swim-float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-fish-float {
+  animation: fish-swim-float 6s ease-in-out infinite;
+}
+
+.tech-tank-card {
+  background: rgba(0, 31, 63, 0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(34, 211, 238, 0.1);
+  border-radius: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 4px 16px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--wavio-cyan);
+}
+
+.phone-mockup {
+  width: 100%;
+  max-width: 320px;
+  height: 640px;
+  background: #000;
+  border: 12px solid var(--wavio-dark-blue);
+  border-radius: 3rem;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.7);
+}
+
+.sonar-pulse {
+  position: relative;
+}
+
+.sonar-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px solid var(--wavio-red-active);
+  border-radius: inherit;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }

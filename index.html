@@ -192,6 +192,12 @@
             100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
         }
 
+        @keyframes pulse-cyan {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(34, 211, 238, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+        }
+
         .beta-text { display: flex; flex-direction: column; }
         .beta-text strong { font-size: 0.7rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.1em; }
         .beta-text span { font-size: 0.6rem; color: var(--text-muted); }
@@ -252,6 +258,17 @@
                 <p>Bespoke AI utilities, operational automation frameworks, and specialized intelligence tools designed to solve high-friction business challenges.</p>
                 <a href="https://leonrdardenaitech.github.io/leons-ai-solutions/" class="lobby-btn">Explore Solutions Lab</a>
                 
+                <div class="beta-notice" style="border-color: rgba(34, 211, 238, 0.1); margin-top: 2rem;">
+                    <div class="pulse-dot" style="background: #22d3ee; animation-name: pulse-cyan;"></div>
+                    <a href="/wavio" style="text-decoration: none;">
+                        <div class="beta-text">
+                            <strong style="color: #22d3ee;">WaVio // Acoustic Sensing</strong>
+                            <span>Touchless UI Interface Active</span>
+                        </div>
+                    </a>
+                    <a href="/wavio" class="beta-link" style="color: #22d3ee;">Initialize</a>
+                </div>
+
                 <div class="beta-notice">
                     <div class="pulse-dot"></div>
                     <a href="/what2eat" style="text-decoration: none;">
