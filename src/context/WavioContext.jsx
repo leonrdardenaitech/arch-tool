@@ -7,23 +7,27 @@ export const WavioProvider = ({ children }) => {
   const [isEcoMode, setIsEcoMode] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(100);
   const [isSonarActive, setIsSonarActive] = useState(false);
-  const [globalTheme, setGlobalTheme] = useState('aquarium-main.mp4'); // Default
+  const [globalTheme, setGlobalTheme] = useState('Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4');
+  const [isInitializing, setIsInitializing] = useState(true); // Control the big green pulse
 
   useEffect(() => {
-    // Battery Monitoring
+    // Initial Pulse Timeout: Show the "Green Core" then return to standby
+    const timer = setTimeout(() => setIsInitializing(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if ('getBattery' in navigator) {
       navigator.getBattery().then(batt => {
         setBatteryLevel(batt.level * 100);
-        
         const updateBattery = () => {
           const level = batt.level * 100;
           setBatteryLevel(level);
           if (level <= 20 && !isEcoMode) {
             setIsEcoMode(true);
-            setGlobalTheme('placidplace-fish-13525.gif'); // Auto-switch to low power background
+            setGlobalTheme('placidplace-fish-13525.gif');
           }
         };
-
         batt.addEventListener('levelchange', updateBattery);
         return () => batt.removeEventListener('levelchange', updateBattery);
       });
@@ -33,11 +37,7 @@ export const WavioProvider = ({ children }) => {
   const toggleEcoMode = () => {
     const newMode = !isEcoMode;
     setIsEcoMode(newMode);
-    if (newMode) {
-      setGlobalTheme('placidplace-fish-13525.gif');
-    } else {
-      setGlobalTheme('aquarium-main.mp4');
-    }
+    setGlobalTheme(newMode ? 'placidplace-fish-13525.gif' : 'Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4');
   };
 
   const toggleSonar = async () => {
@@ -52,13 +52,10 @@ export const WavioProvider = ({ children }) => {
 
   return (
     <WavioContext.Provider value={{ 
-      isEcoMode, 
-      toggleEcoMode, 
-      batteryLevel, 
-      isSonarActive, 
-      toggleSonar,
-      globalTheme,
-      setGlobalTheme
+      isEcoMode, toggleEcoMode, batteryLevel, 
+      isSonarActive, toggleSonar, 
+      globalTheme, setGlobalTheme,
+      isInitializing, setIsInitializing
     }}>
       {children}
     </WavioContext.Provider>

@@ -9,7 +9,11 @@ import {
 
 const WavioHome = () => {
   const navigate = useNavigate();
-  const { isSonarActive, toggleSonar, globalTheme, setGlobalTheme, isEcoMode } = useWavio();
+  const { 
+    isSonarActive, toggleSonar, globalTheme, setGlobalTheme, 
+    isEcoMode, isInitializing, setIsInitializing 
+  } = useWavio();
+  
   const [isMuted, setIsMuted] = useState(false);
   const [time, setTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
@@ -29,17 +33,26 @@ const WavioHome = () => {
     { name: 'Blank', type: 'image', src: 'blank' }
   ];
 
-  const handleEnterTank = async () => {
+  const handleInitialize = async () => {
+    setIsInitializing(true);
     if (!isSonarActive) await toggleSonar();
-    navigate('/dashboard');
+    // After 5 seconds the context will set isInitializing to false automatically
   };
 
   const isVideo = globalTheme.endsWith('.mp4');
 
   return (
-    <div className="relative min-h-screen w-full flex bg-black font-sans overflow-x-hidden">
+    <div className="relative min-h-screen w-full flex bg-[#000814] font-sans overflow-hidden select-none">
       
-      {/* --- CONTINUOUS BACKGROUND --- */}
+      {/* --- GLOBAL VIEWPORT ARROWS --- */}
+      <div className="fixed top-1/2 left-4 -translate-y-1/2 z-[60] opacity-20 hover:opacity-100 transition-opacity cursor-pointer">
+        <ChevronLeft size={32} className="text-white" />
+      </div>
+      <div className="fixed top-1/2 right-24 -translate-y-1/2 z-[60] opacity-20 hover:opacity-100 transition-opacity cursor-pointer">
+        <ChevronRight size={32} className="text-white" />
+      </div>
+
+      {/* --- CONTINUOUS BACKGROUND (Synced with Phone) --- */}
       <div className="absolute inset-0 z-0">
         {globalTheme !== 'blank' && (
           isVideo ? (
@@ -56,37 +69,38 @@ const WavioHome = () => {
             />
           )
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001f3f]/90 via-[#001f3f]/20 to-[#001f3f]/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001f3f]/95 via-transparent to-[#001f3f]/95"></div>
       </div>
 
       {/* --- LEFT COLUMN: CONTENT --- */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center px-12 lg:px-24 max-w-3xl">
-        <div className="space-y-8">
-          <div className="glass-pill w-fit opacity-10">For Aquarium Lovers</div>
-          
-          <div className="space-y-2">
-            <h1 className="text-8xl font-black italic tracking-tighter text-white drop-shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+      <main className="relative z-10 w-1/2 flex flex-col justify-center pl-24 pr-12">
+        <div className="space-y-6">
+          <div className="space-y-0">
+            <h1 className="text-[120px] font-black italic tracking-tighter text-white leading-[0.8] drop-shadow-[0_0_30px_rgba(34,211,238,0.3)]">
               WaVio
             </h1>
-            <h2 className="text-2xl font-black uppercase tracking-[0.4em] text-cyan-400">
+            <div className="glass-pill w-fit opacity-10 mt-4 ml-2">For Aquarium Lovers</div>
+          </div>
+          
+          <div className="pt-4 space-y-4">
+            <h2 className="text-xl font-black uppercase tracking-[0.5em] text-cyan-400">
               Trigger from Hand Gestures
             </h2>
+            <p className="wavio-font-thin text-base text-white/50 leading-relaxed max-w-md">
+              Control your media with acoustic sensing. No touch needed—just wave your hand through the air while enjoying the serene aquarium backdrop.
+            </p>
           </div>
 
-          <p className="wavio-font-thin text-xl text-white/60 leading-relaxed max-w-xl">
-            Control your media with acoustic sensing. No touch needed—just wave your hand through the air while enjoying the serene aquarium backdrop.
-          </p>
-
-          <div className="flex gap-6 pt-8">
+          <div className="flex gap-4 pt-10">
             <button 
-              onClick={handleEnterTank}
-              className="btn-wavio-primary px-10 py-4 text-xs shadow-[0_0_30px_rgba(0,123,255,0.4)]"
+              onClick={() => navigate('/dashboard')}
+              className="btn-wavio-primary px-8 py-3 text-[10px] shadow-[0_0_20px_rgba(0,123,255,0.3)] hover:border-red-600 border border-transparent"
             >
               Open Dashboard
             </button>
             <button 
               onClick={() => navigate('/gestures')}
-              className="btn-wavio-outline px-10 py-4 text-xs"
+              className="btn-wavio-outline px-8 py-3 text-[10px] hover:border-red-600"
             >
               Learn Gestures
             </button>
@@ -95,76 +109,89 @@ const WavioHome = () => {
       </main>
 
       {/* --- MIDDLE RIGHT: PHONE FORM FACTOR --- */}
-      <div className="relative z-10 flex-1 hidden lg:flex items-center justify-center pr-24">
-        <div className="phone-mockup flex flex-col">
+      <div className="relative z-10 w-1/2 flex items-center justify-center pr-24">
+        <div className="phone-mockup flex flex-col shadow-[0_0_100px_rgba(0,0,0,0.8)] border-[10px] border-[#001f3f]">
           {/* Phone Status Bar */}
-          <div className="bg-[#001f3f] h-14 flex items-center justify-between px-8 text-white/70">
-            <span className="text-[10px] font-black tracking-widest">{time}</span>
+          <div className="bg-[#001f3f] h-12 flex items-center justify-between px-6 text-white/50">
+            <span className="text-[9px] font-black tracking-widest">{time}</span>
             <div className="flex items-center gap-3">
-              <div className={`w-2 h-2 rounded-full ${isSonarActive ? 'bg-red-500 animate-pulse' : 'bg-white/20'}`} />
-              <Settings size={12} />
+              <div className={`w-1.5 h-1.5 rounded-full ${isSonarActive ? 'bg-red-500 animate-pulse' : 'bg-white/10'}`} />
+              <Settings size={10} />
             </div>
           </div>
 
           {/* Phone Body */}
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
-            {/* Inner Phone Background */}
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden bg-black">
+            {/* Inner Phone Background (Synced with main) */}
             <div className="absolute inset-0 z-0 opacity-20">
-               {isVideo ? (
-                 <video autoPlay loop muted playsinline className="w-full h-full object-cover" src={`/WavioWorld/video/${globalTheme}`} />
-               ) : (
-                 <img className="w-full h-full object-cover" src={`/WavioWorld/images/${globalTheme}`} />
+               {globalTheme !== 'blank' && (
+                 isVideo ? (
+                   <video autoPlay loop muted playsinline className="w-full h-full object-cover" src={`/WavioWorld/video/${globalTheme}`} />
+                 ) : (
+                   <img className="w-full h-full object-cover" src={`/WavioWorld/images/${globalTheme}`} />
+                 )
                )}
             </div>
 
-            <div className="relative z-10 mb-12">
-              <h4 className="text-3xl font-black italic tracking-tighter">WaVio</h4>
-              <p className="text-[8px] uppercase tracking-[0.3em] text-cyan-400 font-bold">Trigger from hand gestures</p>
+            <div className="relative z-10 mb-8">
+              <h4 className="text-2xl font-black italic tracking-tighter text-white">WaVio</h4>
+              <p className="text-[7px] uppercase tracking-[0.3em] text-cyan-400 font-bold">Trigger from hand gestures</p>
             </div>
 
-            <div className="relative z-10 mb-12">
-              <img src="/WavioWorld/images/placidplace-fish-13525.gif" className="w-20 h-20 animate-fish-float opacity-60" alt="Fish" />
+            <div className="relative z-10 mb-8">
+              <img src="/WavioWorld/images/placidplace-fish-13525.gif" className="w-16 h-16 animate-fish-float opacity-40" alt="Fish" />
             </div>
 
-            <p className="relative z-10 text-[9px] uppercase tracking-[0.3em] text-white/40 font-black animate-pulse">Tap mic to wake</p>
+            <p className="relative z-10 text-[8px] uppercase tracking-[0.3em] text-white/30 font-black animate-pulse">Tap mic to wake</p>
           </div>
 
           {/* Phone Media Controls */}
-          <div className="px-8 pb-8 grid grid-cols-4 gap-4 relative z-10">
+          <div className="px-6 pb-6 grid grid-cols-4 gap-3 relative z-10 bg-black">
             {[Play, Pause, RotateCcw, AlarmClock].map((Icon, idx) => (
-              <button key={idx} className="p-3 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-white hover:bg-white/10">
-                <Icon size={14} />
+              <button key={idx} className="p-2.5 bg-white/5 border border-white/5 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-all">
+                <Icon size={12} />
               </button>
             ))}
           </div>
 
           {/* Phone Triggers */}
-          <div className="flex items-center justify-center gap-6 pb-12 relative z-10">
-            <button className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg"><Mic size={16} /></button>
-            <button className={`w-16 h-16 bg-[#001f3f] rounded-full flex items-center justify-center border-2 border-red-600 shadow-2xl ${isSonarActive ? 'sonar-pulse' : ''}`}>
-              <Radar size={24} className="text-white" />
+          <div className="flex items-center justify-center gap-5 pb-10 relative z-10 bg-black">
+            <button className="w-9 h-9 bg-red-600 rounded-full flex items-center justify-center shadow-lg text-white"><Mic size={14} /></button>
+            
+            {/* The Heart of WaVio: Sonar Button */}
+            <button 
+              onClick={handleInitialize}
+              className={`w-14 h-14 bg-[#001f3f] rounded-full flex items-center justify-center border-2 border-red-600 shadow-2xl transition-all ${isInitializing ? 'bg-green-500 border-white scale-110 animate-pulse' : ''}`}
+            >
+              <Radar size={20} className={isInitializing ? 'text-white' : 'text-white/80'} />
             </button>
-            <button className="w-10 h-10 bg-[#007bff] rounded-full flex items-center justify-center shadow-lg"><Activity size={16} /></button>
+
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="w-9 h-9 bg-[#007bff] rounded-full flex items-center justify-center shadow-lg text-white"
+            >
+              <Activity size={14} />
+            </button>
           </div>
 
-          {/* Side Toggle Arrows */}
-          <div className="absolute top-1/2 left-2 -translate-y-1/2 opacity-20"><ChevronLeft size={16} /></div>
-          <div className="absolute top-1/2 right-2 -translate-y-1/2 opacity-20"><ChevronRight size={16} /></div>
+          {/* Phone Toggle Arrows */}
+          <div className="absolute top-1/2 left-1.5 -translate-y-1/2 opacity-10"><ChevronLeft size={12} /></div>
+          <div className="absolute top-1/2 right-1.5 -translate-y-1/2 opacity-10"><ChevronRight size={12} /></div>
         </div>
       </div>
 
       {/* --- FAR RIGHT UTILITY SIDEBAR --- */}
-      <div className="relative z-[20] w-20 flex flex-col items-center py-24 gap-12 bg-black/40 backdrop-blur-xl border-l border-white/5">
-        <button onClick={() => setIsMuted(!isMuted)} className="text-white opacity-40 hover:opacity-100 transition-opacity">
-          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+      <div className="relative z-[70] w-20 flex flex-col items-center py-20 gap-10 bg-[#001f3f]/40 backdrop-blur-2xl border-l border-white/5">
+        <button onClick={() => setIsMuted(!isMuted)} className="text-white/40 hover:text-white transition-colors">
+          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </button>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {backgrounds.map((bg, idx) => (
             <button 
               key={idx}
               onClick={() => setGlobalTheme(bg.src)}
-              className={`w-10 h-10 rounded-lg border-2 overflow-hidden transition-all ${globalTheme === bg.src ? 'border-cyan-400 scale-110 shadow-[0_0_10px_#22d3ee]' : 'border-white/10 opacity-40 hover:opacity-100'}`}
+              className={`w-9 h-9 rounded-md border-2 overflow-hidden transition-all ${globalTheme === bg.src ? 'border-cyan-400 scale-110' : 'border-white/5 opacity-30 hover:opacity-100'}`}
               title={bg.name}
             >
               {bg.src === 'blank' ? (
@@ -181,9 +208,8 @@ const WavioHome = () => {
         </div>
       </div>
 
-      {/* --- SCROLL CONTENT: MARKETING --- */}
-      {/* (Reserved for scroll logic if needed) */}
-
+      {/* --- SCROLL SECTION: DARK BLUE BORDER MARKETING --- */}
+      <div className="absolute bottom-0 left-0 w-full h-[15vh] bg-gradient-to-t from-[#001f3f] to-transparent pointer-events-none" />
     </div>
   );
 };

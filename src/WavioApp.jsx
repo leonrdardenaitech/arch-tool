@@ -18,26 +18,29 @@ const GlobalNav = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-[100] bg-[#001f3f] border-b border-white/5 h-16 flex items-center px-8">
-      {/* Logo Area */}
-      <div className="flex-1 flex items-center gap-4">
+      {/* Far Left: Settings */}
+      <div className="flex-1 flex items-center gap-6">
+        <Settings size={18} className="text-white/40 hover:text-white cursor-pointer transition-colors" />
         <div className="text-xl font-black italic tracking-tighter text-white">WaVio</div>
       </div>
 
-      {/* Center Navigation */}
-      <div className="flex-[2] flex justify-center items-center gap-8">
-        <Link to="/" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Home</Link>
-        <Link to="/dashboard" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Dashboard</Link>
-        <Link to="/gestures" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">Gestures</Link>
-        <Link to="/about" className="text-[11px] wavio-font-thin uppercase tracking-widest text-white/70 hover:text-white transition-colors">About</Link>
+      {/* Center: Pages (Thin Arial Style) */}
+      <div className="flex-[2] flex justify-center items-center gap-10">
+        <Link to="/" className="text-[12px] font-light font-sans uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors">Home</Link>
+        <Link to="/dashboard" className="text-[12px] font-light font-sans uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors">Dashboard</Link>
+        <Link to="/gestures" className="text-[12px] font-light font-sans uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors">Gestures</Link>
+        <Link to="/about" className="text-[12px] font-light font-sans uppercase tracking-[0.2em] text-white/70 hover:text-white transition-colors">About</Link>
       </div>
       
-      {/* Settings / Status Area */}
-      <div className="flex-1 flex justify-end items-center gap-6">
-        <div className="flex items-center gap-2">
-          {isEcoMode && <span className="text-[8px] font-black text-green-400 border border-green-500/30 px-2 py-0.5 rounded">ECO</span>}
-          <div className={`w-2 h-2 rounded-full ${isSonarActive ? 'bg-red-500 animate-pulse' : 'bg-white/20'}`} />
+      {/* Far Right: Status Indicators */}
+      <div className="flex-1 flex justify-end items-center gap-4">
+        <div className="flex items-center gap-3 bg-black/20 px-4 py-1.5 rounded-full border border-white/5">
+          {isEcoMode && <span className="text-[8px] font-black text-green-400">ECO</span>}
+          <div className="flex items-center gap-2">
+            <span className="text-[8px] font-black uppercase tracking-widest text-white/30">Sonar</span>
+            <div className={`w-2 h-2 rounded-full ${isSonarActive ? 'bg-red-500 animate-pulse' : 'bg-white/10'}`} />
+          </div>
         </div>
-        <Settings size={18} className="text-white/40 hover:text-white cursor-pointer transition-colors" />
       </div>
     </nav>
   );

@@ -1,66 +1,113 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Info, Github, Linkedin, Mail } from 'lucide-react';
+import { ChevronLeft, Github, Linkedin, Mail, ShieldCheck, Cpu, Code, Zap } from 'lucide-react';
 
 const WavioAbout = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#000814] text-white font-sans p-6 md:p-12 pt-24 overflow-x-hidden">
-      <div className="max-w-4xl mx-auto space-y-16">
+    <div className="min-h-screen bg-[#000814] text-white font-sans overflow-x-hidden">
+      
+      {/* Background Distraction */}
+      <div className="fixed inset-0 z-0">
+        <img 
+          src="/WavioWorld/images/aquarium screensaver GIF.gif" 
+          className="w-full h-full object-cover opacity-20" 
+          alt="Distraction" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000814] via-transparent to-[#000814]"></div>
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto p-6 md:p-24 space-y-24">
         
         {/* Navigation */}
         <button 
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/')}
           className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-cyan-500 hover:text-white transition-all"
         >
-          <ChevronLeft size={16} /> Back to Tank
+          <ChevronLeft size={16} /> Close Dossier
         </button>
 
         {/* Hero Section */}
-        <section className="space-y-6">
-          <div className="glass-pill w-fit">Project Documentation</div>
-          <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase">
-            Acoustic <span className="text-cyan-500">Intelligence</span>
+        <header className="space-y-6">
+          <div className="glass-pill w-fit">Architect_Dossier_v2.0</div>
+          <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.8]">
+            Leon R. <span className="text-cyan-500">Darden</span>
           </h1>
-          <p className="wavio-font-thin text-xl text-white/60 leading-relaxed max-w-2xl">
-            WaVio is a physical interaction layer for multimodal superintelligence. By transforming standard microphones into 19kHz ultrasonic radar, we enable zero-touch control in any environment.
-          </p>
-        </section>
+          <p className="text-sm font-mono text-cyan-700 uppercase tracking-[0.4em]">AI Solutions Architect // Engineer El</p>
+        </header>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="tech-tank-card p-10 space-y-6">
-            <div className="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl flex items-center justify-center">
-              <Info size={24} className="text-cyan-400" />
+        {/* The "Boring" Professional Vault Section (Shrunken Fonts) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          
+          <section className="space-y-8">
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40 border-b border-white/5 pb-2">Professional_Identity</h3>
+              <div className="text-[11px] leading-relaxed text-white/60 space-y-4 font-mono">
+                <p>Strategic and results-driven AI Solutions Architect with over 15 years of experience in systems support, technical operations, and client-facing solutions.</p>
+                <p>Recently completed the comprehensive Google AI Professional suite, specializing in the integration of Large Language Models (LLMs) to solve enterprise challenges.</p>
+                <p>Proven track record in optimizing complex workflows via SAP, automating communications, and designing high-fidelity AI-native applications.</p>
+              </div>
             </div>
-            <h3 className="text-xl font-bold uppercase tracking-tight">The Vision</h3>
-            <p className="text-sm text-white/40 leading-relaxed">
-              Designed for high-load engineering desks, commercial kitchens, and assistive care kiosks. WaVio bridges the gap between binary logic and human serenity.
-            </p>
-          </div>
 
-          <div className="tech-tank-card p-10 space-y-6">
-            <img src="/WavioWorld/images/aquarium screensaver GIF.gif" className="w-full aspect-video object-cover rounded-xl opacity-50" alt="Logic" />
-            <h3 className="text-xl font-bold uppercase tracking-tight">System Core</h3>
-            <p className="text-sm text-white/40 leading-relaxed">
-              Utilizing Fast Fourier Transform (FFT) to decode Doppler shifts in real-time. No cameras. No invasive tracking. Just sound.
-            </p>
-          </div>
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40 border-b border-white/5 pb-2">Technical_Stack</h3>
+              <div className="grid grid-cols-2 gap-4 text-[10px] font-mono text-cyan-400/60">
+                <div className="flex items-center gap-2"><Cpu size={12} /> Gemini 1.5 Pro</div>
+                <div className="flex items-center gap-2"><Code size={12} /> React / Node.js</div>
+                <div className="flex items-center gap-2"><Zap size={12} /> Prompt Eng.</div>
+                <div className="flex items-center gap-2"><ShieldCheck size={12} /> Trust Infra</div>
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-8">
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40 border-b border-white/5 pb-2">The_Ruthless_Protocol</h3>
+              <div className="text-[11px] leading-relaxed text-white/60 space-y-4 font-mono">
+                <p>The objective is to secure high-leverage AI Solutions and Technical Operations roles within the Decatur/Atlanta metropolitan corridor.</p>
+                <p>By leveraging a background in complex customer solutions (Utilities/Logistics), the goal is to bypass automated Applicant Tracking Systems (ATS).</p>
+                <p>Digital Archaeology: Use depreciated/archived data to find names of department heads and decision-makers.</p>
+              </div>
+            </div>
+
+            <div className="tech-tank-card p-8 bg-cyan-900/10">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-cyan-200 mb-4">Meta_Brand_Logic</h3>
+              <p className="text-[11px] font-mono text-white/40 leading-loose">
+                The "?" represents the user's query; the "2" represents the transition to a solution. Every "?" product builds "Brand Equity" for the next. Trust in one leads to trust in all.
+              </p>
+            </div>
+          </section>
+
         </div>
 
-        {/* Architect Footer */}
-        <footer className="pt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 opacity-40">
-          <div className="text-center md:text-left">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em]">Architect: Leon R. Darden</p>
-            <p className="text-[8px] font-mono mt-1 uppercase">Stonecrest, GA // 2026</p>
-          </div>
-          <div className="flex gap-8">
-            <Github size={18} className="hover:text-cyan-400 cursor-pointer" />
-            <Linkedin size={18} className="hover:text-cyan-400 cursor-pointer" />
-            <Mail size={18} className="hover:text-cyan-400 cursor-pointer" />
+        {/* Closing Visual */}
+        <div className="w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-white/5 relative group">
+           <img 
+             src="/WavioWorld/images/Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4" 
+             className="hidden" 
+             alt="Fallback" 
+           />
+           <video 
+             autoPlay loop muted playsInline 
+             className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
+             src="/WavioWorld/video/Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4"
+           />
+           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <p className="text-[8px] font-black uppercase tracking-[1em] text-white/20">Acoustic_Architecture_Node</p>
+           </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="pt-12 border-t border-white/5 flex justify-between items-center opacity-20 pb-24">
+          <p className="text-[9px] font-mono">ARCH-TOOL // SECTOR_ABOUT // 2026</p>
+          <div className="flex gap-6">
+            <Github size={16} />
+            <Linkedin size={16} />
+            <Mail size={16} />
           </div>
         </footer>
+
       </div>
     </div>
   );
