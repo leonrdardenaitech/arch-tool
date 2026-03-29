@@ -74,6 +74,26 @@ export default function ResumeApp() {
   const [stars, setStars] = useState([]);
   const audioRef = useRef(null);
 
+  const handleDownloadPDF = () => {
+    const element = document.getElementById('resume-capture');
+    if (!element) return;
+    if (!window.html2pdf) return alert("PDF Engine Offline.");
+
+    const opt = {
+      margin: 0.2,
+      filename: 'LEON_R_DARDEN_RESUME.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        backgroundColor: '#050505'
+      },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    window.html2pdf().from(element).set(opt).save();
+  };
+
   // Generate stars and handle audio on entry
   useEffect(() => {
     const starCount = 150;
@@ -166,12 +186,12 @@ export default function ResumeApp() {
           <ArrowLeft size={14} /> Back to Portfolio
         </a>
         <div className="text-[10px] font-black tracking-[0.3em] text-blue-500 uppercase">Neural Resume v2.0</div>
-        <a href="/LEON R. DARDEN RESUME.pdf" download className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]">
+        <button onClick={handleDownloadPDF} className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]">
           <Download size={14} /> Download PDF
-        </a>
+        </button>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-32 flex flex-col gap-24 relative z-10">
+      <main id="resume-capture" className="max-w-4xl mx-auto px-6 py-32 flex flex-col gap-24 relative z-10">
         
         {/* --- SECTION 1: INTERACTIVE PROFILE CARD --- */}
         <section className="flex justify-center">
