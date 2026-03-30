@@ -134,7 +134,7 @@ const WavioGestures = () => {
         </div>
 
         {/* Global Calibration Action */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
            <section className="lg:col-span-2">
              <div className="tech-tank-card p-12 text-center space-y-8 bg-gradient-to-br from-cyan-900/20 to-transparent border border-white/5">
                <Radio size={64} className="mx-auto text-cyan-500 animate-pulse" />
@@ -146,21 +146,33 @@ const WavioGestures = () => {
              </div>
            </section>
 
-           {/* Side Mini Tank */}
-           <div className="tech-tank-card p-0 overflow-hidden relative group">
-              <img 
-                src="/WavioWorld/images/Finding Nemo Coral GIF by Monterey Bay Aquarium.gif" 
-                className="w-full h-full object-cover opacity-40 group-hover:opacity-100 transition-opacity duration-1000" 
-                alt="Mini Tank" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-              <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Target size={14} className="text-cyan-400" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/60">Node_Visual_04</span>
+           {/* Side Mini Tank & Privacy */}
+           <div className="flex flex-col gap-4">
+             <div className="tech-tank-card flex-1 p-0 overflow-hidden relative group">
+                <img 
+                  src="/WavioWorld/images/Finding Nemo Coral GIF by Monterey Bay Aquarium.gif" 
+                  className="w-full h-full object-cover opacity-40 group-hover:opacity-100 transition-opacity duration-1000" 
+                  alt="Mini Tank" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Target size={14} className="text-cyan-400" />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-white/60">Node_Visual_04</span>
+                  </div>
+                  <Activity size={14} className="text-cyan-500 animate-pulse" />
                 </div>
-                <Activity size={14} className="text-cyan-500 animate-pulse" />
-              </div>
+             </div>
+             
+             <div className="flex flex-col items-center text-center p-4 opacity-20 hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-2 text-cyan-500 mb-1">
+                  <Lock size={10} />
+                  <span className="text-[7px] font-black uppercase tracking-[0.3em]">Privacy Protocol</span>
+                </div>
+                <p className="text-[8px] font-bold text-white uppercase tracking-widest leading-relaxed">
+                  Acoustic telemetry is processed locally. Zero data persistence.
+                </p>
+             </div>
            </div>
         </div>
 

@@ -199,11 +199,20 @@ const WavioDashboard = () => {
         </div>
       </div>
 
-      {/* Navigation Shortcut */}
-      <div className="fixed bottom-6 left-6 z-[80]">
+      {/* Navigation Shortcut & Privacy */}
+      <div className="fixed bottom-6 left-6 z-[80] flex items-center gap-6">
         <button onClick={() => navigate('/')} className="p-4 bg-[#001f3f] rounded-2xl border border-white/10 text-white/40 hover:text-white transition-all shadow-3xl hover:border-cyan-500/50">
           <Home size={20} />
         </button>
+        <div className="flex flex-col opacity-20 hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 text-cyan-500">
+            <Lock size={10} />
+            <span className="text-[7px] font-black uppercase tracking-[0.3em]">Privacy Protocol</span>
+          </div>
+          <p className="text-[8px] font-bold text-white uppercase tracking-widest">
+            Acoustic telemetry is processed locally. Zero data persistence.
+          </p>
+        </div>
       </div>
 
     </div>

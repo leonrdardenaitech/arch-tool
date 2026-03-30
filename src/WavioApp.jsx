@@ -8,7 +8,7 @@ import './wavio.css';
 import WavioHome from './pages/WavioHome';
 import WavioDashboard from './pages/WavioDashboard';
 import WavioGestures from './pages/WavioGestures';
-import WavioAbout from './pages/WavioAbout';
+import WavioArchitect from './pages/WavioArchitect';
 import WavioFocusMode from './pages/WavioFocusMode';
 
 const GlobalNav = () => {
@@ -94,7 +94,7 @@ const WavioApp = () => {
             <Route path="/" element={<WavioHome />} />
             <Route path="/dashboard" element={<WavioDashboard />} />
             <Route path="/gestures" element={<WavioGestures />} />
-            <Route path="/architect" element={<WavioAbout />} />
+            <Route path="/architect" element={<WavioArchitect />} />
             <Route path="/focus" element={<WavioFocusMode />} />
           </Routes>
         </div>

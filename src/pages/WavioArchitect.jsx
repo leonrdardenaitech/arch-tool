@@ -1,9 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWavio } from '../context/WavioContext';
-import { ChevronLeft, Github, Linkedin, Mail, ShieldCheck, Cpu, Code, Zap, Database, Terminal } from 'lucide-react';
+import { 
+  ChevronLeft, Github, Linkedin, Mail, ShieldCheck, 
+  Cpu, Code, Zap, Database, Terminal, Activity, Lock 
+} from 'lucide-react';
 
-const WavioAbout = () => {
+const WavioArchitect = () => {
   const navigate = useNavigate();
   const { globalTheme } = useWavio();
   const isVideo = globalTheme.endsWith('.mp4');
@@ -115,13 +118,25 @@ const WavioAbout = () => {
            </div>
         </div>
 
-        {/* Footer */}
-        <footer className="pt-12 border-t border-white/5 flex justify-between items-center opacity-40 pb-24">
-          <p className="text-[9px] font-mono tracking-widest uppercase">ARCH-TOOL // SECTOR_ABOUT // SYNC_STATUS_OK</p>
-          <div className="flex gap-8">
-            <Github size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
-            <Linkedin size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
-            <Mail size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
+        {/* Footer with Privacy Notice */}
+        <footer className="pt-12 border-t border-white/5 space-y-8 pb-24">
+          <div className="flex justify-between items-center opacity-40">
+            <p className="text-[9px] font-mono tracking-widest uppercase">ARCH-TOOL // SECTOR_ARCHITECT // SYNC_STATUS_OK</p>
+            <div className="flex gap-8">
+              <Github size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
+              <Linkedin size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
+              <Mail size={18} className="hover:text-cyan-400 cursor-pointer transition-colors" />
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-center text-center space-y-2 py-6 bg-white/5 rounded-3xl border border-white/5 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-cyan-500/60 mb-1">
+              <Lock size={12} />
+              <span className="text-[8px] font-black uppercase tracking-[0.3em]">Neural Security Protocol</span>
+            </div>
+            <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest">
+              PRIVACY PROTOCOL: WaVio Acoustic telemetry is processed locally. Zero data persistence.
+            </p>
           </div>
         </footer>
 
@@ -130,4 +145,4 @@ const WavioAbout = () => {
   );
 };
 
-export default WavioAbout;
+export default WavioArchitect;

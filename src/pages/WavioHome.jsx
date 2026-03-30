@@ -240,7 +240,17 @@ const WavioHome = () => {
       </div>
 
       {/* --- SCROLL SECTION: DARK BLUE BORDER MARKETING --- */}
-      <div className="absolute bottom-0 left-0 w-full h-[15vh] bg-gradient-to-t from-[#001f3f] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-[15vh] bg-gradient-to-t from-[#001f3f] to-transparent pointer-events-none flex flex-col items-center justify-end pb-6 px-4">
+        <div className="flex flex-col items-center text-center space-y-1 opacity-20 group hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 text-cyan-500">
+            <Lock size={10} />
+            <span className="text-[7px] font-black uppercase tracking-[0.3em]">Privacy Protocol</span>
+          </div>
+          <p className="text-[8px] font-bold text-white uppercase tracking-widest">
+            Acoustic telemetry is processed locally. Zero data persistence.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
