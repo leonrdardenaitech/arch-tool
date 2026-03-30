@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Settings, ShieldCheck, DoorOpen, LogOut, Radio } from 'lucide-react';
 import { WavioProvider, useWavio } from './context/WavioContext';
 import './wavio.css';
