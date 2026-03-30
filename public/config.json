@@ -13,24 +13,18 @@
     "ctaPrimary": "Open Dashboard",
     "ctaSecondary": "Learn Gestures"
   },
+  "backgrounds": [
+    { "id": "video", "type": "video", "src": "/WavioWorld/video/Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4" },
+    { "id": "gif1", "type": "image", "src": "/WavioWorld/images/aquarium GIF.gif" },
+    { "id": "gif2", "type": "image", "src": "/WavioWorld/images/placidplace-fish-13525.gif" },
+    { "id": "gif3", "type": "image", "src": "/WavioWorld/images/placidplace-fish-18858.gif" }
+  ],
   "sections": {
     "architect": {
       "badge": "Architect_Dossier_v2.1",
-      "title": "Architect Dossier",
-      "subtitle": "Leon R. Darden // AI Solutions Architect",
-      "content": "Strategic and results-driven AI Solutions Architect with over 15 years of experience in systems support, technical operations, and client-facing solutions. Expertise lies in bridging the gap between raw machine logic and human-centric design. Recently completed the Google AI Professional suite, specializing in the integration of Large Language Models (LLMs) to solve enterprise challenges. My work focuses on high-fidelity RAG systems, autonomous agentic workflows, and secure AI infrastructure.",
-      "metaBrand": "The '?' represents the user's query; the '2' represents the transition to a solution. Every product in the ecosystem builds 'Brand Equity' for the next. WaVio is the sensory manifestation of this trust protocol."
-    },
-    "gestures": {
-      "badge": "Neural_Mapping_v1.0",
-      "title": "Neural Mapping",
-      "subtitle": "Acoustic Logic Gates",
-      "content": "WaVio translates doppler shifts into binary commands. The Swipe (Rewind 15s), The Impact (Play/Pause), and the Air Wave (Skip) are the foundation of this touchless protocol. Each movement is decoded locally via the HTML5 Web Audio API.",
-      "gestures": [
-        { "name": "The Swipe", "action": "Rewind 15s" },
-        { "name": "The Impact", "action": "Play/Pause" },
-        { "name": "Air Wave", "action": "Skip Forward" }
-      ]
+      "subtitle": "AI Solutions Architect // Systems Integration Expert",
+      "marketing": "WaVio is more than a product; it is a demonstration of 'Engineering Empathy'. By leveraging high-frequency acoustic sensing, we remove the friction of touch in high-stakes environments.",
+      "techSpecs": "• 19kHz Sine Wave Emission\n• Fast Fourier Transform (FFT) Analysis\n• Zero-Latency Z-Axis Telemetry\n• Decoupled SPA Architecture\n• Local-Only Data Processing Protocol\n• Cross-Origin Resource Isolation\n• Neural Handshake Verification"
     }
   }
 }
