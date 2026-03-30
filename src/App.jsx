@@ -205,26 +205,6 @@ const CAPABILITIES = [
     description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
     metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
     liveUrl: "/wavio"
-  },
-  { 
-    id: "wavio", 
-    title: "WaVio // Acoustic Sensing", 
-    type: "APP_MODULE",
-    icon: <Activity className="text-cyan-400" size={24} />,
-    image: "/WavioWorld/images/placidplace-fish-18858.gif",
-    description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
-    metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
-    liveUrl: "/wavio"
-  },
-  { 
-    id: "wavio", 
-    title: "WaVio // Acoustic Sensing", 
-    type: "APP_MODULE",
-    icon: <Activity className="text-cyan-400" size={24} />,
-    image: "/WavioWorld/images/placidplace-fish-18858.gif",
-    description: "Touchless interface architecture utilizing 19kHz ultrasonic sonar fields. Enables zero-friction control through high-frequency doppler shift detection.",
-    metrics: ["Ultrasonic Sonar", "FFT Analysis", "Assistive Tech"],
-    liveUrl: "/wavio"
   }
 ];
 

@@ -8,13 +8,8 @@ export const WavioProvider = ({ children }) => {
   const [batteryLevel, setBatteryLevel] = useState(100);
   const [isSonarActive, setIsSonarActive] = useState(false);
   const [globalTheme, setGlobalTheme] = useState('Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4');
-  const [isInitializing, setIsInitializing] = useState(true); // Control the big green pulse
-
-  useEffect(() => {
-    // Initial Pulse Timeout: Show the "Green Core" then return to standby
-    const timer = setTimeout(() => setIsInitializing(false), 5000);
-    return () => clearTimeout(timer);
-  }, []);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [isFindMyDoorActive, setIsFindMyDoorActive] = useState(false);
 
   useEffect(() => {
     if ('getBattery' in navigator) {
@@ -50,12 +45,17 @@ export const WavioProvider = ({ children }) => {
     }
   };
 
+  const toggleFindMyDoor = () => {
+    setIsFindMyDoorActive(!isFindMyDoorActive);
+  };
+
   return (
     <WavioContext.Provider value={{ 
       isEcoMode, toggleEcoMode, batteryLevel, 
       isSonarActive, toggleSonar, 
       globalTheme, setGlobalTheme,
-      isInitializing, setIsInitializing
+      isInitializing, setIsInitializing,
+      isFindMyDoorActive, toggleFindMyDoor
     }}>
       {children}
     </WavioContext.Provider>
