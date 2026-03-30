@@ -72,25 +72,25 @@ const WavioHome = () => {
             />
           )
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#001f3f]/95 via-transparent to-[#001f3f]/95"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001f3f]/80 via-transparent to-[#001f3f]/80"></div>
       </div>
 
       {/* --- GLOBAL VIEWPORT ARROWS --- */}
       <div 
         onClick={() => cycleBackground(-1)}
-        className="fixed top-1/2 left-4 -translate-y-1/2 z-[60] opacity-20 hover:opacity-100 transition-opacity cursor-pointer p-4"
+        className="fixed top-1/2 left-4 -translate-y-1/2 z-[100] opacity-20 hover:opacity-100 transition-opacity cursor-pointer p-4"
       >
         <ChevronLeft size={48} className="text-white" />
       </div>
       <div 
         onClick={() => cycleBackground(1)}
-        className="fixed top-1/2 right-24 -translate-y-1/2 z-[60] opacity-20 hover:opacity-100 transition-opacity cursor-pointer p-4"
+        className="fixed top-1/2 right-24 -translate-y-1/2 z-[100] opacity-20 hover:opacity-100 transition-opacity cursor-pointer p-4"
       >
         <ChevronRight size={48} className="text-white" />
       </div>
 
       {/* --- LEFT COLUMN: CONTENT (Shrunken for Whitespace) --- */}
-      <main className="relative z-10 w-1/2 flex flex-col justify-center pl-24 pr-12 scale-90 origin-left">
+      <main className="relative z-50 w-1/2 flex flex-col justify-center pl-24 pr-12 scale-90 origin-left">
         <div className="space-y-6">
           <div className="space-y-0">
             <h1 className="text-[120px] font-black italic tracking-tighter text-white leading-[0.8] drop-shadow-[0_0_30px_rgba(34,211,238,0.3)]">

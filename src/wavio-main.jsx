@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import WavioApp from './WavioApp'
-import './index.css'
 import './wavio.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
