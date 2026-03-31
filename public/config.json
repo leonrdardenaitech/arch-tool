@@ -23,8 +23,28 @@
     "architect": {
       "badge": "Architect_Dossier_v2.1",
       "subtitle": "AI Solutions Architect // Systems Integration Expert",
-      "marketing": "WaVio is more than a product; it is a demonstration of 'Engineering Empathy'. By leveraging high-frequency acoustic sensing, we remove the friction of touch in high-stakes environments.",
-      "techSpecs": "• 19kHz Sine Wave Emission\n• Fast Fourier Transform (FFT) Analysis\n• Zero-Latency Z-Axis Telemetry\n• Decoupled SPA Architecture\n• Local-Only Data Processing Protocol\n• Cross-Origin Resource Isolation\n• Neural Handshake Verification"
+      "solution": {
+        "title": "Solution & Architecture",
+        "content": "Binary Acoustic Logic (The Sonar Engine) Instead of relying on heavy visual machine learning, WaVio utilizes a custom pure-JavaScript Web Audio engine. It broadcasts an inaudible 19kHz sine wave and actively listens for frequency anomalies or physical device telemetry.",
+        "flow": ["[Hand Wave]", "[19kHz Audio Pulse]", "[FFT Decoder]", "[DOM Event]", "[UI Action]"]
+      },
+      "empathy": {
+        "title": "Empathetic Engineering",
+        "subtitle": "Focus Mode",
+        "content": "Designed for specialized accessibility. 'Focus Mode' locks the UI to prevent accidental touches, translating gross-motor movements into media rewinds and play/pause commands."
+      },
+      "future": {
+        "title": "Future Scope: The AI Horizon",
+        "content": "WaVio is built as a foundational physical interface for next-gen AI like Google Project Astra. Silent Spatial Computing and the WaveSynch Cast Protocol will bridge local DOM events with the Google Cast SDK."
+      },
+      "techSpecs": "🔹 The Engine: custom pure-JS utility using Web Audio API.\n🔹 Telemetry: Integrated accelerometer for 'table bumps'.\n🔹 Eco-Tank: Global state monitors battery/thermal APIs."
+    },
+    "gestures": {
+      "items": [
+        { "id": "swipe", "title": "The Swipe", "command": "Rewind_15s", "logic": "Doppler shift detection from 19kHz sine wave variance.", "icon": "radar" },
+        { "id": "impact", "title": "The Impact", "command": "Play_Pause", "logic": "Accelerometer Z-axis > 8.5g threshold trigger.", "icon": "zap" },
+        { "id": "wave", "title": "Air Wave", "command": "Skip_Track", "logic": "Consecutive sweep logic establishes progression intent.", "icon": "mouse-pointer-2" }
+      ]
     }
   }
 }
