@@ -4,7 +4,6 @@ class WavioShell {
         this.appContainer = document.getElementById('app-shell');
         this.isMuted = true;
         this.bgIndex = 0;
-        // Fallback data to prevent blank pages if fetch fails
         this.gesturesFallback = [
             { "id": "swipe", "title": "The Swipe", "command": "Rewind_15s", "logic": "Doppler shift detection from 19kHz sine wave variance.", "icon": "radar" },
             { "id": "impact", "title": "The Impact", "command": "Play_Pause", "logic": "Accelerometer Z-axis > 8.5g threshold trigger.", "icon": "zap" },
@@ -15,16 +14,14 @@ class WavioShell {
 
     async init() {
         try {
-            // Try relative path first for local/absolute for prod
             const response = await fetch('config.json').catch(() => fetch('/config.json'));
             this.config = await response.json();
-            console.log("Shell Data Loaded:", this.config);
             this.setupStaticElements();
             this.navigate('home'); 
             lucide.createIcons();
         } catch (err) {
             console.error("Shell Initialization Failed:", err);
-            this.navigate('home'); // Attempt to render with defaults
+            this.navigate('home');
         }
     }
 
@@ -61,7 +58,9 @@ class WavioShell {
     }
 
     navigate(viewId) {
-        window.scrollTo(0, 0);
+        // Reset scroll on navigation
+        this.appContainer.scrollTo(0, 0);
+        
         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
         const activeLink = document.getElementById(`link-${viewId}`);
         if (activeLink) activeLink.classList.add('active');
@@ -79,8 +78,9 @@ class WavioShell {
     renderHome() {
         const h = this.config ? this.config.hero : { title: "WaVio", badge: "Acoustic Sensing", body: "Initializing..." };
         this.appContainer.innerHTML = `
-            <div class="relative min-h-screen w-full flex animate-fade-in pt-16">
-                <main class="relative z-10 w-1/2 flex flex-col items-center justify-center text-center px-12">
+            <div class="relative min-h-full w-full flex animate-fade-in pt-16">
+                <!-- LEFT COLUMN -->
+                <main class="relative z-10 w-1/2 flex flex-col items-center justify-center text-center px-12 pb-24">
                     <div class="space-y-8 max-w-xl">
                         <div class="space-y-2">
                             <h1 class="text-[120px] font-black italic tracking-tighter text-white leading-none drop-shadow-[0_0_30px_rgba(34,211,238,0.3)]">${h.title}</h1>
@@ -97,6 +97,7 @@ class WavioShell {
                     </div>
                 </main>
 
+                <!-- RIGHT COLUMN: THE PHONE -->
                 <div class="relative z-10 w-1/2 flex items-center justify-center pr-24">
                     <div class="phone-mockup flex flex-col bg-black scale-90 border-[1px] border-black ring-[12px] ring-[#001f3f] ring-inset outline outline-1 outline-black/40 shadow-3xl">
                         <div class="bg-[#001f3f] h-12 flex items-center justify-between px-6 text-white/50 z-20">
@@ -142,8 +143,8 @@ class WavioShell {
 
     renderDashboard() {
         this.appContainer.innerHTML = `
-            <div class="relative min-h-screen pt-24 px-12 max-w-7xl mx-auto animate-fade-in overflow-y-auto pb-32 custom-scrollbar scale-95">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[220px]">
+            <div class="relative min-h-full pt-32 px-12 max-w-7xl mx-auto animate-fade-in pb-48">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[220px]">
                     <div class="tech-tank-card flex flex-col items-center justify-center p-4 bg-black/40 border-l-4 border-cyan-500 relative overflow-hidden">
                         <div class="w-24 h-24 rounded-full border-2 border-cyan-500/20 flex items-center justify-center relative">
                             <div class="absolute inset-0 border-t-2 border-cyan-400 rounded-full animate-spin duration-[15s]"></div>
@@ -206,11 +207,10 @@ class WavioShell {
     }
 
     renderGestures() {
-        // Use config items if available, otherwise use fallback
         const items = (this.config && this.config.gestures) ? this.config.gestures.items : this.gesturesFallback;
         
         this.appContainer.innerHTML = `
-            <div class="relative min-h-screen pt-24 px-12 max-w-6xl mx-auto animate-fade-in overflow-y-auto pb-32 custom-scrollbar scale-95">
+            <div class="relative min-h-full pt-32 px-12 max-w-6xl mx-auto animate-fade-in pb-48">
                 <header class="mb-12 space-y-4">
                     <div class="glass-pill w-fit border-cyan-500/30">Manual // Instruction_Set_v1.0</div>
                     <h2 class="text-5xl font-light tracking-[0.2em] text-cyan-400 uppercase wavio-font-thin">Movement Language</h2>
@@ -221,6 +221,7 @@ class WavioShell {
                     ${items.map((g, i) => `
                         <div class="group h-[320px] [perspective:1000px] cursor-pointer">
                             <div class="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+                                <!-- FRONT -->
                                 <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] tech-tank-card p-10 border-l-4 border-cyan-500 flex flex-col justify-between shadow-2xl">
                                     <div class="flex justify-between items-start">
                                         <h3 class="text-2xl font-black italic uppercase tracking-tighter">${g.title}</h3>
@@ -231,6 +232,7 @@ class WavioShell {
                                         <p class="text-[9px] uppercase font-black tracking-widest text-white/30 italic">Hover to unlock logic</p>
                                     </div>
                                 </div>
+                                <!-- BACK -->
                                 <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] [transform:rotateY(180deg)] tech-tank-card p-10 bg-gradient-to-br from-[#001f3f] to-black border-l-4 border-cyan-400 flex flex-col justify-center space-y-6">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="zap" size="18" class="text-cyan-400"></i>
@@ -275,14 +277,12 @@ class WavioShell {
     renderArchitect() {
         if (!this.config) return;
         const d = this.config.sections.architect;
-        const flowSteps = d.solution.flow || [];
-        const flow = flowSteps.map(step => `<div class="flex items-center gap-2"><span class="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded text-[8px] font-mono">${step}</span>${step !== flowSteps[flowSteps.length-1] ? '<i data-lucide="arrow-right" size="10" class="text-white/20"></i>' : ''}</div>`).join('');
-
+        
         this.appContainer.innerHTML = `
-            <div class="relative z-10 min-h-screen animate-fade-in overflow-y-auto pt-24 pb-32 custom-scrollbar scale-95">
-                <div class="max-w-5xl mx-auto px-6 space-y-20">
-                    <header class="space-y-4">
-                        <div class="glass-pill w-fit border-cyan-500/30">${d.badge}</div>
+            <div class="relative z-10 min-h-full animate-fade-in pt-32 px-6 pb-48">
+                <div class="max-w-5xl mx-auto space-y-20">
+                    <header class="space-y-4 text-center">
+                        <div class="glass-pill mx-auto w-fit border-cyan-500/30">${d.badge}</div>
                         <h2 class="text-xl text-cyan-400 tracking-[0.4em] uppercase font-bold">${d.subtitle}</h2>
                     </header>
 
