@@ -38,8 +38,15 @@ class WavioShell {
     toggleMute() {
         this.isMuted = !this.isMuted;
         const video = document.getElementById('bg-video');
+        const audio = document.getElementById('shell-audio');
         const icon = document.getElementById('mute-icon');
+        
         if (video) video.muted = this.isMuted;
+        if (audio) {
+            if (this.isMuted) audio.pause();
+            else audio.play().catch(e => console.log("Audio play blocked by browser"));
+        }
+        
         icon.setAttribute('data-lucide', this.isMuted ? 'volume-x' : 'volume-2');
         lucide.createIcons();
     }
@@ -58,9 +65,7 @@ class WavioShell {
     }
 
     navigate(viewId) {
-        // Reset scroll on navigation
         this.appContainer.scrollTo(0, 0);
-        
         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
         const activeLink = document.getElementById(`link-${viewId}`);
         if (activeLink) activeLink.classList.add('active');
@@ -79,7 +84,6 @@ class WavioShell {
         const h = this.config ? this.config.hero : { title: "WaVio", badge: "Acoustic Sensing", body: "Initializing..." };
         this.appContainer.innerHTML = `
             <div class="relative min-h-full w-full flex animate-fade-in pt-16">
-                <!-- LEFT COLUMN -->
                 <main class="relative z-10 w-1/2 flex flex-col items-center justify-center text-center px-12 pb-24">
                     <div class="space-y-8 max-w-xl">
                         <div class="space-y-2">
@@ -97,7 +101,6 @@ class WavioShell {
                     </div>
                 </main>
 
-                <!-- RIGHT COLUMN: THE PHONE -->
                 <div class="relative z-10 w-1/2 flex items-center justify-center pr-24">
                     <div class="phone-mockup flex flex-col bg-black scale-90 border-[1px] border-black ring-[12px] ring-[#001f3f] ring-inset outline outline-1 outline-black/40 shadow-3xl">
                         <div class="bg-[#001f3f] h-12 flex items-center justify-between px-6 text-white/50 z-20">
@@ -208,7 +211,6 @@ class WavioShell {
 
     renderGestures() {
         const items = (this.config && this.config.gestures) ? this.config.gestures.items : this.gesturesFallback;
-        
         this.appContainer.innerHTML = `
             <div class="relative min-h-full pt-32 px-12 max-w-6xl mx-auto animate-fade-in pb-48">
                 <header class="mb-12 space-y-4">
@@ -221,7 +223,6 @@ class WavioShell {
                     ${items.map((g, i) => `
                         <div class="group h-[320px] [perspective:1000px] cursor-pointer">
                             <div class="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-                                <!-- FRONT -->
                                 <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] tech-tank-card p-10 border-l-4 border-cyan-500 flex flex-col justify-between shadow-2xl">
                                     <div class="flex justify-between items-start">
                                         <h3 class="text-2xl font-black italic uppercase tracking-tighter">${g.title}</h3>
@@ -232,7 +233,6 @@ class WavioShell {
                                         <p class="text-[9px] uppercase font-black tracking-widest text-white/30 italic">Hover to unlock logic</p>
                                     </div>
                                 </div>
-                                <!-- BACK -->
                                 <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] [transform:rotateY(180deg)] tech-tank-card p-10 bg-gradient-to-br from-[#001f3f] to-black border-l-4 border-cyan-400 flex flex-col justify-center space-y-6">
                                     <div class="flex items-center gap-3">
                                         <i data-lucide="zap" size="18" class="text-cyan-400"></i>
@@ -294,17 +294,15 @@ class WavioShell {
                             </div>
                             <div class="h-[250px] bg-black/40 rounded-3xl border border-white/5 p-8 overflow-y-auto custom-scrollbar font-mono text-xs text-cyan-400/60 leading-loose whitespace-pre-line shadow-inner">
                                 ${d.techSpecs}
-                                <br><br>
-                                ${d.future.content}
                             </div>
                         </section>
                         <section class="space-y-8">
                             <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Marketing_Architecture</h3>
-                                <i data-lucide="shield-check" size="12" class="text-cyan-500"></i>
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">About Me</h3>
+                                <i data-lucide="user" size="12" class="text-cyan-500"></i>
                             </div>
                             <div class="tech-tank-card p-10 bg-cyan-900/10 border-l-4 border-cyan-500 shadow-2xl relative overflow-hidden">
-                                <p class="text-[14px] leading-relaxed text-white/60 font-mono italic relative z-10">${d.marketing || 'WaVio Engineering Ecosystem'}</p>
+                                <p class="text-[14px] leading-relaxed text-white/60 font-mono italic relative z-10">${d.aboutMe}</p>
                                 <i data-lucide="brain-circuit" class="absolute bottom-[-20%] right-[-10%] text-cyan-500/5 rotate-12" size="120"></i>
                             </div>
                         </section>

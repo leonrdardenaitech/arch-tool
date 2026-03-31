@@ -15,29 +15,20 @@
   },
   "backgrounds": [
     { "id": "video", "type": "video", "src": "/WavioWorld/video/Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4" },
+    { "id": "fishtank", "type": "image", "src": "/WavioWorld/images/FishTankfish.gif" },
     { "id": "gif1", "type": "image", "src": "/WavioWorld/images/aquarium GIF.gif" },
     { "id": "gif2", "type": "image", "src": "/WavioWorld/images/placidplace-fish-13525.gif" },
     { "id": "gif3", "type": "image", "src": "/WavioWorld/images/placidplace-fish-18858.gif" }
   ],
+  "audio": {
+    "src": "/WavioWorld/audio/fishTankaudio.mp3"
+  },
   "sections": {
     "architect": {
       "badge": "Architect_Dossier_v2.1",
       "subtitle": "AI Solutions Architect // Systems Integration Expert",
-      "solution": {
-        "title": "Solution & Architecture",
-        "content": "Binary Acoustic Logic (The Sonar Engine) Instead of relying on heavy visual machine learning, WaVio utilizes a custom pure-JavaScript Web Audio engine. It broadcasts an inaudible 19kHz sine wave and actively listens for frequency anomalies or physical device telemetry.",
-        "flow": ["[Hand Wave]", "[19kHz Audio Pulse]", "[FFT Decoder]", "[DOM Event]", "[UI Action]"]
-      },
-      "empathy": {
-        "title": "Empathetic Engineering",
-        "subtitle": "Focus Mode",
-        "content": "Designed for specialized accessibility. 'Focus Mode' locks the UI to prevent accidental touches, translating gross-motor movements into media rewinds and play/pause commands."
-      },
-      "future": {
-        "title": "Future Scope: The AI Horizon",
-        "content": "WaVio is built as a foundational physical interface for next-gen AI like Google Project Astra. Silent Spatial Computing and the WaveSynch Cast Protocol will bridge local DOM events with the Google Cast SDK."
-      },
-      "techSpecs": "🔹 The Engine: custom pure-JS utility using Web Audio API.\n🔹 Telemetry: Integrated accelerometer for 'table bumps'.\n🔹 Eco-Tank: Global state monitors battery/thermal APIs."
+      "aboutMe": "As a visionary AI Solutions Architect, Leon R. Darden blends technical precision with a profound creative instinct. With over 15 years of navigating the complex intersections of machine logic and human behavior, he architects systems that don't just solve problems—they anticipate them. Driven by 'Engineering Empathy', Leon transforms raw telemetry into intuitive experiences, ensuring that the next generation of automation remains accessible, ethical, and inspired.",
+      "techSpecs": "🔹 The Engine: custom pure-JS utility using Web Audio API.\n🔹 Telemetry: Integrated accelerometer for 'table bumps'.\n🔹 Eco-Tank: Global state monitors battery/thermal APIs.\n🔹 RAG Systems: High-fidelity unstructured data retrieval.\n🔹 Agentic Flow: Autonomous AI workflow orchestration.\n🔹 Security: Zero-persistence local data protocols."
     },
     "gestures": {
       "items": [
