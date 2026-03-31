@@ -17,6 +17,7 @@ class WavioShell {
             const response = await fetch('config.json').catch(() => fetch('/config.json'));
             this.config = await response.json();
             this.setupStaticElements();
+            this.renderSettingsSelectors();
             this.navigate('home'); 
             lucide.createIcons();
         } catch (err) {
@@ -29,6 +30,16 @@ class WavioShell {
         if (!this.config) return;
         document.getElementById('nav-brand').innerText = this.config.siteConfig.brand;
         document.getElementById('footer-privacy').innerText = this.config.siteConfig.privacyProtocol;
+    }
+
+    renderSettingsSelectors() {
+        if (!this.config) return;
+        const grid = document.getElementById('bg-selector-grid');
+        grid.innerHTML = this.config.backgrounds.map((bg, i) => `
+            <button onclick="shell.selectBackground(${i})" class="w-full aspect-square rounded-lg border border-white/10 overflow-hidden hover:border-cyan-500 transition-all">
+                <img src="${bg.type === 'video' ? '/WavioWorld/images/placidplace-fish-13525.gif' : bg.src}" class="w-full h-full object-cover opacity-40">
+            </button>
+        `).join('');
     }
 
     toggleSettings() {
@@ -44,16 +55,15 @@ class WavioShell {
         if (video) video.muted = this.isMuted;
         if (audio) {
             if (this.isMuted) audio.pause();
-            else audio.play().catch(e => console.log("Audio play blocked by browser"));
+            else audio.play().catch(e => console.log("Audio play blocked"));
         }
         
         icon.setAttribute('data-lucide', this.isMuted ? 'volume-x' : 'volume-2');
         lucide.createIcons();
     }
 
-    cycleBackground(dir) {
-        if (!this.config) return;
-        this.bgIndex = (this.bgIndex + dir + this.config.backgrounds.length) % this.config.backgrounds.length;
+    selectBackground(index) {
+        this.bgIndex = index;
         const bg = this.config.backgrounds[this.bgIndex];
         const bgDiv = document.getElementById('global-bg');
         
@@ -62,6 +72,12 @@ class WavioShell {
         } else {
             bgDiv.innerHTML = `<img class="w-full h-full object-cover opacity-20" src="${bg.src}"><div class="absolute inset-0 bg-gradient-to-r from-[#001f3f]/80 via-transparent to-[#001f3f]/80"></div>`;
         }
+    }
+
+    cycleBackground(dir) {
+        if (!this.config) return;
+        const nextIdx = (this.bgIndex + dir + this.config.backgrounds.length) % this.config.backgrounds.length;
+        this.selectBackground(nextIdx);
     }
 
     navigate(viewId) {
