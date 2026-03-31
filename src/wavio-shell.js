@@ -4,7 +4,6 @@ class WavioShell {
         this.appContainer = document.getElementById('app-shell');
         this.isMuted = true;
         this.bgIndex = 0;
-        this.isPingActive = true;
         this.init();
     }
 
@@ -70,7 +69,6 @@ class WavioShell {
         const h = this.config.hero;
         this.appContainer.innerHTML = `
             <div class="relative min-h-screen w-full flex animate-fade-in pt-16">
-                <!-- LEFT COLUMN -->
                 <main class="relative z-10 w-1/2 flex flex-col items-center justify-center text-center px-12">
                     <div class="space-y-8 max-w-xl">
                         <div class="space-y-2">
@@ -88,7 +86,6 @@ class WavioShell {
                     </div>
                 </main>
 
-                <!-- RIGHT COLUMN: THE PHONE -->
                 <div class="relative z-10 w-1/2 flex items-center justify-center pr-24">
                     <div class="phone-mockup flex flex-col bg-black scale-90 border-[1px] border-black ring-[12px] ring-[#001f3f] ring-inset outline outline-1 outline-black/40 shadow-3xl">
                         <div class="bg-[#001f3f] h-12 flex items-center justify-between px-6 text-white/50 z-20">
@@ -112,14 +109,12 @@ class WavioShell {
                                 </div>
                                 <p id="phone-msg" class="text-[9px] uppercase tracking-[0.4em] text-white/40 font-black animate-pulse">Tap mic to wake</p>
                             </div>
-                            <!-- Gesture Controls Tied to Gestures Page -->
                             <div class="px-6 pb-4 grid grid-cols-4 gap-3 relative z-10 bg-black/40 backdrop-blur-md border-t border-white/5 pt-4">
                                 <button onclick="shell.navigate('gestures')" class="p-2 bg-white/5 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-all"><i data-lucide="play" size="12"></i></button>
                                 <button onclick="shell.navigate('gestures')" class="p-2 bg-white/5 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-all"><i data-lucide="pause" size="12"></i></button>
                                 <button onclick="shell.navigate('gestures')" class="p-2 bg-white/5 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-all"><i data-lucide="rotate-ccw" size="12"></i></button>
                                 <button onclick="shell.navigate('gestures')" class="p-2 bg-white/5 rounded-lg flex items-center justify-center text-white/40 hover:text-white transition-all"><i data-lucide="cast" size="12"></i></button>
                             </div>
-                            <!-- Bottom Triggers -->
                             <div class="flex items-center justify-center gap-5 pb-10 relative z-10 bg-black/40 backdrop-blur-md">
                                 <button class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg text-white"><i data-lucide="mic" size="18"></i></button>
                                 <button onclick="shell.initiateHandshake()" class="group w-20 h-20 bg-[#001f3f] rounded-full flex items-center justify-center border-4 border-red-600 shadow-2xl transition-all hover:bg-green-500 hover:border-white">
@@ -137,9 +132,9 @@ class WavioShell {
     renderDashboard() {
         this.appContainer.innerHTML = `
             <div class="relative min-h-screen pt-24 px-12 max-w-7xl mx-auto animate-fade-in overflow-y-auto pb-32 custom-scrollbar scale-95">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[220px]">
                     <!-- Circle Clock -->
-                    <div class="tech-tank-card flex flex-col items-center justify-center p-4 bg-black/40 border-l-4 border-cyan-500">
+                    <div class="tech-tank-card flex flex-col items-center justify-center p-4 bg-black/40 border-l-4 border-cyan-500 relative overflow-hidden">
                         <div class="w-24 h-24 rounded-full border-2 border-cyan-500/20 flex items-center justify-center relative">
                             <div class="absolute inset-0 border-t-2 border-cyan-400 rounded-full animate-spin duration-[15s]"></div>
                             <span class="text-xl font-black italic text-cyan-400">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -160,7 +155,9 @@ class WavioShell {
                             <p>[${new Date().toLocaleTimeString()}] Accelerometer Z: 0.98g (STABLE)</p>
                             <p>[${new Date().toLocaleTimeString()}] Ultrasonic Echo: Sectors 04-09</p>
                             <p>[${new Date().toLocaleTimeString()}] Neural Link: 128ms latency</p>
-                            <p>[${new Date().toLocaleTimeString()}] Handshake... OK</p>
+                            <div class="h-8 w-full flex items-end gap-1 mt-2">
+                                ${[...Array(30)].map(() => `<div class="flex-1 bg-cyan-500/40" style="height: ${20+Math.random()*80}%"></div>`).join('')}
+                            </div>
                         </div>
                     </div>
 
@@ -178,28 +175,24 @@ class WavioShell {
                         <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                             <div class="flex gap-2">
                                 <button onclick="shell.initiateHandshake()" class="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500 text-white text-[7px] font-black rounded-lg uppercase transition-all">Feed Fish</button>
-                                <button class="px-3 py-1.5 bg-white/5 hover:bg-white/20 text-white text-[7px] font-black rounded-lg uppercase transition-all">pH: 7.2</button>
+                                <button class="px-3 py-1.5 bg-white/5 hover:bg-white/20 text-white text-[7px] font-black rounded-lg uppercase transition-all">pH Balance</button>
                             </div>
                             <div class="text-cyan-400 animate-pulse"><i data-lucide="activity" size="12"></i></div>
                         </div>
                     </div>
 
-                    <!-- Cast Wizard & Monitor -->
-                    <div class="tech-tank-card p-6 bg-black/60 border-l-4 border-fuchsia-500 flex flex-col justify-between">
-                        <h3 class="text-[9px] font-black uppercase tracking-widest text-fuchsia-200">Cast_Protocol</h3>
-                        <button class="w-full py-2 bg-fuchsia-500/10 border border-fuchsia-500/30 rounded-lg text-[7px] font-black uppercase hover:bg-fuchsia-500 hover:text-black transition-all">Connect Hub</button>
-                        <div class="flex justify-between items-center opacity-30">
-                            <span class="text-[6px] uppercase tracking-widest">Monitor Mode</span>
-                            <i data-lucide="eye" size="10"></i>
-                        </div>
+                    <!-- Voice Node & Master Vault -->
+                    <div class="tech-tank-card p-6 bg-black/60 border-l-4 border-red-500 flex flex-col justify-center items-center text-center">
+                        <div class="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center animate-pulse mb-3"><i data-lucide="mic" class="text-red-500" size="16"></i></div>
+                        <h3 class="text-[8px] font-black uppercase tracking-widest text-red-200">Voice_Input</h3>
+                        <p class="text-[6px] opacity-40 uppercase mt-1">Listening for intent...</p>
                     </div>
 
-                    <!-- Master Vault -->
-                    <div class="tech-tank-card p-6 bg-black/60 border-l-4 border-yellow-500">
-                        <h3 class="text-[9px] font-black uppercase tracking-widest text-yellow-200 mb-4">Master_Vault</h3>
+                    <div class="tech-tank-card p-6 bg-black/60 border-l-4 border-fuchsia-500">
+                        <h3 class="text-[9px] font-black uppercase tracking-widest text-fuchsia-200 mb-4">Master_Vault</h3>
                         <div class="space-y-2">
                             <div class="flex justify-between border-b border-white/5 pb-1 text-[7px] opacity-40 uppercase"><span>Neural_Log</span><span>[SECURED]</span></div>
-                            <div class="flex justify-between text-[7px] opacity-40 uppercase"><span>Vault_Archive</span><i data-lucide="lock" size="8"></i></div>
+                            <div class="flex justify-between text-[7px] opacity-40 uppercase"><span>Archive</span><i data-lucide="lock" size="8"></i></div>
                         </div>
                     </div>
                 </div>
@@ -211,38 +204,64 @@ class WavioShell {
         this.appContainer.innerHTML = `
             <div class="relative min-h-screen pt-24 px-12 max-w-6xl mx-auto animate-fade-in overflow-y-auto pb-32 custom-scrollbar scale-95">
                 <header class="mb-12 space-y-4">
-                    <h2 class="text-5xl font-light tracking-[0.2em] text-cyan-400 uppercase wavio-font-thin">Gesture Calibration</h2>
-                    <p class="text-[10px] font-mono text-cyan-700 uppercase tracking-[0.5em] font-bold">Neural Mapping // Acoustic Synthesis</p>
+                    <div class="glass-pill w-fit border-cyan-500/30">Manual // Instruction_Set_v1.0</div>
+                    <h2 class="text-5xl font-light tracking-[0.2em] text-cyan-400 uppercase wavio-font-thin">Movement Language</h2>
+                    <p class="text-sm font-mono text-cyan-700 uppercase tracking-[0.5em] font-bold">Decoding High-Frequency Intent</p>
                 </header>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                
+                <!-- Instructional Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     ${this.config.gestures.items.map((g, i) => `
-                        <div class="group h-[280px] [perspective:1000px]">
-                            <div class="relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+                        <div class="group h-[320px] [perspective:1000px] cursor-pointer">
+                            <div class="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                                 <!-- FRONT -->
-                                <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] tech-tank-card p-8 border-l-4 border-cyan-500 flex flex-col justify-between">
+                                <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] tech-tank-card p-10 border-l-4 border-cyan-500 flex flex-col justify-between shadow-2xl">
                                     <div class="flex justify-between items-start">
-                                        <h3 class="text-xl font-bold italic">${g.title}</h3>
-                                        <i data-lucide="${g.icon}" class="text-cyan-400 opacity-20"></i>
+                                        <h3 class="text-2xl font-black italic uppercase tracking-tighter">${g.title}</h3>
+                                        <div class="p-3 bg-cyan-500/10 rounded-full"><i data-lucide="${g.icon}" class="text-cyan-400"></i></div>
                                     </div>
-                                    <p class="text-[8px] uppercase font-black tracking-widest text-white/30">Action: ${g.command}</p>
+                                    <div class="space-y-4">
+                                        <div class="h-[1px] w-full bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
+                                        <p class="text-[9px] uppercase font-black tracking-widest text-white/30 italic">Hover to unlock logic</p>
+                                    </div>
                                 </div>
                                 <!-- BACK -->
-                                <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] [transform:rotateY(180deg)] tech-tank-card p-8 bg-cyan-900/40 border-l-4 border-cyan-400 flex flex-col justify-center">
-                                    <div class="flex items-center gap-2 mb-4">
-                                        <i data-lucide="info" size="14" class="text-cyan-400"></i>
-                                        <span class="text-[8px] font-black uppercase text-white">Movement Language</span>
+                                <div class="absolute inset-0 h-full w-full [backface-visibility:hidden] [transform:rotateY(180deg)] tech-tank-card p-10 bg-gradient-to-br from-[#001f3f] to-black border-l-4 border-cyan-400 flex flex-col justify-center space-y-6">
+                                    <div class="flex items-center gap-3">
+                                        <i data-lucide="zap" size="18" class="text-cyan-400"></i>
+                                        <h4 class="text-xs font-black uppercase tracking-widest text-white">Neural Binary</h4>
                                     </div>
-                                    <p class="text-xs font-mono leading-relaxed italic text-white/80">${g.logic}</p>
+                                    <div class="p-4 bg-white/5 rounded-xl border border-white/5">
+                                        <p class="text-xs font-mono leading-relaxed italic text-cyan-100">${g.logic}</p>
+                                    </div>
+                                    <div class="flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-white/40">
+                                        <span>Trigger: ${g.command}</span>
+                                        <i data-lucide="activity" size="10" class="animate-pulse"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     `).join('')}
                 </div>
-                <div class="tech-tank-card p-10 bg-gradient-to-br from-[#001f3f] to-transparent border border-white/5 text-center space-y-6">
-                    <h3 class="text-2xl font-black italic tracking-tighter uppercase">Calibrate / Customize</h3>
-                    <div class="flex justify-center gap-4">
-                        <button class="px-8 py-3 bg-cyan-500 text-black text-[9px] font-black uppercase rounded-full shadow-2xl">Initialize Diagnostic</button>
-                        <button class="px-8 py-3 bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase rounded-full">Reset Baseline</button>
+
+                <!-- Calibration Deep Dive -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="tech-tank-card p-12 bg-black/40 border border-white/5 flex flex-col justify-center space-y-8">
+                        <div class="space-y-2">
+                            <h3 class="text-3xl font-black italic tracking-tighter uppercase">Calibrate / Customize</h3>
+                            <p class="text-xs font-mono text-white/40 italic">Establishing baseline echo frequency for local environment.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button class="btn-wavio-primary px-10 py-4 text-[9px]">Initialize Diagnostic</button>
+                            <button class="btn-wavio-outline px-10 py-4 text-[9px]">Reset Array</button>
+                        </div>
+                    </div>
+                    <div class="tech-tank-card p-0 overflow-hidden relative aspect-video bg-black flex items-center justify-center group">
+                        <img src="/WavioWorld/images/Finding Nemo Coral GIF by Monterey Bay Aquarium.gif" class="w-full h-full object-cover opacity-40 group-hover:opacity-100 transition-opacity duration-1000">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <i data-lucide="target" size="48" class="text-cyan-500 opacity-20 group-hover:animate-ping"></i>
+                            <p class="text-[8px] font-black uppercase tracking-[1em] text-white/40 mt-4">Field_Scanning</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -251,8 +270,6 @@ class WavioShell {
 
     renderArchitect() {
         const d = this.config.sections.architect;
-        const flow = d.solution.flow.map(step => `<div class="flex items-center gap-2"><span class="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded text-[8px] font-mono">${step}</span>${step !== d.solution.flow[d.solution.flow.length-1] ? '<i data-lucide="arrow-right" size="10" class="text-white/20"></i>' : ''}</div>`).join('');
-
         this.appContainer.innerHTML = `
             <div class="relative z-10 min-h-screen animate-fade-in overflow-y-auto pt-24 pb-32 custom-scrollbar scale-95">
                 <div class="max-w-5xl mx-auto px-6 space-y-20">
@@ -261,49 +278,35 @@ class WavioShell {
                         <h2 class="text-xl text-cyan-400 tracking-[0.4em] uppercase font-bold">${d.subtitle}</h2>
                     </header>
 
-                    <!-- Section 2: Solution & Architecture -->
-                    <section class="space-y-8">
-                        <div class="flex justify-between items-end border-b border-white/5 pb-2">
-                            <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Section 02 // Solution_Architecture</h3>
-                            <div class="flex gap-4">${flow}</div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <p class="text-[13px] leading-relaxed text-white/60 font-mono italic">${d.solution.content}</p>
-                            <div class="tech-tank-card p-6 bg-black/40 border border-white/5 flex flex-col justify-center">
-                                <h4 class="text-[9px] font-black uppercase tracking-widest text-cyan-400 mb-4">The Sensory Beast</h4>
-                                <div class="h-8 w-full flex items-end gap-1">
-                                    ${[...Array(20)].map(() => `<div class="flex-1 bg-cyan-500/20" style="height: ${20+Math.random()*80}%"></div>`).join('')}
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                        <section class="space-y-8">
+                            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Technical_Dossier</h3>
+                                <i data-lucide="cpu" size="12" class="text-cyan-500"></i>
                             </div>
-                        </div>
-                    </section>
-
-                    <!-- Section 3: Focus Mode -->
-                    <section class="space-y-8">
-                        <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40 border-b border-white/5 pb-2">Section 03 // Empathetic_Engineering</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div class="tech-tank-card p-0 overflow-hidden relative aspect-video bg-black flex items-center justify-center">
-                                <img src="/WavioWorld/images/placidplace-fish-13525.gif" class="w-16 h-16 animate-fish-float opacity-40">
-                                <div class="absolute top-4 right-4 bg-red-500/20 px-2 py-1 rounded text-[6px] uppercase text-red-400 border border-red-500/40 animate-pulse">Focus_Active</div>
-                            </div>
-                            <div class="space-y-6">
-                                <h4 class="text-2xl font-black italic text-white uppercase">${d.empathy.subtitle}</h4>
-                                <p class="text-[12px] leading-relaxed text-white/50 font-mono">${d.empathy.content}</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Technical Dossier Scroll -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="md:col-span-2 space-y-4">
-                            <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Technical_Dossier_Buffer</h3>
-                            <div class="h-[150px] bg-black/40 rounded-2xl border border-white/5 p-6 overflow-y-auto custom-scrollbar font-mono text-[10px] text-cyan-400/60 leading-relaxed whitespace-pre-line">
+                            <div class="h-[250px] bg-black/40 rounded-3xl border border-white/5 p-8 overflow-y-auto custom-scrollbar font-mono text-xs text-cyan-400/60 leading-loose whitespace-pre-line shadow-inner">
                                 ${d.techSpecs}
+                                <br><br>
+                                ${d.future.content}
                             </div>
-                        </div>
-                        <div class="tech-tank-card p-6 bg-cyan-900/10 border-l-4 border-cyan-500 flex flex-col justify-center">
-                            <h3 class="text-[9px] font-black uppercase tracking-widest text-cyan-200 mb-2">AI_Horizon</h3>
-                            <p class="text-[10px] text-white/40 font-mono italic">${d.future.title}</p>
+                        </section>
+                        <section class="space-y-8">
+                            <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Marketing_Architecture</h3>
+                                <i data-lucide="shield-check" size="12" class="text-cyan-500"></i>
+                            </div>
+                            <div class="tech-tank-card p-10 bg-cyan-900/10 border-l-4 border-cyan-500 shadow-2xl relative overflow-hidden">
+                                <p class="text-[14px] leading-relaxed text-white/60 font-mono italic relative z-10">${d.marketing}</p>
+                                <i data-lucide="brain-circuit" class="absolute bottom-[-20%] right-[-10%] text-cyan-500/5 rotate-12" size="120"></i>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="w-full aspect-[21/9] rounded-[3rem] overflow-hidden border border-white/10 relative group shadow-3xl">
+                        <video autoPlay loop muted playsinline class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 transition-all duration-1000" src="/WavioWorld/video/Amazingly_Beautiful_3D_Aquarium_Live_Wallpaper_Wallpaper.mp4"></video>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none bg-black/20 backdrop-blur-[1px]">
+                            <p class="text-[10px] font-black uppercase tracking-[1.5em] text-white/40 mb-2">Aquarium_Node_Active</p>
+                            <div class="w-32 h-[1px] bg-cyan-500/50"></div>
                         </div>
                     </div>
                 </div>
