@@ -3,7 +3,7 @@ import {
   Mail, Linkedin, Server, Cpu, 
   Terminal, ShieldCheck, ArrowRight, BrainCircuit, Code,
   Crosshair, Layers, Volume2, VolumeX, Github, PlayCircle, X,
-  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan, CookingPot, Info, ChevronRight
+  Video, Activity, Lock, Zap, Sparkles, Save, Search, AlertTriangle, Globe, Scan, CookingPot, Info, ChevronRight, Radar
 } from 'lucide-react';
 import NexusChat from './components/NexusChat';
 

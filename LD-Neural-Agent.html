@@ -43,7 +43,10 @@
             Preview will generate here...
         </div>
 
-        <button class="btn-deploy" onclick="deployEmail()">Generate & Open Email</button>
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn-deploy" style="flex: 2;" onclick="deployEmail()">Generate & Open Email</button>
+            <button class="btn-deploy" style="flex: 1; background: #333; color: var(--neon-cyan); border: 1px solid var(--neon-cyan);" onclick="copyToClipboard()">Copy</button>
+        </div>
     </div>
 
     <script>
@@ -60,6 +63,16 @@
             }
             
             document.getElementById('preview').innerText = body;
+        }
+
+        function copyToClipboard() {
+            const body = document.getElementById('preview').innerText;
+            navigator.clipboard.writeText(body).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = "COPIED!";
+                setTimeout(() => btn.innerText = originalText, 2000);
+            });
         }
 
         function deployEmail() {
