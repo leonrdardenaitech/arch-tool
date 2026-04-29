@@ -1,0 +1,29 @@
+.exp-node {
+  margin-bottom: 25px;
+}
+
+.exp-node h5 {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #00E5FF;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.exp-node p {
+  font-size: 0.85rem;
+  color: #AAA;
+  line-height: 1.6;
+}
+
+.narrative-summary {
+  font-style: italic;
+  border-left: 2px solid #FDFFB6;
+  padding-left: 15px;
+  margin-bottom: 20px;
+}
+
+.narrative-summary strong {
+  color: #FDFFB6;
+}

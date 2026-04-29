@@ -1,0 +1,156 @@
+<!-- Arch Nexus (Evolved) -->
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SLIME CENTRAL - Arch Nexus</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-dim": "#d53d18",
+                    "on-background": "#f6eefc",
+                    "on-tertiary": "#33005b",
+                    "secondary-fixed": "#69f6b8",
+                    "primary-fixed": "#6bff8f",
+                    "surface-container-high": "#221d2a",
+                    "on-tertiary-fixed-variant": "#560094",
+                    "on-secondary": "#005a3c",
+                    "secondary-dim": "#58e7ab",
+                    "tertiary-fixed": "#ce9bff",
+                    "surface-dim": "#100d16",
+                    "on-tertiary-fixed": "#270048",
+                    "inverse-on-surface": "#58535e",
+                    "secondary-fixed-dim": "#58e7ab",
+                    "primary": "#6bff8f",
+                    "on-secondary-fixed-variant": "#006544",
+                    "surface-container": "#1c1823",
+                    "on-tertiary-container": "#000000",
+                    "tertiary-fixed-dim": "#c488ff",
+                    "on-error-container": "#ffd2c8",
+                    "error": "#ff7351",
+                    "surface-container-highest": "#282331",
+                    "primary-dim": "#5bf083",
+                    "on-error": "#450900",
+                    "on-primary-container": "#002c0f",
+                    "inverse-surface": "#fef7ff",
+                    "on-primary": "#005f28",
+                    "on-primary-fixed": "#004a1d",
+                    "surface-container-lowest": "#000000",
+                    "surface-variant": "#282331",
+                    "tertiary-container": "#af5cfe",
+                    "primary-container": "#0abc56",
+                    "secondary": "#69f6b8",
+                    "background": "#100d16",
+                    "on-surface": "#f6eefc",
+                    "outline-variant": "#4b4651",
+                    "on-secondary-fixed": "#00452d",
+                    "primary-fixed-dim": "#5bf083",
+                    "on-primary-fixed-variant": "#006a2d",
+                    "surface": "#100d16",
+                    "surface-container-low": "#15121c",
+                    "surface-bright": "#2f2a38",
+                    "outline": "#79737f",
+                    "tertiary": "#c180ff",
+                    "inverse-primary": "#006e2f",
+                    "secondary-container": "#006c49",
+                    "on-secondary-container": "#e1ffec",
+                    "on-surface-variant": "#afa8b5",
+                    "tertiary-dim": "#9c48ea",
+                    "surface-tint": "#6bff8f",
+                    "error-container": "#b92902"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Space Grotesk"],
+                    "label": ["Space Grotesk"]
+            },
+            "animation": {
+                "slime-float": "slime-float 20s ease-in-out infinite alternate",
+                "viscous-pulse": "viscous-pulse 4s ease-in-out infinite",
+            },
+            "keyframes": {
+                "slime-float": {
+                    "0%": { transform: "translate(0, 0) scale(1) rotate(0deg)" },
+                    "33%": { transform: "translate(2% , 5%) scale(1.1) rotate(2deg)" },
+                    "66%": { transform: "translate(-3%, -2%) scale(0.95) rotate(-1deg)" },
+                    "100%": { transform: "translate(1%, 2%) scale(1.05) rotate(1deg)" }
+                },
+                "viscous-pulse": {
+                    "0%, 100%": { opacity: "0.2" },
+                    "50%": { opacity: "0.4" }
+                }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .liquid-bg {
+            background: radial-gradient(circle at 50% -20%, rgba(107, 255, 143, 0.1) 0%, rgba(16, 13, 22, 1) 100%);
+        }
+        .slime-hero-mask {
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+        }
+    </style>
+    <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-x-hidden selection:bg-primary selection:text-on-primary-container">
+    <div id="root"></div>
+    <!-- Ambient Liquid Background -->
+    <div class="fixed inset-0 -z-10 liquid-bg overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]"></div>
+    </div>
+    <!-- TopAppBar -->
+    <header class="flex justify-between items-center w-full px-8 pt-4 docked full-width top-0 h-20 bg-transparent z-50">
+        <div class="flex items-center gap-2 text-green-400">
+            <span class="material-symbols-outlined text-primary" data-icon="sensors">sensors</span>
+        </div>
+        <h1 class="font-headline tracking-[0.3em] font-bold text-sm text-green-400 drop-shadow-[0_0_12px_rgba(34,197,94,0.6)]">SLIME CENTRAL</h1>
+        <div class="flex items-center gap-2 text-green-400">
+            <span class="material-symbols-outlined" data-icon="motion_photos_on">motion_photos_on</span>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 pt-24 pb-32 space-y-12">
+        <!-- Hero Area: Animated Slime Section -->
+        <section class="relative h-[500px] -mt-24 -mx-6 overflow-hidden rounded-b-[4rem] border-b border-primary/10">
+            <!-- Pulsating Slime Animation -->
+            <div class="absolute inset-0 z-0 bg-surface-container-lowest">
+                <div class="absolute inset-0 flex items-center justify-center animate-slime-float">
+                    <div class="w-[120%] h-[120%] opacity-40 mix-blend-screen grayscale contrast-[150%] blur-3xl">
+                        <img class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Vs7DmUW7X6gDtvvfeHMHDiVGq3nzJ167_eUZ4w3Bbrbx95mPxnelux2FafUC0Kg7Xpt214zZ6_7fd8Mth2SGb6DpHniZ_cScbqkGjLZ5lueAw0Mvt7BuIoicrBI3oxRHBJCVchqpHNIcUwj8qH_fUBLdeTVfBNzCT-_zKiPMapHhj-quDW_6CxMcqX1mp7ijEkQC5U0b8D-D5fFc3cYy-UTIUqSadyNXRxIqZ8lhF5P2m3Aqsf3E2EfKT0Dyg-TvMF3zYb-ICMu0"/>
+                    </div>
+                </div>
+                <!-- Tint Overlay -->
+                <div class="absolute inset-0 bg-primary/10 mix-blend-color"></div>
+            </div>
+            <!-- Scrim & Overlay -->
+            <div class="absolute inset-0 z-10 bg-black/50 backdrop-blur-sm"></div>
+            <!-- Content Overlay -->
+            <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-6">
+                <span class="text-primary font-label tracking-[0.5em] text-xs uppercase mb-4 opacity-80">Central Identity Node</span>
+                <h2 class="text-7xl md:text-9xl font-headline font-bold tracking-tighter text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">ARCH NEXUS</h2>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

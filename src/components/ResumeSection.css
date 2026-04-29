@@ -1,0 +1,153 @@
+.resume-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+  width: 100%;
+}
+
+/* --- BASE NODE STYLING --- */
+.resume-node {
+  background-color: #1A1A1D;
+  border: 1px solid #333;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.node-inner {
+  padding: 20px 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  background-color: #1A1A1D;
+  border-radius: 7px;
+}
+
+/* Glassmorphic Base */
+.resume-node::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.node-icon-wrapper {
+  flex-shrink: 0;
+  width: 45px;
+  height: 45px;
+  background: #111;
+  border-radius: 6px;
+  border: 1px solid #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+  transition: all 0.3s;
+}
+
+.node-text {
+  flex: 1;
+}
+
+.node-text h4 {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: #444;
+  margin-bottom: 5px;
+  letter-spacing: 2px;
+}
+
+.node-text p {
+  font-size: 0.85rem;
+  color: #AAA;
+  line-height: 1.4;
+  white-space: normal; /* Activated wrapping */
+  max-width: 100%;
+}
+
+.node-action {
+  color: #333;
+  transition: all 0.3s;
+}
+
+/* --- HOVER EFFECTS --- */
+
+/* 1. Summary: Yellow */
+.node-thesis:hover {
+  border-color: rgba(253, 255, 166, 0.4);
+}
+.node-thesis:hover::after {
+  background-color: rgba(253, 255, 166, 0.03);
+  opacity: 1;
+}
+.node-thesis:hover .node-icon-wrapper {
+  border-color: #FDFFB6;
+  box-shadow: 0 0 10px rgba(253, 255, 166, 0.2);
+}
+
+/* 2. Experience: Purple */
+.node-history:hover {
+  border-color: rgba(213, 0, 249, 0.4);
+}
+.node-history:hover::after {
+  background-color: rgba(213, 0, 249, 0.03);
+  opacity: 1;
+}
+.node-history:hover .node-icon-wrapper {
+  border-color: #D500F9;
+  box-shadow: 0 0 10px rgba(213, 0, 249, 0.2);
+}
+
+/* 3. Google AI: Cyan */
+.node-google-ai-spec:hover {
+  border-color: rgba(0, 229, 255, 0.4);
+}
+.node-google-ai-spec:hover::after {
+  background-color: rgba(0, 229, 255, 0.03);
+  opacity: 1;
+}
+.node-google-ai-spec:hover .node-icon-wrapper {
+  border-color: #00E5FF;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+/* 4. Credentials: Rainbow */
+.node-google-ai-spec.rainbow-border {
+  padding: 1px;
+  background: linear-gradient(120deg, #4285F4, #DB4437, #F4B400, #0F9D58);
+  background-size: 300% 300%;
+  animation: holoFlow 5s ease infinite;
+}
+
+.node-google-ai-spec.rainbow-border .node-inner {
+  background-color: #0A0A0C; /* Darker to pop the rainbow */
+}
+
+.node-google-ai-spec.rainbow-border:hover .node-icon-wrapper {
+  color: #FFF;
+  border-color: #FFF;
+}
+
+@keyframes holoFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.resume-node:hover .node-action {
+  color: #00E5FF;
+  transform: translateX(5px);
+}

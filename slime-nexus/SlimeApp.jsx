@@ -186,7 +186,7 @@ export default function SlimeApp() {
     <div className="flex items-center justify-center min-h-screen bg-[#020105] p-0 sm:p-4 font-mono select-none overflow-hidden text-emerald-400">
       <CustomStyles />
       
-      <div className="relative w-full h-screen sm:h-auto sm:max-w-[380px] sm:aspect-[9/19] bg-zinc-900 sm:rounded-[3.5rem] border-0 sm:border-[12px] border-zinc-900 shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col">
+      <div className="relative w-full h-screen sm:h-auto sm:max-w-[500px] sm:aspect-[9/16] bg-zinc-900 sm:rounded-[3.5rem] border-0 sm:border-[12px] border-zinc-900 shadow-[0_0_100px_rgba(0,0,0,1)] overflow-hidden flex flex-col">
         
         {/* SIDE OOZE PHYSICS */}
         <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
