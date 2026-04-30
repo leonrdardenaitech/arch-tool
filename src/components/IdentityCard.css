@@ -60,12 +60,16 @@
   position: relative;
   overflow: hidden;
   border: 1px solid #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .headshot {
-  width: 100%;
-  height: 100%;
+  width: 110%; /* Slightly larger to allow for better centering/scaling */
+  height: 110%;
   object-fit: cover;
-  transition: filter 0.5s ease;
+  object-position: center 20%; /* Shift up slightly to focus on face */
+  transition: all 0.5s ease;
 }
 .headshot.idle-still {
   filter: grayscale(0.6) contrast(1.1) brightness(0.7);
