@@ -43,10 +43,15 @@ export default function ResumeApp() {
           
           {/* Header Section */}
           <header className="flex flex-col md:flex-row items-center gap-8 border-b border-white/5 pb-12 mb-12">
-            <div className="w-20 h-20 rounded-full border-2 border-[#00f3ff] p-0.5 flex-shrink-0 shadow-[0_0_20px_rgba(0,243,255,0.3)] relative">
+            <div className="w-24 h-24 rounded-full border-2 border-[#00f3ff] p-0.5 flex-shrink-0 shadow-[0_0_20px_rgba(0,243,255,0.3)] relative group">
                <div className="absolute inset-0 rounded-full border border-[#b026ff]/50 animate-pulse"></div>
-              <div className="w-full h-full rounded-full overflow-hidden">
-                <img src="/assets/images/leon_headshot_static.png" alt="Leon R. Darden" className="w-full h-full object-cover contrast-110" />
+              <div className="w-full h-full rounded-full overflow-hidden flex justify-center items-center bg-black">
+                <img 
+                  src="/assets/images/leon_headshot_zoom.png" 
+                  alt="Leon R. Darden" 
+                  className="w-[120%] h-[120%] object-cover contrast-110 grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500"
+                  style={{ objectPosition: 'center 25%' }}
+                />
               </div>
             </div>
             <div className="text-center md:text-left flex-1">
