@@ -131,7 +131,7 @@ const IdentityCard = ({ selectedProject }) => {
             />
           ) : (
             <img 
-              src="/assets/images/leon_headshot_static.png" 
+              src="/assets/images/leon_headshot_zoom.png" 
               alt="Leon R. Darden" 
               className="headshot idle-still"
             />

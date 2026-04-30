@@ -4,9 +4,18 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/*.exe"
     ],
     "rewrites": [
+      {
+        "source": "/portfolio",
+        "destination": "/portfolio.html"
+      },
+      {
+        "source": "/resume",
+        "destination": "/resume.html"
+      },
       {
         "source": "**",
         "destination": "/index.html"
