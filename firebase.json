@@ -13,10 +13,6 @@
         "destination": "/portfolio.html"
       },
       {
-        "source": "/resume",
-        "destination": "/resume.html"
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }

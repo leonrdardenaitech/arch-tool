@@ -15,7 +15,6 @@ export default defineConfig({
         watz: resolve(__dirname, 'watz-dinner.html'),
         archGenUi: resolve(__dirname, 'arch-gen-ui/index.html'),
         wavesync: resolve(__dirname, 'wavesync.html'),
-        resume: resolve(__dirname, 'resume.html'),
         slimeNexus: resolve(__dirname, 'slime-nexus/index.html'),
         watzV2: resolve(__dirname, 'watz-v2.html'),
         what2eat: resolve(__dirname, 'what2eat/index.html'),
