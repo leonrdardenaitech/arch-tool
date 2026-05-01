@@ -192,7 +192,15 @@ const ProjectOverlay = ({ project, onClose }) => {
           {project.hasPresentation && (
             <div className="mt-6 p-4 bg-black/40 border border-emerald-500/30 rounded">
               <p className="text-xs text-emerald-400 font-mono mb-2">Architectural Payload Detected:</p>
-              <button className="slide-btn" onClick={() => { project.slides = [{text: "System Synthesis", img: "button3423.png"}]; setCurrentSlide(0); }}>Initialize Slides</button>
+              <button className="slide-btn" onClick={() => { 
+                project.slides = [
+                  { text: "Phase 1 / Output Monitoring: Continuous analysis of LLM generations for security validation.", img: "seqscan1.png" },
+                  { text: "Phase 2 / Bias Detection: Identifying and neutralizing unintended patterns in real-time.", img: "seqscan2.png" },
+                  { text: "Phase 3 / Security Lock: Automated escalation triggered by high-risk handshake patterns.", img: "seqscan3.png" }
+                ]; 
+                setCurrentSlide(0); 
+                document.querySelector('.presentation-anchor')?.scrollIntoView({ behavior: 'smooth' });
+              }}>INITIALIZE_ARCHITECTURAL_PRESENTATION</button>
             </div>
           )}
         </div>

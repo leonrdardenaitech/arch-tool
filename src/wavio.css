@@ -69,15 +69,27 @@
   letter-spacing: 0.2em;
 }
 
-.phone-mockup {
-  width: 320px;
-  height: 640px;
-  background: #000;
-  border-radius: 40px;
-  border: 12px solid var(--wavio-dark-blue);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+.wavio-app-root {
+  background: #000814;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: sans-serif;
+}
+
+.wavio-app-root ::selection {
+  background: rgba(34, 211, 238, 0.3);
+}
+
+@media (max-width: 768px) {
+  .phone-mockup {
+    width: 280px;
+    height: 560px;
+    border-width: 8px;
+  }
 }
 
 .tech-tank-card {
