@@ -187,8 +187,20 @@ const ProjectOverlay = ({ project, onClose }) => {
       ) : (
         <div className="unlocked-state">
           <div className="unlocked-header">WELCOME, RECRUITER. PAYLOAD DECRYPTED.</div>
-          <p>Active Skill: <span className="pink">nlm-skill (NotebookLM Automation)</span></p>
-          <p>Status: Orchestrating autonomous deployment pipelines.</p>
+          <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded">
+            <p className="text-emerald-400 font-mono text-sm mb-2">ACCESS_GRANTED: SESSION_ACTIVE</p>
+            <a 
+              href="/Leon-Darden-Resume-Standalone.html" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="roster-link flavor-emerald block text-center py-2 border border-emerald-500 hover:bg-emerald-500 hover:text-black transition-colors"
+            >
+              [↗] LAUNCH_STANDALONE_RESUME
+            </a>
+            <p className="text-[10px] text-muted-foreground mt-2 font-mono text-center">
+              Click launch to download PDF version of my resume.
+            </p>
+          </div>
           {project.hasPresentation && (
             <div className="mt-6 p-4 bg-black/40 border border-emerald-500/30 rounded">
               <p className="text-xs text-emerald-400 font-mono mb-2">Architectural Payload Detected:</p>
@@ -272,8 +284,20 @@ const ProjectOverlay = ({ project, onClose }) => {
               target={project.link === '#presentation' ? '_self' : '_blank'} 
               rel="noreferrer" 
               className="launch-btn" 
+              id={project.id === 10 ? 'node-10-btn' : undefined}
+              data-target={project.link}
               style={{ background: `linear-gradient(90deg, ${project.glow}, #000)` }}
               onClick={(e) => {
+                if (project.id === 10) {
+                  e.preventDefault();
+                  const code = prompt("ENTER ACCESS CODE TO INITIALIZE NODE_10:");
+                  if (code === "Hire Leon") {
+                    window.open(project.link, '_blank');
+                  } else {
+                    alert("ACCESS DENIED: INVALID CREDENTIALS");
+                  }
+                  return;
+                }
                 if (project.link === '#presentation') {
                   e.preventDefault();
                   document.querySelector('.presentation-anchor')?.scrollIntoView({ behavior: 'smooth' });

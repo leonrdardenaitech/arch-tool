@@ -13,6 +13,14 @@
         "destination": "/portfolio.html"
       },
       {
+        "source": "/hunger",
+        "destination": "/hunger.html"
+      },
+      {
+        "source": "/scan",
+        "destination": "/hunger.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

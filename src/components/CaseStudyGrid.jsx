@@ -133,9 +133,35 @@ const projects = [
       { text: "Phase 2 / Bias Detection: Identifying and neutralizing unintended patterns in real-time.", img: "seqscan2.png" },
       { text: "Phase 3 / Security Lock: Automated escalation triggered by high-risk handshake patterns.", img: "seqscan3.png" }
     ]
-  }
-];
-
+  },
+  { 
+    id: 9, 
+    category: 'project',
+    title: 'CODE ORCHESTRATION', 
+    type: 'AI AGENTIC HUB', 
+    tech: 'GEMINI CLI + GENAI',
+    glow: '#00E5FF', 
+    customComponent: 'arch-tool-node',
+    problem: 'Previous AI workflows relied on deprecated SDKs and manual terminal execution, creating operational friction and interrupting continuous development pipelines.',
+    architecture: 'Upgraded the background Python service to the modern google-genai SDK and engineered an "Auto-Bridge" clipboard watcher that detects ###DRAFT### tags. Deployed the Gemini CLI for codebase orchestration across Vite-based React frontends and Capacitor mobile directories.',
+    impact: 'Achieved zero-latency AI integration by running the assistant as a persistent system tray application, powering seamless Human-in-the-Loop (HITL) workflows without manual hotkey or terminal intervention.',
+    metrics: ['Gemini CLI', 'Auto-Bridge', 'SDK Migration'],
+    link: 'https://github.com/leonrdardenaitech/arch-tool'
+  },
+  { 
+    id: 10, 
+    category: 'project',
+    title: 'LOCAL AI COPILOT', 
+    type: 'PRIVACY-FIRST AUTOMATION', 
+    tech: 'QWEN 2.5 + OLLAMA + EXTENSION',
+    glow: '#7C4DFF', 
+    problem: 'Aggressive ATS bot-protection and privacy risks from exposing sensitive personal data like phone numbers and work history to cloud-based APIs.',
+    architecture: 'Multi-agent system using a custom Manifest V3 Browser Extension and a local LLM running via Ollama to bypass browser sandboxing safely.',
+    impact: 'Bypasses ATS detection with zero token costs while keeping all routing and sensitive user data behind the personal firewall.',
+    metrics: ['Local LLM', 'Browser Extension', 'Privacy-First Ops'],
+    link: '#'
+    }
+    ];
 const CaseStudyGrid = ({ onSelectProject }) => {
   return (
     <div className="case-study-grid">
