@@ -284,20 +284,9 @@ const ProjectOverlay = ({ project, onClose }) => {
               target={project.link === '#presentation' ? '_self' : '_blank'} 
               rel="noreferrer" 
               className="launch-btn" 
-              id={project.id === 10 ? 'node-10-btn' : undefined}
               data-target={project.link}
               style={{ background: `linear-gradient(90deg, ${project.glow}, #000)` }}
               onClick={(e) => {
-                if (project.id === 10) {
-                  e.preventDefault();
-                  const code = prompt("ENTER ACCESS CODE TO INITIALIZE NODE_10:");
-                  if (code === "Hire Leon") {
-                    window.open(project.link, '_blank');
-                  } else {
-                    alert("ACCESS DENIED: INVALID CREDENTIALS");
-                  }
-                  return;
-                }
                 if (project.link === '#presentation') {
                   e.preventDefault();
                   document.querySelector('.presentation-anchor')?.scrollIntoView({ behavior: 'smooth' });

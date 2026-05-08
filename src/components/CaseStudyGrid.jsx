@@ -159,9 +159,33 @@ const projects = [
     architecture: 'Multi-agent system using a custom Manifest V3 Browser Extension and a local LLM running via Ollama to bypass browser sandboxing safely.',
     impact: 'Bypasses ATS detection with zero token costs while keeping all routing and sensitive user data behind the personal firewall.',
     metrics: ['Local LLM', 'Browser Extension', 'Privacy-First Ops'],
-    link: '#'
-    }
-    ];
+    link: 'https://github.com/leonrdardenaitech/gemma4-extension'
+    },
+  {
+    id: 11,
+    title: "ENTERPRISE TPM + SOLUTIONS ARCHITECT",
+    category: "project",
+    visual: "/assets/images/cds/transparent_case.jpg",
+    glow: "#00E5FF",
+    metrics: ["Notion + Jira", "Zapier MCP", "Gemma 4"],
+    problem: "Need for verifiable, real-world enterprise deployments.",
+    architecture: "Orchestrated enterprise-grade pipelines via Zapier MCP to optimize e-commerce fulfillment.",
+    impact: "Real-world, verifiable deployment of multi-agent systems.",
+    link: "https://leonrdarden.com/vox.html"
+  },
+  {
+    id: 12,
+    title: "ATLAS CORE: THE ENTERPRISE HEAVY HITTER",
+    category: "project",
+    visual: "/BurningOne/image/Atlaslogoupright.png",
+    glow: "#00FF41",
+    metrics: ["Triple Price Breakdown", "Zero-Cost Grunt Work", "Premium AI Rivalry"],
+    problem: "Bypassing $250/mo enterprise AI constraints.",
+    architecture: "Built on the Forge Foundation. A Mega-Brain Neural Specialist acting as Chief of Operations.",
+    impact: "Operates as a Thanos-level Heavy Hitter, saving companies a fortune in operational overhead.",
+    link: "https://github.com/leonrdardenaitech/atlas-core"
+  }
+];
 const CaseStudyGrid = ({ onSelectProject }) => {
   return (
     <div className="case-study-grid">
