@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leon R. Darden // Dark Architect Resume</title>
+    <style>
+        :root {
+            --bg-charcoal: #121212;
+            --sidebar-bg: #0a0a0a;
+            --accent-cyan: #00f3ff;
+            --accent-purple: #b026ff;
+            --accent-green: #00FF87;
+            --text-primary: #e0e0e0;
+            --text-muted: #888;
+            --border-glow: rgba(0, 243, 255, 0.3);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;900&family=JetBrains+Mono&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-charcoal);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .resume-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            background: #000;
+            border: 1px solid #222;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+            min-height: 1200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sidebar Section */
+        .sidebar {
+            width: 300px;
+            background: var(--sidebar-bg);
+            padding: 50px 30px;
+            border-right: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .photo-frame {
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--accent-cyan);
+            padding: 5px;
+            position: relative;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px var(--border-glow);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.1) grayscale(0.2);
+        }
+
+        .name-block {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .name-block h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .name-block .role {
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .contact-info {
+            width: 100%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+        }
+
+        .contact-item {
+            margin-bottom: 10px;
+        }
+
+        .contact-item span {
+            color: var(--accent-purple);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .terminal-block {
+            width: 100%;
+            background: #050505;
+            border: 1px solid #333;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .terminal-prompt { color: var(--accent-purple); }
+        .terminal-cursor { color: var(--accent-cyan); animation: blink 1s infinite; }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Main Content Section */
+        .main-content {
+            flex: 1;
+            padding: 60px 50px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #000 100%);
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+
+        .item-block {
+            margin-bottom: 30px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .item-title {
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        .item-subtitle {
+            color: var(--accent-purple);
+            font-weight: 900;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .item-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .architecture-item {
+            margin-bottom: 25px;
+        }
+
+        .architecture-title {
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .architecture-desc {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.05);
+            pointer-events: none;
+            transform: rotate(-90deg);
+        }
+
+        @media print {
+            body { padding: 0; background: #000; }
+            .resume-container { border: none; box-shadow: none; width: 100%; height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="watermark">ꟻB</div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="photo-frame">
+                <img src="/leonheadshot.jpg" alt="Leon R. Darden">
+            </div>
+
+            <div class="name-block">
+                <h1>LEON R. DARDEN</h1>
+                <div class="role">AI SOLUTIONS ARCHITECT</div>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-item"><span>LOC:</span> Lithonia, GA</div>
+                <div class="contact-item"><span>PH:</span> (678) 763-0580</div>
+                <div class="contact-item"><span>EM:</span> leonrdarden@gmail.com</div>
+                <div class="contact-item"><span>WEB:</span> leonrdarden.com</div>
+                <div class="contact-item"><span>LINKEDIN:</span> linkedin.com/in/leon-darden-686899a5</div>
+                <div class="contact-item"><span>GITHUB:</span> github.com/leonrdardenaitech</div>
+                <div class="contact-item" style="margin-top: 15px; color: var(--accent-cyan); font-weight: bold;">Access Code: Hire Leon</div>
+            </div>
+
+            <div class="terminal-block">
+                <span class="terminal-prompt">> run current_state</span><br>
+                Agentic infrastructure<br>
+                active.<span class="terminal-cursor">_</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <section>
+                <h2>ARCHITECTURE & DEPLOYED INFRASTRUCTURE</h2>
+                
+                <div class="architecture-item">
+                    <span class="architecture-title">Operational Automation & B2B Architecture</span>
+                    <p class="architecture-desc">Conducted comprehensive workflow audits and designed specialized, automated AI solutions for physical retail locations and local restaurants, translating complex LLM capabilities into direct brick-and-mortar ROI.</p>
+                </div>
+
+                <div class="architecture-item">
+                    <span class="architecture-title">Specialized Accessibility Infrastructure</span>
+                    <p class="architecture-desc">Engineered WaVio and WaveSync, integrating advanced touchless, gesture-controlled media designed to provide seamless, zero-touch tablet navigation for users with limited mobility.</p>
+                </div>
+
+                <div class="architecture-item">
+                    <span class="architecture-title">Full-Cycle App Deployment & Utility Systems</span>
+                    <p class="architecture-desc">Built and launched mobile applications (including Watz 4 Dinner? and the Hydro-Scan hydration tracker), managing the entire pipeline from local code to navigating strict Google Play Console integrity protocols.</p>
+                </div>
+
+                <div class="architecture-item">
+                    <span class="architecture-title">API Integration & Ecosystems</span>
+                    <p class="architecture-desc">Managed the arch-tool repository utilizing custom AI APIs, and developed scalable production bibles and agentic workflows to support diverse digital ecosystems.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2>PROFESSIONAL EXPERIENCE</h2>
+
+                <div class="item-block">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">Independent Researcher & AI Architecture</div>
+                            <div class="item-subtitle">Darden Trust Infrastructure</div>
+                        </div>
+                        <div class="item-date">May 2024 – Present</div>
+                    </div>
+                    <ul>
+                        <li><strong>Agentic AI Development:</strong> Applied the principles of physical logistics to autonomous AI agent loops, ensuring high-fidelity delivery of digital assets with the same precision as physical logistics.</li>
+                        <li><strong>Systems & Logistics Operations:</strong> Managed high-volume delivery streams with 99%+ efficiency, serving as the active proving ground for recursive reasoning and real-time conflict resolution.</li>
+                        <li><strong>Research & Development (R&D):</strong> Architected the "?4DINNER?", "Hydro-Scan", and "?2Trust?" digital ecosystems, integrating workflow automation, LLM data pipelines, and prompt engineering.</li>
+                    </ul>
+                </div>
+
+                <div class="item-block">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">Operations Solutions Specialist & Independent Contractor</div>
+                            <div class="item-subtitle">Live Ops / Duke Energy & Amazon Flex</div>
+                        </div>
+                        <div class="item-date">2020 – Present</div>
+                    </div>
+                    <ul>
+                        <li><strong>Supply Chain & Operations:</strong> Managed high-volume utility data, billing functions via SAP, and complex last-mile delivery logistics, consistently maintaining strict "On-Time Delivery" KPIs.</li>
+                        <li><strong>Process Execution:</strong> Optimized critical service escalation pathways by deploying targeted problem-solving frameworks, successfully bridging the gap between raw system constraints and human operational trust.</li>
+                    </ul>
+                </div>
+
+                <div class="item-block">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">Client Solutions Consultant</div>
+                            <div class="item-subtitle">Vertex / Georgia Natural Gas</div>
+                        </div>
+                        <div class="item-date">2008 – 2014</div>
+                    </div>
+                    <ul>
+                        <li><strong>Performance Excellence:</strong> Ranked in the top 5% for productivity, resolving complex billing and account issues while maintaining superior customer satisfaction ratings.</li>
+                        <li><strong>App Design:</strong> Collaborated on user engagement concepts for the GNG mobile application, leveraging design expertise to improve UI/UX flows.</li>
+                    </ul>
+                </div>
+
+                <div class="item-block">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">Systems Support Analyst</div>
+                            <div class="item-subtitle">New Health Care Management</div>
+                        </div>
+                        <div class="item-date">2004 – 2008</div>
+                    </div>
+                    <ul>
+                        <li><strong>Data Integrity:</strong> Led large-scale data cleanup and conversion projects, ensuring accuracy across multi-departmental systems.</li>
+                        <li><strong>Technical Training:</strong> Served as the lead SAP trainer, developing documentation and workflows to ensure seamless adoption by staff.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>SYSTEM UPGRADES & CERTIFICATIONS</h2>
+                <div class="architecture-item">
+                    <span class="architecture-title">Google AI Professional Certificate</span>
+                    <p class="architecture-desc">Mastered and completed all seven required architectural courses within a rigorous 7-day sprint.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>

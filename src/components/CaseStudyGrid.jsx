@@ -141,6 +141,7 @@ const projects = [
     type: 'AI AGENTIC HUB', 
     tech: 'GEMINI CLI + GENAI',
     glow: '#00E5FF', 
+    visual: '/securtyClip88.mp4',
     customComponent: 'arch-tool-node',
     problem: 'Previous AI workflows relied on deprecated SDKs and manual terminal execution, creating operational friction and interrupting continuous development pipelines.',
     architecture: 'Upgraded the background Python service to the modern google-genai SDK and engineered an "Auto-Bridge" clipboard watcher that detects ###DRAFT### tags. Deployed the Gemini CLI for codebase orchestration across Vite-based React frontends and Capacitor mobile directories.',
@@ -156,8 +157,8 @@ const projects = [
     tech: 'QWEN 2.5 + OLLAMA + EXTENSION',
     glow: '#7C4DFF', 
     problem: 'Aggressive ATS bot-protection and privacy risks from exposing sensitive personal data like phone numbers and work history to cloud-based APIs.',
-    architecture: 'Multi-agent system using a custom Manifest V3 Browser Extension and a local LLM running via Ollama to bypass browser sandboxing safely.',
-    impact: 'Bypasses ATS detection with zero token costs while keeping all routing and sensitive user data behind the personal firewall.',
+    architecture: 'Multi-agent system using a custom Manifest V3 Browser Extension and a local LLM running via Ollama to bypass browser sandboxing safely. This node operates as a decentralized intelligence layer, routing sensitive data away from cloud scrutiny.',
+    impact: 'Bypasses ATS detection with zero token costs while keeping all routing and sensitive user data behind the personal firewall. Transforms the browser into an agentic workstation.',
     metrics: ['Local LLM', 'Browser Extension', 'Privacy-First Ops'],
     link: 'https://github.com/leonrdardenaitech/gemma4-extension'
     },
@@ -169,19 +170,19 @@ const projects = [
     glow: "#00E5FF",
     metrics: ["Notion + Jira", "Zapier MCP", "Gemma 4"],
     problem: "Need for verifiable, real-world enterprise deployments.",
-    architecture: "Orchestrated enterprise-grade pipelines via Zapier MCP to optimize e-commerce fulfillment.",
-    impact: "Real-world, verifiable deployment of multi-agent systems.",
-    link: "https://leonrdarden.com/vox.html"
+    architecture: "Orchestrated enterprise-grade pipelines via Zapier MCP to optimize e-commerce fulfillment. Revitalized legacy Watz 4 Dinner infrastructure into a high-scale B2B routing engine.",
+    impact: "Real-world, verifiable deployment of multi-agent systems. Bypasses traditional middleware bottlenecks.",
+    link: "/watz-dinner.html"
   },  {
     id: 12,
-    title: "ATLAS CORE: THE ENTERPRISE HEAVY HITTER",
+    title: "ATLAS CORE: THE ENTERPRISE AGENTIC SCALABILITY",
     category: "project",
-    visual: "/BurningOne/image/Atlaslogoupright.png",
+    visual: "/BurningOne/image/Atlaslogolayingdown.png",
     glow: "#00FF41",
     metrics: ["Triple Price Breakdown", "Zero-Cost Grunt Work", "Premium AI Rivalry"],
     problem: "Bypassing $250/mo enterprise AI constraints.",
     architecture: "Built on the Forge Foundation. A Mega-Brain Neural Specialist acting as Chief of Operations.",
-    impact: "Operates as a Thanos-level Heavy Hitter, saving companies a fortune in operational overhead.",
+    impact: "ATLAS CORE: THE ENTERPRISE HEAVY HITTER. Built on the Forge Foundation. By combining mechanical genius with Google's Ultra-tier infrastructure, the Darden Array operates as a Thanos-level Heavy Hitter. We leverage $250/month enterprise subscriptions to access thousands of dollars in cinematic studios and dev tools, saving companies an absolute fortune in operational overhead.",
     link: "https://github.com/leonrdardenaitech/atlas-core"
   }
 ];
@@ -196,10 +197,22 @@ const CaseStudyGrid = ({ onSelectProject }) => {
           style={{ '--node-glow': project.glow }}
         >
           <div className="cd-disc">
-            <div className="cd-center"></div>
-            <div className="cd-label">
-              <span className="cd-id">NODE_{project.id.toString().padStart(2, '0')}</span>
-            </div>
+            {project.id === 12 ? (
+              <div className="cd-custom-icon">
+                <img src="/BurningOne/image/Atlaslogoupright.png" alt="Atlas Core" className="atlas-icon" />
+              </div>
+            ) : project.id === 11 ? (
+              <div className="cd-jewel-case">
+                <div className="cd-center"></div>
+              </div>
+            ) : (
+              <>
+                <div className="cd-center"></div>
+                <div className="cd-label">
+                  <span className="cd-id">NODE_{project.id.toString().padStart(2, '0')}</span>
+                </div>
+              </>
+            )}
             <div className="cd-holo-overlay"></div>
           </div>
           <div className="cd-info">

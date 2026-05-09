@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensional Hunger | Creative IP</title>
+    <style>
+        :root {
+            --horror-red: #8B0000;
+            --flame-orange: #FF4500;
+            --void-black: #050505;
+        }
+        body {
+            background-color: var(--void-black);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            border: 1px solid #333;
+            background: rgba(255, 69, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+        }
+        h1 {
+            color: var(--flame-orange);
+            font-size: 3rem;
+            letter-spacing: 0.5rem;
+            text-shadow: 0 0 20px var(--horror-red);
+        }
+        .nodes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .node {
+            padding: 1.5rem;
+            border: 1px solid #444;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        .node:hover {
+            transform: scale(1.05);
+            border-color: var(--flame-orange);
+        }
+        h2 { color: var(--flame-orange); font-size: 1.2rem; }
+        p { font-size: 0.9rem; line-height: 1.6; color: #ccc; }
+        .cta {
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            border: 2px solid var(--flame-orange);
+            color: var(--flame-orange);
+            text-decoration: none;
+            letter-spacing: 0.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .cta:hover {
+            background: var(--flame-orange);
+            color: white;
+            box-shadow: 0 0 30px var(--flame-orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DIMENSIONAL HUNGER</h1>
+        <p>A DARDEN ARCHITECTURE CREATIVE IP</p>
+        
+        <div class="nodes">
+            <div class="node">
+                <h2>FRIED BRAINS</h2>
+                <p>The anti-addiction hub. A surreal comic relief valve for volatile subjects. "Don't be a friedbrains."</p>
+            </div>
+            <div class="node">
+                <h2>BURN-1</h2>
+                <p>Gritty urban horror. The cursed lighter. An interactive branching e-book and cinematic pitch package.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <a href="/portfolio" class="cta">RETURN TO ARRAY</a>
+        </div>
+    </div>
+</body>
+</html>

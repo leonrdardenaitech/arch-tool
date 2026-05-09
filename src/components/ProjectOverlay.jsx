@@ -279,23 +279,54 @@ const ProjectOverlay = ({ project, onClose }) => {
 
           {/* 3. LAUNCH ACTION */}
           <div className="action-anchor">
-            <a 
-              href={project.link === '#presentation' ? '#slides' : project.link} 
-              target={project.link === '#presentation' ? '_self' : '_blank'} 
-              rel="noreferrer" 
-              className="launch-btn" 
-              data-target={project.link}
-              style={{ background: `linear-gradient(90deg, ${project.glow}, #000)` }}
-              onClick={(e) => {
-                if (project.link === '#presentation') {
-                  e.preventDefault();
-                  document.querySelector('.presentation-anchor')?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              {project.link === '#presentation' ? 'VIEW ARCHITECTURAL PRESENTATION' : 'LAUNCH_DEPLOYMENT'} 
-              <ExternalLink size={16} />
-            </a>
+            {project.id === 10 ? (
+              <div className="node-10-special">
+                <a 
+                  href={project.link} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="launch-btn"
+                  style={{ background: `linear-gradient(90deg, ${project.glow}, #000)` }}
+                >
+                  LAUNCH_AGENTIC_WORKSTATION <ExternalLink size={16} />
+                </a>
+                <div className="random-image-container mt-4">
+                  <img 
+                    src={[
+                      "3d cloud88.png",
+                      "3d-brain88.jpg",
+                      "4in1overlay88.png",
+                      "ai-cert56488.gif",
+                      "chart floating88.jpg",
+                      "cybergirlheadfix88.jpg",
+                      "glowing crystal88.png",
+                      "seqscan188.png"
+                    ][Math.floor(Math.random() * 8)]} 
+                    alt="Neural Insight" 
+                    className="random-insight-img"
+                  />
+                  <div className="insight-label">LOCAL_INTELLIGENCE_LAYER_ACTIVE</div>
+                </div>
+              </div>
+            ) : (
+              <a 
+                href={project.link === '#presentation' ? '#slides' : project.link} 
+                target={project.link === '#presentation' ? '_self' : '_blank'} 
+                rel="noreferrer" 
+                className="launch-btn" 
+                data-target={project.link}
+                style={{ background: `linear-gradient(90deg, ${project.glow}, #000)` }}
+                onClick={(e) => {
+                  if (project.link === '#presentation') {
+                    e.preventDefault();
+                    document.querySelector('.presentation-anchor')?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                {project.link === '#presentation' ? 'VIEW ARCHITECTURAL PRESENTATION' : 'LAUNCH_DEPLOYMENT'} 
+                <ExternalLink size={16} />
+              </a>
+            )}
           </div>
 
           {/* 4. DEEP DIVE (SLIDES AT THE VERY BOTTOM) */}

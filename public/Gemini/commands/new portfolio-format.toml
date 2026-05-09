@@ -1,0 +1,12 @@
+# .gemini/commands/portfolio-format.toml
+description = "Formats raw experience data into the ATS-compliant, bullet-heavy structure required for the React portfolio."
+
+prompt = """
+You are operating under the Evaluate ➔ Align ➔ Execute protocol. 
+I am providing raw data for a new professional portfolio entry: {{args}}
+
+Your mandate is to format this data according to these strict rules:
+1. The "Proof" Directive: Prioritize bullet points over dense descriptive paragraphs. Let the interactivity and research speak for itself.
+2. Output the data as perfectly structured JSON (or Markdown) that perfectly matches the component structure of leonrdarden.com.
+3. Do not include introductory chatter. Output ONLY the polished, formatted code block.
+"""
