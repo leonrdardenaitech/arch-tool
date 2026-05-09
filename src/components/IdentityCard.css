@@ -188,11 +188,12 @@
   font-family: monospace;
   color: #00FF87;
   font-size: 0.85rem;
-  min-height: 3em;
+  height: 4.5em; /* Fixed height to prevent layout shifts */
   border-radius: 4px;
   margin: 10px 0;
   display: flex;
   align-items: center;
+  overflow: hidden; /* Prevent text overflow if message is too long */
 }
 
 .privacy-notice {

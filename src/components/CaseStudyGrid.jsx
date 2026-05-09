@@ -88,7 +88,7 @@ const projects = [
     type: 'MODEL-AGNOSTIC OPS', 
     tech: 'ECOSYSTEM INTEGRATION',
     glow: '#B0BEC5', 
-    visual: '3d-brain.jpg',
+    visual: '3d-brain88.jpg',
     customComponent: 'rd-matrix',
     problem: 'Reliance on single-provider AI creates brittle systems prone to obsolescence.',
     architecture: 'Continuous R&D pipeline routing workflows across a matrix of frontier models.',
@@ -96,9 +96,9 @@ const projects = [
     metrics: ['API Integration', 'LangChain', 'Model Benchmarking'],
     link: '#',
     slides: [
-      { text: "Node 1 / Neural Core: Logic-aware embeddings transform raw data into architectural insights.", img: "3d-brain.jpg" },
-      { text: "Node 2 / Vector Vault: Secure RAG indexing with sub-millisecond retrieval latency.", img: "3d cloud.png" },
-      { text: "Node 3 / Synthesis: Recombining verified sub-tasks into comprehensive B2B solutions.", img: "glowing crystal.png" }
+      { text: "Node 1 / Neural Core: Logic-aware embeddings transform raw data into architectural insights.", img: "3d-brain88.jpg" },
+      { text: "Node 2 / Vector Vault: Secure RAG indexing with sub-millisecond retrieval latency.", img: "3d cloud88.png" },      
+      { text: "Node 3 / Synthesis: Recombining verified sub-tasks into comprehensive B2B solutions.", img: "glowing crystal88.png" }
     ]
   },
   { 
@@ -129,7 +129,7 @@ const projects = [
     metrics: ['Zero-Trust', 'IAM Security', 'MCP Integration'],
     link: '#',
     slides: [
-      { text: "Phase 1 / Output Monitoring: Continuous analysis of LLM generations for security validation.", img: "seqscan1.png" },
+      { text: "Phase 1 / Output Monitoring: Continuous analysis of LLM generations for security validation.", img: "seqscan188.png" },
       { text: "Phase 2 / Bias Detection: Identifying and neutralizing unintended patterns in real-time.", img: "seqscan2.png" },
       { text: "Phase 3 / Security Lock: Automated escalation triggered by high-risk handshake patterns.", img: "seqscan3.png" }
     ]
@@ -165,15 +165,14 @@ const projects = [
     id: 11,
     title: "ENTERPRISE TPM + SOLUTIONS ARCHITECT",
     category: "project",
-    visual: "/assets/images/cds/transparent_case.jpg",
+    visual: "4in1overlay88.png",
     glow: "#00E5FF",
     metrics: ["Notion + Jira", "Zapier MCP", "Gemma 4"],
     problem: "Need for verifiable, real-world enterprise deployments.",
     architecture: "Orchestrated enterprise-grade pipelines via Zapier MCP to optimize e-commerce fulfillment.",
     impact: "Real-world, verifiable deployment of multi-agent systems.",
     link: "https://leonrdarden.com/vox.html"
-  },
-  {
+  },  {
     id: 12,
     title: "ATLAS CORE: THE ENTERPRISE HEAVY HITTER",
     category: "project",

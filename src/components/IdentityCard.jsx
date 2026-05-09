@@ -11,14 +11,16 @@ const IdentityCard = ({ selectedProject }) => {
     { type: 'system', text: "Type 'help' for available commands." }
   ]);
   
+  const terminalLogRef = useRef(null);
+  
   const logEndRef = useRef(null);
 
   // IdentityBot Telemetry Feed Logic
   const messages = [
     "SYSTEM ONLINE. DARDEN ARCHITECTURE ACTIVE.",
-    "SCANNING B2B PIPELINES...",
-    "ALL 8 NODES SECURED. READY FOR HR INQUIRY.",
-    "AWAITING COMMAND...",
+    "TECHNICAL PRODUCT MANAGER & AI SOLUTIONS ARCHITECT.",
+    "OPERATING ENTERPRISE-GRADE AGENTIC WORKFLOWS.",
+    "ALL 15 NODES SECURED. READY FOR HR INQUIRY.",
     "DARDEN GRADE PROTOCOLS INITIALIZED."
   ];
 
@@ -72,14 +74,16 @@ const IdentityCard = ({ selectedProject }) => {
     }
   }, [selectedProject]);
 
-  // Auto-scroll to bottom of terminal
+  // Auto-scroll to bottom of terminal container only (No page jump)
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (terminalLogRef.current) {
+      terminalLogRef.current.scrollTop = terminalLogRef.current.scrollHeight;
+    }
   }, [terminalLog]);
 
   const commandCache = {
     "help": "Available commands: summary, projects, contact, clear",
-    "summary": "Bridging machine intelligence with human operational trust. 2000+ hours of dedicated AI research. Focus: B2B workflows and utility systems.",
+    "summary": "Technical Product Manager & AI Solutions Architect operating enterprise-grade agentic workflows. Focus: B2B automation, serverless architecture, and secure LLM routing.",
     "projects": "Accessing project grid... Click any disc to view deployment architecture.",
     "contact": "LOC: Atlanta Metro | Requesting secure comms...",
   };
@@ -116,7 +120,7 @@ const IdentityCard = ({ selectedProject }) => {
         
         <div className="card-header">
           <h1 className="name">LEON R. DARDEN</h1>
-          <div className="title">AI Solutions Architect</div>
+          <div className="title">Technical Product Manager & AI Solutions Architect</div>
         </div>
 
         <div className="photo-container">
@@ -140,7 +144,7 @@ const IdentityCard = ({ selectedProject }) => {
         </div>
 
         <div className="terminal-container">
-          <div className="terminal-output">
+          <div className="terminal-output" ref={terminalLogRef}>
             {terminalLog.map((log, index) => (
               <div key={index} className={`log-entry ${log.type === 'user' ? 'user-cmd' : 'sys-res'}`}>
                 {log.text}

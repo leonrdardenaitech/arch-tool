@@ -48,17 +48,18 @@ body {
   100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* --- THE FOCUS ENGINE (Dynamic Wrapping) --- */
+/* --- THE FOCUS ENGINE (Stable Scaling) --- */
 .focus-text {
   transition: all 0.3s ease-out;
   display: inline-block;
   cursor: default;
-  font-size: 1.05rem; /* Baseline from blueprint */
-  width: 100%; /* Ensure it fills the wrap zone */
+  font-size: 1.05rem;
+  width: 100%;
+  transform-origin: left center; /* Scale from the left to keep text aligned */
 }
 
-.focus-text:hover, .focus-text:hover * {
-  font-size: 1.3rem !important; /* Force scale on all children */
+.focus-text:hover {
+  transform: scale(1.05); /* Subtle scale-up instead of font-size jump */
   color: #FFFFFF !important;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
   z-index: 100;

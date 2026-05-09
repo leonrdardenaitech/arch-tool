@@ -20,6 +20,7 @@ export default defineConfig({
         what2eat: resolve(__dirname, 'what2eat/index.html'),
         privacy: resolve(__dirname, 'privacy.html'),
         wavio: resolve(__dirname, 'wavio.html'),
+        hunger: resolve(__dirname, 'hunger.html'),
       },
     },
   },
