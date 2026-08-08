@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Gemma 4 WebGPU Agent",
+  "version": "4.0.0",
+  "description": "Local WebGPU browser agent for the Darden Architecture.",
+  "permissions": ["storage", "sidePanel", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "action": {
+    "default_title": "Open Gemma 4"
+  }
+}

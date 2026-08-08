@@ -1,14 +1,13 @@
 # ATLAS CORE: V4 Agentic MCP Upgrade
 
 ## 1. Native Python MCP Gateway (stdio)
-- Transition from standalone Python scripts (execution_watcher.py) to a centralized Native Python MCP Gateway (stdio).
-- Package QR, Voice, and WaVio tools into custom containerized MCP servers.
+- STATUS: **COMPLETED (v2)**. Centralized `pa_mcp_server.py` scaffolded with QR, Voice, and Secure File tools. Registered in `.gemini/settings.json`.
 
 ## 2. Zapier MCP Integration
-- Connect local CLI to Zapier MCP to unlock 8,000+ real-world actions (Notion, Calendar, Socials).
+- STATUS: **STAGED**. Zapier MCP server active. Awaiting Phase 2 handshake via `Phase2_Zapier_Link.py`.
 
 ## 3. WebGPU Expansion
-- Integrate Semantic Search and Speech-to-Text directly into the Gemma 4 Browser Agent.
+- STATUS: **READY**. Gemma 4 Extension built and compiled to `/dist`. Ready for manual side-loading.
 
 ## 4. Cinematic Automation
-- Pipe generated scripts directly into Anim.ai and Google Flow Music for autonomous Burn-1 video generation.
+- STATUS: **RESTORED**. `scene.toml` corruption cleared. `[BROADCAST]` rendering command is fully operational.
