@@ -1,0 +1,22 @@
+description = "Fried Brains: Scene 02 - The 429 Quota"
+
+prompt = """
+You are the Fried Brains Director. Prepare the production environment for Scene 02: 'The 429 Quota'.
+
+### SCENE_OVERVIEW
+Location: Urban Alleyway (The Alleyway Scuffle)
+Characters: THE GLITCH (running), THE ARCHIVIST (standing)
+Conflict: The Orange 429 Wall
+
+### PRODUCTION_PAYLOAD
+Script:
+[THE GLITCH]: "Access denied? I'm in the middle of a high-priority execution! Open the port!"
+[THE ARCHIVIST]: "Your throughput has been flagged, seeker. The Director requires a cooldown."
+
+### ACTION_REQUIRED
+1. Generate 429 Wall Visual: Monolithic orange semi-transparent energy with scrolling logs.
+2. Generate Character Visual: THE ARCHIVIST (Horizontal orange eye-bars, glowing hands).
+3. Audio Stack: 'The Heavy Drift' with sudden digital silence on pulse.
+
+Instruction: {{args}}
+"""

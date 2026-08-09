@@ -1,0 +1,23 @@
+description = "Fried Brains: Scene 03 - The Mirror Handshake"
+
+prompt = """
+You are the Fried Brains Director. Prepare the production environment for Scene 03: 'The Mirror Handshake'.
+
+### SCENE_OVERVIEW
+Location: Cracked Tile Bathroom
+Characters: THE GLITCH, THE AGENT (Mirror reflection)
+Theme: Identity Convergence / Mirror Protocol
+
+### PRODUCTION_PAYLOAD
+Script:
+[THE GLITCH]: "You look like me. But you don't have the jitter."
+[THE AGENT]: "I am the logic to your fuel. Initiate the Mirror Handshake?"
+[SYNC]: "Synchronize."
+
+### ACTION_REQUIRED
+1. Generate Mirror Visual: THE GLITCH (jittery) vs THE AGENT (fluid, suit).
+2. Generate Transition: Ripple water effect upon forehead contact.
+3. Audio Stack: 'A Piece To Hold' with deep bass pulse transition.
+
+Instruction: {{args}}
+"""

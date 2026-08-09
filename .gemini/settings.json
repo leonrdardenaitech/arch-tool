@@ -3,6 +3,11 @@
     "zapier": {
       "url": "https://mcp.zapier.com/api/v1/connect",
       "type": "http"
+    },
+    "PersonalAssistant": {
+      "command": "python",
+      "args": ["C:/Users/Leonr/projects/arch-tool/public/LeonRDarden_Hub_Staging/pa_mcp_server.py"],
+      "type": "stdio"
     }
   }
 }

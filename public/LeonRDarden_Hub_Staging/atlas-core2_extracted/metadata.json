@@ -1,6 +1,0 @@
-{
-  "name": "ATLAS CORE",
-  "description": "Secure Personal Assistant Blueprint featuring a Bastion Host architecture, IPC state management, and asynchronous HITL signaling.",
-  "requestFramePermissions": [],
-  "majorCapabilities": []
-}

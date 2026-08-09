@@ -290,23 +290,6 @@ const ProjectOverlay = ({ project, onClose }) => {
                 >
                   LAUNCH_AGENTIC_WORKSTATION <ExternalLink size={16} />
                 </a>
-                <div className="random-image-container mt-4">
-                  <img 
-                    src={[
-                      "3d cloud88.png",
-                      "3d-brain88.jpg",
-                      "4in1overlay88.png",
-                      "ai-cert56488.gif",
-                      "chart floating88.jpg",
-                      "cybergirlheadfix88.jpg",
-                      "glowing crystal88.png",
-                      "seqscan188.png"
-                    ][Math.floor(Math.random() * 8)]} 
-                    alt="Neural Insight" 
-                    className="random-insight-img"
-                  />
-                  <div className="insight-label">LOCAL_INTELLIGENCE_LAYER_ACTIVE</div>
-                </div>
               </div>
             ) : (
               <a 

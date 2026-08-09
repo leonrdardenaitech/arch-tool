@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import IdentityCard from './components/IdentityCard';
 import CaseStudyGrid from './components/CaseStudyGrid';
 import ProjectOverlay from './components/ProjectOverlay';
 import ResumeSection from './components/ResumeSection';
 import ResumePanel from './components/ResumePanel';
+import VideoEditorApp from './components/VideoEditor/VideoEditorApp';
+import AtlasCoreV2App from './components/AtlasCoreV2/AtlasCoreV2App';
 import './index.css';
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#/nle') {
+        setSelectedNode({ id: 13, category: 'nle', title: 'AI-NATIVE NLE (VIDEO EDITOR)' });
+      } else if (hash === '#/architect') {
+        setSelectedNode({ id: 12, category: 'project', title: 'ATLAS CORE: THE ENTERPRISE AGENTIC SCALABILITY' });
+      } else if (hash === '#/dashboard') {
+        // Dashboard is handled by command-center.html, but we can add a fallback here if needed
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   const handleSelectNode = (node) => {
     setSelectedNode(node);
@@ -62,6 +81,37 @@ function App() {
               backdrop-filter: blur(20px); cursor: pointer;
             }
             .special-inner { text-align: center; font-family: monospace; border: 1px solid #333; padding: 50px; border-radius: 20px;}
+          `}</style>
+        </div>
+      )}
+      {/* 4. AI-Native NLE (Video Editor) */}
+      {selectedNode?.category === 'nle' && (
+        <div className="video-editor-modal">
+          <div className="modal-close-btn" onClick={handleClose}>×</div>
+          <VideoEditorApp />
+          <style>{`
+            .video-editor-modal {
+              position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+              background: #000; z-index: 5000;
+            }
+            .modal-close-btn {
+              position: absolute; top: 10px; right: 20px; 
+              color: #A855F7; font-size: 30px; cursor: pointer; z-index: 6000;
+              font-family: sans-serif;
+            }
+          `}</style>
+        </div>
+      )}
+      {/* 5. Atlas Core v2 (Sandboxed Agent) */}
+      {selectedNode?.id === 12 && (
+        <div className="atlas-v2-modal">
+          <div className="modal-close-btn" onClick={handleClose}>×</div>
+          <AtlasCoreV2App />
+          <style>{`
+            .atlas-v2-modal {
+              position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+              background: #000; z-index: 5000;
+            }
           `}</style>
         </div>
       )}

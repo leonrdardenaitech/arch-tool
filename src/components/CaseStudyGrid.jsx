@@ -5,15 +5,15 @@ const projects = [
   { 
     id: 1, 
     category: 'project',
-    title: 'AI DATA INTEGRATION', 
+    title: 'B2B AI BUSINESS AUDITS', 
     type: 'B2B DATA PIPELINE', 
-    tech: 'WATZ-V2',
+    tech: 'SNAPBACK & CHRONOS',
     glow: '#FF8C00', 
     visual: '/assets/video/node01image.gif', 
     problem: 'Hospitality environments lack the infrastructure to analyze fragmented operational data.',
-    architecture: 'Scraping and analyzing local venue reviews to trigger automated AI performance interventions.',
+    architecture: 'Deployment of the Restaurant Intelligence Architect, including the SnapBack Agent (reputation management) and Chronos Architect (scheduling).',
     impact: 'Bridges the gap between raw web data and actionable B2B dashboard visualization.',
-    metrics: ['Data Analysis', 'Sentiment Scraper', 'B2B Strategy'],
+    metrics: ['Restaurant Intelligence', 'SnapBack Agent', 'Chronos Architect'],
     link: 'https://leonrdarden.com/what2eat/'
   },
   { 
@@ -34,16 +34,16 @@ const projects = [
   { 
     id: 3, 
     category: 'project',
-    title: 'DEPLOYMENT PROTOCOL', 
+    title: 'HYDRO-SCAN NODE', 
     type: 'UTILITY ECOSYSTEM', 
-    tech: 'MULTIPLE APP NODES',
+    tech: 'VOICE & NEURAL KEYBOARD',
     glow: '#00FF87', 
     visual: '/assets/images/wavio_preview.png', 
     customComponent: 'deployment-roster',
     problem: 'Application development often suffers from feature creep and fragmented wireframing.',
-    architecture: 'Standardized "Darden Grade" protocol mandating token-efficient logic before production.',
+    architecture: 'Multimodal entry system using Voice and Neural Keyboard integrated with a HITL RAG system for personalized hydration tracking.',
     impact: 'Accelerates deployment while maintaining strict operational integrity across utility tools.',
-    metrics: ['Hydro-Scan', 'WaveSync', 'Slime Nexus'],
+    metrics: ['Multimodal Input', 'HITL RAG System', 'Neural Keyboard'],
     link: '#presentation',
     slides: [
       { text: "Phase 1 / Initialization: Mapping real-time personnel availability.", img: "weekly1.jpg" },
@@ -166,24 +166,63 @@ const projects = [
     id: 11,
     title: "ENTERPRISE TPM + SOLUTIONS ARCHITECT",
     category: "project",
-    visual: "4in1overlay88.png",
+    visual: "/4in1overlay88.png",
     glow: "#00E5FF",
     metrics: ["Notion + Jira", "Zapier MCP", "Gemma 4"],
     problem: "Need for verifiable, real-world enterprise deployments.",
     architecture: "Orchestrated enterprise-grade pipelines via Zapier MCP to optimize e-commerce fulfillment. Revitalized legacy Watz 4 Dinner infrastructure into a high-scale B2B routing engine.",
     impact: "Real-world, verifiable deployment of multi-agent systems. Bypasses traditional middleware bottlenecks.",
-    link: "/watz-dinner.html"
-  },  {
+    link: "/watz-v2.html"
+  },
+  {
     id: 12,
     title: "ATLAS CORE: THE ENTERPRISE AGENTIC SCALABILITY",
     category: "project",
     visual: "/BurningOne/image/Atlaslogolayingdown.png",
-    glow: "#00FF41",
-    metrics: ["Triple Price Breakdown", "Zero-Cost Grunt Work", "Premium AI Rivalry"],
+    glow: "#FFD700",
+    metrics: ["CODE ORCHESTRATION", "AI AGENTIC HUB", "GEMINI CLI + GENAI"],
     problem: "Bypassing $250/mo enterprise AI constraints.",
     architecture: "Built on the Forge Foundation. A Mega-Brain Neural Specialist acting as Chief of Operations.",
-    impact: "ATLAS CORE: THE ENTERPRISE HEAVY HITTER. Built on the Forge Foundation. By combining mechanical genius with Google's Ultra-tier infrastructure, the Darden Array operates as a Thanos-level Heavy Hitter. We leverage $250/month enterprise subscriptions to access thousands of dollars in cinematic studios and dev tools, saving companies an absolute fortune in operational overhead.",
+    impact: "Operates as a Thanos-level Heavy Hitter, saving companies a fortune in operational overhead.",
     link: "https://github.com/leonrdardenaitech/atlas-core"
+  },
+  {
+    id: 13,
+    title: "AI-NATIVE NLE (VIDEO EDITOR)",
+    category: "nle",
+    type: "REAL-TIME VIDEO PRODUCTION",
+    tech: "FFMPEG + FABRIC.JS",
+    glow: "#A855F7",
+    visual: "/assets/video/leon_awake_loop.mp4",
+    problem: "Traditional video editing is linear and computationally expensive.",
+    architecture: "Browser-based NLE using FFmpeg.wasm for client-side processing and Fabric.js for object-oriented layer management.",
+    impact: "Enables instant, automated video assembly and creative iteration without studio overhead.",
+    metrics: ["FFmpeg.wasm", "Fabric.js", "State Ledger"],
+    link: "#"
+  },
+  {
+    id: 14,
+    title: "BURN-1: DIMENSIONAL HUNGER",
+    category: "project",
+    visual: "/assets/video/dreamgirl44.mp4",
+    glow: "#FF4500",
+    metrics: ["AI ANIMATION", "LORE", "CINEMATIC"],
+    problem: "Maintaining visual consistency in long-form AI animation.",
+    architecture: "31-shot cinematic pipeline using the 'Archetype Bypass' strategy to maintain character traits across generative variations.",
+    impact: "Production of high-fidelity narrative lore with zero API cost via local rendering and automated assembly.",
+    link: "/fried-brains.html"
+  },
+  {
+    id: 15,
+    title: "EXECUTIVE COMMAND CENTER",
+    category: "project",
+    visual: "googlcertbutton88.png",
+    glow: "#00FF87",
+    metrics: ["PYTHON + MCP", "PIPER TTS", "GEO-AWARE"],
+    problem: "Managing cross-platform professional identity and local toolsets in a unified environment.",
+    architecture: "Centralized Python MCP gateway with real-time city-aware briefing, voice synthesis (Piper), and automated asset synchronization.",
+    impact: "100% professional data consistency and real-time operational readiness for high-stakes B2B audits.",
+    link: "/command-center.html"
   }
 ];
 const CaseStudyGrid = ({ onSelectProject }) => {
@@ -192,19 +231,15 @@ const CaseStudyGrid = ({ onSelectProject }) => {
       {projects.map((project) => (
         <div 
           key={project.id} 
-          className="cd-case" 
+          className={`cd-case node-${project.id}`} 
           onClick={() => onSelectProject(project)}
           style={{ '--node-glow': project.glow }}
         >
           <div className="cd-disc">
             {project.id === 12 ? (
-              <div className="cd-custom-icon">
-                <img src="/BurningOne/image/Atlaslogoupright.png" alt="Atlas Core" className="atlas-icon" />
-              </div>
+              <img src="/BurningOne/image/node12_icon.png" alt="Atlas Core" className="w-full h-full object-contain" />
             ) : project.id === 11 ? (
-              <div className="cd-jewel-case">
-                <div className="cd-center"></div>
-              </div>
+              <img src="/BurningOne/image/node11_icon.png" alt="Enterprise TPM" className="w-full h-full object-contain" />
             ) : (
               <>
                 <div className="cd-center"></div>

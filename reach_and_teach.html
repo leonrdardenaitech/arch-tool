@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reach & Teach App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        radred: '#e60000',
+                        radgreen: '#22c55e',
+                        reach: '#e60000',
+                        teach: '#2563eb',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .phone-container {
+            width: 100%;
+            height: 100vh;
+            max-width: 414px;
+            max-height: 896px;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        @media (min-width: 420px) {
+            .phone-container { height: 90vh; border-radius: 2rem; border: 8px solid #111; }
+        }
+
+        /* Strict single-view snap container */
+        .snap-tier {
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .snap-tier > * {
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+            flex-shrink: 0;
+        }
+
+        /* Overlays */
+        .holding-pen {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .holding-pen.active { display: flex; }
+
+        .dashboard-overlay {
+            position: absolute;
+            inset: 0;
+            background: #dc2626;
+            z-index: 90;
+            display: none;
+            flex-direction: column;
+        }
+        .dashboard-overlay.active { display: flex; }
+
+        /* Animations */
+        @keyframes pulse-rec {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .rec-dot { animation: pulse-rec 1s infinite; }
+        @keyframes scan-line {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255,0,0,0.6);
+            animation: scan-line 2s ease-in-out infinite;
+        }
+
+        /* 40% Max-height Dynamic Text Area */
+        .message-area {
+            max-height: 40%;
+            overflow-y: auto;
+        }
+        .message-area::-webkit-scrollbar { width: 4px; }
+        .message-area::-webkit-scrollbar-track { background: transparent; }
+        .message-area::-webkit-scrollbar-thumb { background: rgba(230,0,0,0.5); border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container text-gray-900">
+    <!-- ===== HEADER ===== -->
+    <header class="bg-reach text-white py-2 px-4 flex justify-center items-center z-10 shrink-0 relative shadow-md">
+        <button class="absolute left-4 p-2 hover:bg-white/20 rounded-lg transition" onclick="showToast('Menu opened')">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
+        <h1 class="font-black text-xl tracking-widest uppercase text-center">Reach & Teach</h1>
+        <button class="absolute right-4 p-2 hover:bg-white/20 rounded-lg transition" onclick="showToast('Settings opened')">
+            <i class="fas fa-cog text-lg"></i>
+        </button>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto pb-20 bg-gray-900" id="mainContent">
+        <!-- Tiers injected by JS -->
+    </main>
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bg-reach text-white flex justify-around items-center px-2 pt-2 pb-6 absolute bottom-0 w-full z-10 shrink-0 shadow-[0_-4px_15px_rgba(230,0,0,0.5)]">
+        <button class="flex flex-col items-center p-2 opacity-100" onclick="openDashboard()">
+            <i class="fas fa-tachometer-alt mb-1 text-xl"></i>
+            <span class="text-[10px] font-semibold">Dashboard</span>
+        </button>
+        <button class="flex flex-col items-center p-2 opacity-70 hover:opacity-100 transition" onclick="showToast('Search...')">
+            <i class="fas fa-search mb-1 text-xl"></i>
+            <span class="text-[10px] font-semibold">Search</span>
+        </button>
+        <button class="flex flex-col items-center p-2 opacity-70 hover:opacity-100 transition" onclick="showToast('Stumped View')">
+            <i class="fas fa-puzzle-piece mb-1 text-xl"></i>
+            <span class="text-[10px] font-semibold">Stumped</span>
+        </button>
+        <button class="flex flex-col items-center p-2 opacity-70 hover:opacity-100 transition" onclick="showToast('Leaderboard')">
+            <i class="fas fa-crown mb-1 text-xl"></i>
+            <span class="text-[10px] font-semibold">Leaders</span>
+        </button>
+        <button class="flex flex-col items-center p-2 opacity-70 hover:opacity-100 transition relative" onclick="showToast('Rooms')">
+            <i class="fas fa-comments mb-1 text-xl"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
+            <span class="text-[10px] font-semibold">Rooms</span>
+        </button>
+    </nav>
+
+    <!-- ===== USER ACTION MODAL (ASK/TELL) ===== -->
+    <div id="modalBackdrop" class="absolute inset-0 bg-black/80 hidden z-40 transition-opacity" onclick="closeModal()"></div>
+    <div id="actionModal" class="absolute inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)] transform translate-y-full transition-transform duration-300 z-50 border-t-4 border-reach flex flex-col h-[75%]">
+        <div class="w-full flex justify-center pt-3 pb-1" onclick="closeModal()">
+            <div class="w-16 h-1.5 bg-gray-300 rounded-full cursor-pointer"></div>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1">
+            <!-- User Info Header -->
+            <div class="flex items-center gap-4 mb-6 border-b-2 border-gray-100 pb-4">
+                <div class="relative">
+                    <img id="modalAvatar" src="" alt="Avatar" class="w-20 h-20 rounded-full border-4 border-reach object-cover">
+                    <div id="modalRank" class="absolute -bottom-2 -right-2 bg-gray-800 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white shadow-md">0</div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 id="modalName" class="text-2xl font-bold">Username</h2>
+                        <span id="modalStatus" class="px-2 py-0.5 rounded text-xs font-bold text-white uppercase">ON</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1 font-semibold">Reach Value: <span id="modalValue">High</span></p>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="mb-6 bg-gray-50 p-4 rounded-xl border-2 border-gray-200">
+                <h3 class="font-bold text-gray-700 mb-2 text-sm uppercase tracking-wider">Recent Activity</h3>
+                <div class="mb-3">
+                    <span class="font-bold text-reach text-sm">Last Reach:</span>
+                    <p id="modalRecentReach" class="text-gray-800 italic text-sm mt-1">"Loading..."</p>
+                </div>
+                <div>
+                    <span class="font-bold text-teach text-sm">Last Teach:</span>
+                    <p id="modalRecentTeach" class="text-gray-800 italic text-sm mt-1">"Loading..."</p>
+                </div>
+            </div>
+
+            <!-- Actions: REACH / TEACH -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <button onclick="openHoldingPen('REACH')" class="bg-reach hover:bg-red-700 text-white font-extrabold text-xl py-5 rounded-2xl shadow-[0_8px_0_#990000] active:shadow-[0_0px_0_#990000] active:translate-y-2 transition-all">
+                    REACH
+                </button>
+                <button onclick="openHoldingPen('TEACH')" class="bg-teach hover:bg-blue-700 text-white font-extrabold text-xl py-5 rounded-2xl shadow-[0_8px_0_#1a3f8a] active:shadow-[0_0px_0_#1a3f8a] active:translate-y-2 transition-all">
+                    TEACH
+                </button>
+            </div>
+            <div class="text-center mt-6 flex items-center justify-center gap-2">
+                <i class="fas fa-shield-alt text-radgreen"></i>
+                <p class="text-sm font-bold text-gray-600">AI Content Filter: <span class="text-radgreen">ACTIVE</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PERSONAL DASHBOARD OVERLAY ===== -->
+    <div id="dashboardOverlay" class="dashboard-overlay">
+        <div class="flex items-center justify-between p-4 text-white shrink-0">
+            <h2 class="font-black text-xl tracking-widest uppercase">My Dashboard</h2>
+            <button onclick="closeDashboard()" class="p-2 hover:bg-white/20 rounded-lg transition">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 pb-6">
+            <div class="flex justify-center mb-6">
+                <div class="relative">
+                    <img id="dashAvatar" src="https://placehold.co/150x150/e60000/ffffff?text=ME" alt="My Avatar" class="w-28 h-28 rounded-full border-4 border-white object-cover shadow-lg">
+                    <div class="absolute -bottom-2 -right-2 bg-white text-reach w-8 h-8 rounded-full flex items-center justify-center font-black text-sm border-4 border-reach shadow-md">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mb-6">
+                <h3 id="dashUserName" class="text-white font-black text-2xl">You</h3>
+                <p class="text-white/80 text-sm font-semibold">Your Reaches & Teaches</p>
+            </div>
+            <h4 class="text-white/90 font-bold text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i class="fas fa-inbox"></i> Message Board
+            </h4>
+            <div id="dashMessages" class="space-y-3">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HOLDING PEN (Universal Input & AI Bouncer) ===== -->
+    <div id="holdingPen" class="holding-pen">
+        <div class="w-full max-w-sm text-center">
+            
+            <!-- State: Recording & Typing -->
+            <div id="hpStateRecord" class="text-white w-full">
+                <h3 class="text-2xl font-black text-white mb-2">Submit <span id="hpModeLabel" class="uppercase">REACH</span></h3>
+                <p class="text-white/70 text-xs mb-4">Record media or type your submission</p>
+                
+                <div class="flex justify-center gap-6 mb-4">
+                    <div class="w-16 h-16 rounded-full border-4 border-reach flex items-center justify-center bg-white/10 hover:bg-white/20 cursor-pointer" onclick="hpTransition('preview')">
+                        <i class="fas fa-video text-reach text-xl rec-dot"></i>
+                    </div>
+                    <div class="w-16 h-16 rounded-full border-4 border-teach flex items-center justify-center bg-white/10 hover:bg-white/20 cursor-pointer" onclick="hpTransition('preview')">
+                        <i class="fas fa-microphone text-teach text-xl rec-dot"></i>
+                    </div>
+                </div>
+
+                <textarea id="universalInputText" class="w-full bg-black/60 border border-gray-600 text-white p-3 rounded-lg text-sm mb-4 focus:outline-none focus:border-reach font-mono" rows="4" placeholder="Or type your message here..."></textarea>
+                
+                <div class="w-full bg-white/20 rounded-full h-2 mb-4">
+                    <div id="hpProgressBar" class="bg-reach h-2 rounded-full" style="width: 0%; transition: width 0.3s;"></div>
+                </div>
+                
+                <button onclick="hpTransition('preview')" class="w-full bg-white text-gray-900 font-bold px-8 py-3 rounded-xl shadow-lg uppercase tracking-widest">
+                    Submit Input
+                </button>
+            </div>
+
+            <!-- State: Preview -->
+            <div id="hpStatePreview" class="text-white hidden w-full">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full border-4 border-radgreen flex items-center justify-center bg-white/10">
+                    <i class="fas fa-check text-radgreen text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">Preview</h3>
+                <p class="text-white/70 text-sm mb-4">Review your submission</p>
+                <div class="bg-white/10 rounded-xl p-4 mb-6 text-left border border-white/20">
+                    <p class="text-white/90 text-sm italic">"<span id="hpPreviewText">Preview of your recorded or typed message...</span>"</p>
+                </div>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="hpTransition('scanning')" class="flex-1 bg-radgreen text-white font-bold py-3 rounded-xl shadow-lg uppercase">Keep</button>
+                    <button onclick="hpTransition('record')" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-xl shadow-lg uppercase">Re-record</button>
+                </div>
+            </div>
+
+            <!-- State: Scanning / AI Bouncer -->
+            <div id="hpStateScanning" class="text-white hidden w-full">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full border-4 border-yellow-500 flex items-center justify-center bg-white/10 relative overflow-hidden">
+                    <i class="fas fa-search text-yellow-400 text-3xl"></i>
+                    <div class="scan-line"></div>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">Scanning...</h3>
+                <p class="text-white/70 text-sm mb-6">AI Bouncer reviewing content</p>
+                <div class="w-full bg-white/20 rounded-full h-2 mb-6">
+                    <div id="hpScanBar" class="bg-yellow-500 h-2 rounded-full" style="width: 0%; transition: width 0.1s;"></div>
+                </div>
+                <p class="text-white/50 text-xs font-semibold uppercase tracking-widest">15-Second Holding Pen</p>
+            </div>
+
+            <!-- Cancel / Close -->
+            <button onclick="closeHoldingPen()" class="text-white/60 hover:text-white text-sm font-semibold mt-6 underline uppercase tracking-widest">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-reach text-white px-6 py-2 rounded-full shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-[1] font-bold text-sm whitespace-nowrap border border-red-400">
+        Notification
+    </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA & STATE
+// ============================================================
+const tiersData = [
+    {
+        title: "Made",
+        subtitle: "Elders & Mentors",
+        users: [
+            { id: 101, name: "Sarah J.", status: "ON", rank: 12, recentReach: "How to scale web sockets?", recentTeach: "Use Redis for pub/sub across nodes.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=SJ" },
+            { id: 102, name: "David L.", status: "OFF", rank: 5, recentReach: "Best framework for 2026?", recentTeach: "Still leaning towards minimal TS setups.", avatar: "https://placehold.co/150x150/333333/ffffff?text=DL" },
+            { id: 103, name: "Jahnanani1", status: "ON", rank: 8, recentReach: "UX tenting strategies?", recentTeach: "Feed the tenting protocol directly.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=JA" }
+        ]
+    },
+    {
+        title: "Makers",
+        subtitle: "Active Builders",
+        users: [
+            { id: 201, name: "Alex B.", status: "ON", rank: 3, recentReach: "Help with CSS Grid?", recentTeach: "Tailwind makes it super easy with grid-cols.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=AB" },
+            { id: 202, name: "Sam K.", status: "ON", rank: 9, recentReach: "Docker deployment failing?", recentTeach: "Always check volume mounts and permissions.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=SK" }
+        ]
+    },
+    {
+        title: "Makes",
+        subtitle: "Newcomers & Explorers",
+        users: [
+            { id: 301, name: "NewUser99", status: "ON", rank: 0, recentReach: "How does this app work?", recentTeach: "Just joined today! Learning fast.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=NU" },
+            { id: 302, name: "Coder123", status: "ON", rank: 2, recentReach: "JavaScript closures?", recentTeach: "It's a function remembering its scope.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=C1" },
+            { id: 304, name: "DevDan", status: "ON", rank: 1, recentReach: "Best code editor?", recentTeach: "VS Code by far, with vim bindings.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=DD" }
+        ]
+    }
+];
+
+const dashboardMessages = [
+    { from: "Sarah J.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=SJ", reach: "How to scale web sockets?", teach: "Use Redis pub/sub across multiple nodes.", time: "2h ago" },
+    { from: "Alex B.", avatar: "https://placehold.co/150x150/e60000/ffffff?text=AB", reach: "Help with CSS Grid?", teach: "Use grid-template-columns with minmax().", time: "5h ago" }
+];
+
+const userMap = new Map();
+tiersData.forEach(tier => tier.users.forEach(user => userMap.set(user.id, user)));
+
+// ============================================================
+// TOAST NOTIFICATIONS
+// ============================================================
+let toastTimeout;
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.innerText = message;
+    toast.style.opacity = '1';
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+}
+
+// ============================================================
+// UI LOGIC (Toggle, Modal, Holding Pen)
+// ============================================================
+function toggleMode(element) {
+    const icon = element.querySelector('i');
+    if (icon.classList.contains('fa-video')) {
+        icon.classList.remove('fa-video', 'text-reach');
+        icon.classList.add('fa-microphone', 'text-teach');
+        showToast("Audio/GIF Avatar Mode Active");
+    } else {
+        icon.classList.remove('fa-microphone', 'text-teach');
+        icon.classList.add('fa-video', 'text-reach');
+        showToast("Video/Camera Mode Active");
+    }
+}
+
+const actionModal = document.getElementById('actionModal');
+const modalBackdrop = document.getElementById('modalBackdrop');
+
+function openUserModal(userId) {
+    const user = userMap.get(userId);
+    if (!user) return;
+    document.getElementById('modalAvatar').src = user.avatar;
+    document.getElementById('modalRank').innerText = user.rank;
+    document.getElementById('modalName').innerText = user.name;
+    document.getElementById('modalValue').innerText = user.rank > 5 ? 'High' : user.rank > 0 ? 'Medium' : 'New';
+    
+    const statusEl = document.getElementById('modalStatus');
+    statusEl.innerText = user.status;
+    statusEl.className = user.status === 'ON' 
+        ? 'px-2 py-0.5 rounded text-xs font-bold text-white uppercase bg-radgreen' 
+        : 'px-2 py-0.5 rounded text-xs font-bold text-white uppercase bg-gray-500';
+
+    document.getElementById('modalRecentReach').innerText = `"${user.recentReach}"`;
+    document.getElementById('modalRecentTeach').innerText = `"${user.recentTeach}"`;
+
+    modalBackdrop.classList.remove('hidden');
+    setTimeout(() => actionModal.classList.remove('translate-y-full'), 10);
+}
+
+function closeModal() {
+    actionModal.classList.add('translate-y-full');
+    setTimeout(() => modalBackdrop.classList.add('hidden'), 300);
+}
+
+let hpMode = 'REACH';
+let hpInterval = null;
+let hpScanInterval = null;
+
+function openHoldingPen(mode) {
+    hpMode = mode;
+    document.getElementById('hpModeLabel').innerText = mode;
+    document.getElementById('holdingPen').classList.add('active');
+    hpTransition('record');
+}
+
+function closeHoldingPen() {
+    document.getElementById('holdingPen').classList.remove('active');
+    clearInterval(hpInterval);
+    clearInterval(hpScanInterval);
+    hpTransition('record');
+    document.getElementById('hpProgressBar').style.width = '0%';
+    document.getElementById('hpScanBar').style.width = '0%';
+}
+
+function hpTransition(state) {
+    document.getElementById('hpStateRecord').classList.add('hidden');
+    document.getElementById('hpStatePreview').classList.add('hidden');
+    document.getElementById('hpStateScanning').classList.add('hidden');
+    clearInterval(hpInterval);
+    clearInterval(hpScanInterval);
+
+    if (state === 'record') {
+        document.getElementById('hpStateRecord').classList.remove('hidden');
+        let pct = 0;
+        document.getElementById('hpProgressBar').style.width = '0%';
+        hpInterval = setInterval(() => {
+            pct += 1;
+            if (pct > 100) pct = 100;
+            document.getElementById('hpProgressBar').style.width = pct + '%';
+            if (pct >= 100) {
+                clearInterval(hpInterval);
+                setTimeout(() => hpTransition('preview'), 500);
+            }
+        }, 150);
+    }
+    else if (state === 'preview') {
+        document.getElementById('hpStatePreview').classList.remove('hidden');
+        const typedText = document.getElementById('universalInputText').value;
+        document.getElementById('hpPreviewText').innerText = typedText ? typedText : `Captured A/V feed for your ${hpMode.toLowerCase()}...`;
+    }
+    else if (state === 'scanning') {
+        document.getElementById('hpStateScanning').classList.remove('hidden');
+        let pct = 0;
+        document.getElementById('hpScanBar').style.width = '0%';
+        hpScanInterval = setInterval(() => {
+            pct += 1;
+            if (pct > 100) pct = 100;
+            document.getElementById('hpScanBar').style.width = pct + '%';
+            if (pct >= 100) {
+                clearInterval(hpScanInterval);
+                showToast(`${hpMode} verified & submitted!`);
+                closeHoldingPen();
+                document.getElementById('universalInputText').value = '';
+            }
+        }, 150);
+    }
+}
+
+function openDashboard() {
+    document.getElementById('dashboardOverlay').classList.add('active');
+    const container = document.getElementById('dashMessages');
+    container.innerHTML = '';
+    dashboardMessages.forEach(msg => {
+        const card = document.createElement('div');
+        card.className = 'bg-white/10 backdrop-blur rounded-xl p-4 border border-white/20';
+        card.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <img src="${msg.avatar}" class="w-10 h-10 rounded-full border-2 border-white">
+                <div>
+                    <p class="text-white font-bold text-sm">${msg.from}</p>
+                    <p class="text-white/60 text-xs">${msg.time}</p>
+                </div>
+            </div>
+            <div class="bg-black/30 rounded-lg p-2 mb-2">
+                <p class="text-reach text-[10px] font-bold uppercase"><i class="fas fa-hand-paper"></i> Reach</p>
+                <p class="text-white text-xs">"${msg.reach}"</p>
+            </div>
+            <div class="bg-teach/30 rounded-lg p-2">
+                <p class="text-blue-300 text-[10px] font-bold uppercase"><i class="fas fa-lightbulb"></i> Teach</p>
+                <p class="text-white text-xs">"${msg.teach}"</p>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function closeDashboard() {
+    document.getElementById('dashboardOverlay').classList.remove('active');
+}
+
+// ============================================================
+// APP INITIATION & DOM INJECTION
+// ============================================================
+function initApp() {
+    const mainContent = document.getElementById('mainContent');
+    tiersData.forEach((tier) => {
+        const tierSection = document.createElement('section');
+        tierSection.className = 'mb-1';
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'px-4 pt-3 pb-1';
+        headerDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <h2 class="font-black text-lg text-white uppercase tracking-wider">${tier.title}</h2>
+                <span class="text-[10px] font-bold text-gray-300 bg-gray-800 px-2 py-1 rounded border border-gray-600 uppercase tracking-widest">
+                    Swipe <i class="fas fa-arrow-right ml-1"></i>
+                </span>
+            </div>
+            <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">${tier.subtitle}</p>
+        `;
+        tierSection.appendChild(headerDiv);
+
+        const scrollContainer = document.createElement('div');
+        scrollContainer.className = 'flex overflow-x-auto hide-scrollbar snap-tier gap-0 w-full';
+
+        tier.users.forEach(user => {
+            const isOnline = user.status === "ON";
+            const onlineColor = isOnline ? 'text-radgreen' : 'text-gray-400';
+            const statusBadge = isOnline ? 'bg-radgreen' : 'bg-gray-600';
+            
+            const card = document.createElement('div');
+            card.className = 'w-full shrink-0 snap-center px-2 py-1';
+            
+            card.innerHTML = `
+                <div class="w-full h-[28vh] max-h-[28vh] rounded-xl border-[3px] border-reach overflow-hidden bg-black relative flex flex-col group cursor-pointer shadow-lg" onclick="openUserModal(${user.id})">
+                    
+                    <!-- Top Left Mode Toggle -->
+                    <div class="absolute top-2 left-2 z-20 bg-white/90 rounded-full p-1.5 shadow-sm text-xs font-bold text-gray-700 flex items-center justify-center border border-gray-300 hover:bg-white transition" onclick="event.stopPropagation(); toggleMode(this)">
+                        <i class="fas fa-video text-reach"></i>
+                    </div>
+
+                    <!-- Top Right Status Badge -->
+                    <div class="absolute top-2 right-2 z-20 ${statusBadge} text-white text-[9px] font-black px-2 py-1 rounded shadow-sm border border-white uppercase">
+                        ${user.status}
+                    </div>
+
+                    <!-- Center User Identification -->
+                    <div class="absolute top-2 left-1/2 transform -translate-x-1/2 z-20 bg-black/70 backdrop-blur rounded-full px-3 py-1 flex items-center gap-2 border border-white/20">
+                        <img src="${user.avatar}" class="w-5 h-5 rounded-full border border-white">
+                        <span class="font-bold text-[10px] text-white tracking-wider">${user.name}</span>
+                        <span class="${onlineColor} text-[9px] font-black">#${user.rank}</span>
+                    </div>
+
+                    <!-- Video Background -->
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://placehold.co/400x600/111111/333333?text=MEDIA+FEED" class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity">
+                    </div>
+
+                    <!-- Bottom Anchored Dynamic Message Area (40% Constraint) -->
+                    <div class="mt-auto bg-gradient-to-t from-black via-black/90 to-transparent p-2 pt-6 message-area flex-shrink-0 z-10 w-full">
+                        <div class="bg-white/10 backdrop-blur rounded p-2 mb-1 border border-white/10">
+                            <p class="text-red-400 text-[9px] font-black uppercase flex items-center gap-1 tracking-widest"><i class="fas fa-hand-paper"></i> Reach</p>
+                            <p class="text-white text-[11px] leading-tight">"${user.recentReach}"</p>
+                        </div>
+                        <div class="bg-blue-500/20 backdrop-blur rounded p-2 border border-blue-500/20">
+                            <p class="text-blue-400 text-[9px] font-black uppercase flex items-center gap-1 tracking-widest"><i class="fas fa-lightbulb"></i> Teach</p>
+                            <p class="text-white text-[11px] leading-tight">"${user.recentTeach}"</p>
+                        </div>
+                    </div>
+
+                    <!-- 4 Minimalist Action Icons -->
+                    <div class="bg-black border-t-2 border-reach/80 flex items-center justify-around py-1.5 px-1 z-20 shrink-0">
+                        <button onclick="event.stopPropagation(); openUserModal(${user.id})" class="flex flex-col items-center gap-0.5 text-reach hover:text-red-400 transition">
+                            <i class="fas fa-hand-paper text-sm"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Reach</span>
+                        </button>
+                        <button onclick="event.stopPropagation(); showToast('Teaching ${user.name}')" class="flex flex-col items-center gap-0.5 text-teach hover:text-blue-400 transition">
+                            <i class="fas fa-lightbulb text-sm"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Teach</span>
+                        </button>
+                        <button onclick="event.stopPropagation(); showToast('Commenting...')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white transition">
+                            <i class="fas fa-comment text-sm"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Discuss</span>
+                        </button>
+                        <button onclick="event.stopPropagation(); showToast('Sharing...')" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-white transition">
+                            <i class="fas fa-share text-sm"></i>
+                            <span class="text-[8px] font-black uppercase tracking-widest">Share</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            scrollContainer.appendChild(card);
+        });
+
+        tierSection.appendChild(scrollContainer);
+        mainContent.appendChild(tierSection);
+    });
+}
+
+window.onload = initApp;
+</script>
+</body>
+</html>

@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "atlas-voice-tool": {
-      "command": "python",
-      "args": ["C:\\Users\\Leonr\\projects\\arch-tool\\public\\LeonRDarden_Hub_Staging\\Atlas_MCP_Server\\atlas_mcp_server.py"]
-    }
-  }
-}
