@@ -11,7 +11,7 @@
 
   <style>
     :root {
-      --bg-light: #f1f5f9;
+      --bg-light: #e5e7eb; /* Light Medium Gray background matching brand */
       --card-white: #ffffff;
       --text-dark: #0f172a;
       --text-muted: #475569;
@@ -34,6 +34,67 @@
 
     .font-cyber {
       font-family: 'Orbitron', sans-serif;
+    }
+
+    /* NAVBAR: MEDIUM GREY ANERGI BRAND THEME */
+    .anergi-navbar {
+      background: linear-gradient(180deg, #585858 0%, #4a4a4a 100%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* REVOLVING 3D ANERGI 'A' CUBE IN NAVBAR (GREY ON THE INSIDE NOT BLACK) */
+    .nav-cube-wrapper {
+      perspective: 500px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-cube {
+      width: 30px;
+      height: 30px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: spinNavCube 9s infinite linear;
+    }
+
+    .nav-cube:hover {
+      animation-play-state: paused;
+    }
+
+    .nav-cube-face {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #64748b, #475569); /* GREY ON INSIDE NOT BLACK */
+      border: 1.5px solid #ffffff;
+      border-radius: 6px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4), 0 0 10px rgba(253, 153, 30, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--brand-orange);
+      text-shadow: 0 0 8px rgba(253, 153, 30, 0.9);
+    }
+
+    .nav-face-front  { transform: rotateY(0deg) translateZ(15px); }
+    .nav-face-back   { transform: rotateY(180deg) translateZ(15px); }
+    .nav-face-right  { transform: rotateY(90deg) translateZ(15px); }
+    .nav-face-left   { transform: rotateY(-90deg) translateZ(15px); }
+    .nav-face-top    { transform: rotateX(90deg) translateZ(15px); }
+    .nav-face-bottom { transform: rotateX(-90deg) translateZ(15px); }
+
+    @keyframes spinNavCube {
+      0% { transform: rotateX(-12deg) rotateY(0deg); }
+      50% { transform: rotateX(12deg) rotateY(180deg); }
+      100% { transform: rotateX(-12deg) rotateY(360deg); }
     }
 
     /* WHITE RAISED TEXTURE CARDS (Tactile Clinical Tech Feel) */
@@ -91,10 +152,10 @@
       position: absolute;
       width: 38px;
       height: 38px;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
+      background: linear-gradient(135deg, #64748b, #475569); /* GREY ON INSIDE NOT BLACK */
       border: 1.5px solid #38bdf8;
       border-radius: 6px;
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8), 0 0 10px rgba(253, 153, 30, 0.4);
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4), 0 0 10px rgba(253, 153, 30, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -179,42 +240,56 @@
 <body class="min-h-screen flex flex-col justify-between">
 
   <!-- ========================================================================= -->
-  <!-- NAVIGATION BAR (Uniform Anergi Ecosystem Architecture)                     -->
+  <!-- NAVIGATION BAR (Medium Grey Anergi Brand Theme With 3D Revolving A Cube)   -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+  <header class="sticky top-0 z-50 anergi-navbar">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
-      <!-- LOGO / WORDMARK -->
-      <a href="index.html" class="flex items-center gap-3 group">
+      <!-- LOGO / WORDMARK WITH 3D SPINNING ANERGI 'A' CUBE (GREY INSIDE) -->
+      <a href="index.html" class="flex items-center gap-3.5 group">
+        <!-- 3D Revolving Anergi 'A' Cube in Navbar -->
+        <div class="nav-cube-wrapper">
+          <div class="nav-cube">
+            <div class="nav-cube-face nav-face-front">A</div>
+            <div class="nav-cube-face nav-face-back">A</div>
+            <div class="nav-cube-face nav-face-right">A</div>
+            <div class="nav-cube-face nav-face-left">A</div>
+            <div class="nav-cube-face nav-face-top">A</div>
+            <div class="nav-cube-face nav-face-bottom">A</div>
+          </div>
+        </div>
+
+        <!-- Electric cyan nergi.io wordmark with orange arch -->
         <div class="relative flex flex-col items-center">
           <svg class="w-20 h-4" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="3" stroke-linecap="round" />
           </svg>
-          <span class="text-2xl font-black tracking-tight text-sky-600 group-hover:text-sky-500 transition-colors">nergi.io</span>
+          <span class="text-2xl font-black tracking-tight text-cyan-400 group-hover:text-cyan-300 transition-colors" style="text-shadow: 0 0 14px rgba(0, 229, 255, 0.65);">nergi.io</span>
         </div>
-        <div class="hidden sm:flex flex-col border-l border-slate-300 pl-3">
-          <span class="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-800">Security Posture Assessment</span>
-          <span class="text-[9px] font-mono-code text-slate-500 uppercase">Clinical Enterprise Diagnostics</span>
+
+        <div class="hidden sm:flex flex-col border-l border-slate-500/60 pl-3">
+          <span class="text-[11px] font-mono-code font-bold uppercase tracking-wider text-white">Security Posture Assessment</span>
+          <span class="text-[9px] font-mono-code text-slate-300 uppercase">Clinical Enterprise Diagnostics</span>
         </div>
       </a>
 
-      <!-- NAV LINKS -->
-      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
-        <a href="index.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">Home</a>
-        <a href="treatment.html" class="px-3.5 py-2 text-xs font-bold text-sky-700 bg-sky-50 border border-sky-200 rounded-xl transition-all">Treatment Stages</a>
-        <a href="mini_spa.html" target="_blank" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-bolt text-amber-500"></i> Mini S.P.A.
+      <!-- NAV LINKS (ORANGE ACCENTS TO STAY ON BRAND) -->
+      <nav class="hidden md:flex items-center gap-2 font-mono">
+        <a href="index.html" class="px-3.5 py-2 text-xs font-bold text-white hover:text-amber-400 rounded-xl hover:bg-white/10 transition-all">Home</a>
+        <a href="treatment.html" class="px-3.5 py-2 text-xs font-bold text-amber-400 border-b-2 border-amber-400 transition-all">Treatment Stages</a>
+        <a href="mini_spa.html" target="_blank" class="px-3.5 py-2 text-xs font-bold text-white hover:text-amber-400 rounded-xl hover:bg-white/10 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt text-amber-400"></i> Mini S.P.A.
         </a>
-        <a href="news.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">News</a>
-        <a href="contact.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">Contact</a>
+        <a href="news.html" class="px-3.5 py-2 text-xs font-bold text-white hover:text-amber-400 rounded-xl hover:bg-white/10 transition-all">News</a>
+        <a href="contact.html" class="px-3.5 py-2 text-xs font-bold text-white hover:text-amber-400 rounded-xl hover:bg-white/10 transition-all">Contact</a>
       </nav>
 
-      <!-- TOP CTA BUTTON -->
+      <!-- TOP CTA BUTTON (BRAND ORANGE) -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="mini_spa.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:border-slate-400 rounded-xl shadow-sm transition-all">
-          <i class="fa-solid fa-bolt text-amber-500"></i> Quick Scan
+        <a href="mini_spa.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-xl shadow-md transition-all">
+          <i class="fa-solid fa-bolt text-slate-950"></i> Quick Scan
         </a>
-        <a href="contact.html" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 rounded-xl shadow-md hover:shadow-sky-500/20 transition-all">
+        <a href="contact.html" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-xl shadow-md transition-all">
           <i class="fa-solid fa-calendar-check"></i>
           <span>Book Consultation</span>
         </a>
@@ -247,23 +322,23 @@
       </p>
     </div>
 
-    <!-- HERO IMAGE: STATIC ROBOT OVERLOOKING CITY -->
+    <!-- HERO IMAGE: STATIC ROBOT OVERLOOKING CITY (SCALED TO FIT WITHOUT CROPPING) -->
     <div class="max-w-5xl mx-auto mb-12">
-      <div class="raised-card overflow-hidden p-2.5 sm:p-3 bg-white border-2 border-slate-200">
-        <div class="relative rounded-2xl overflow-hidden aspect-[16/9] sm:aspect-[21/9] shadow-inner">
+      <div class="raised-card overflow-hidden p-3 sm:p-4 bg-white border-2 border-slate-200">
+        <div class="relative rounded-2xl overflow-hidden shadow-inner bg-slate-950 flex flex-col items-center justify-center">
           <img 
             src="assets/treatment_hero_robot_city.jpeg" 
             alt="Armored Enterprise Robot Overlooking Futuristic City - Get Your Business The Treatment It Deserves"
-            class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+            class="w-full h-auto max-h-[560px] object-contain object-center transform hover:scale-[1.01] transition-transform duration-700"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white">
+          <div class="w-full bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent p-6 sm:p-8 text-white">
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/30 border border-sky-400 text-sky-200 font-mono-code text-[11px] rounded-full uppercase tracking-wider w-fit mb-2 backdrop-blur-md">
               <i class="fa-solid fa-hospital text-amber-400"></i> CLINICAL HEALTH CHECK // CONTINUOUS PERIMETER IMMUNITY
             </div>
             <h2 class="text-xl sm:text-3xl font-black tracking-tight text-white drop-shadow">
               Pampering the Anatomy of Your Digital Enterprise
             </h2>
-            <p class="text-xs sm:text-sm text-slate-200 max-w-xl drop-shadow mt-1">
+            <p class="text-xs sm:text-sm text-slate-200 max-w-2xl drop-shadow mt-1">
               From preventative 60-second perimeter diagnostics to full anatomical pen-testing and continuous zero-trust armor.
             </p>
           </div>
