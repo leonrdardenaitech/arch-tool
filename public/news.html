@@ -18,7 +18,7 @@
 
     body {
       font-family: var(--font-sans);
-      background: linear-gradient(180deg, rgba(13, 18, 28, 0.88) 0%, rgba(15, 23, 42, 0.94) 50%, rgba(10, 15, 26, 0.98) 100%),
+      background: linear-gradient(180deg, rgba(13, 18, 28, 0.40) 0%, rgba(15, 23, 42, 0.50) 50%, rgba(10, 15, 26, 0.62) 100%),
                   url('hero_collaborating.jpeg') center/cover fixed no-repeat;
       color: #f1f5f9;
       min-height: 100vh;
@@ -32,11 +32,12 @@
       inset: 0;
       pointer-events: none;
       background-image: 
-        radial-gradient(rgba(0, 229, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+        radial-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 229, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
       background-size: 40px 40px, 80px 80px, 80px 80px;
       z-index: 0;
+      opacity: 0.5;
     }
 
     /* 3D ROTATING CUBE LOGO */
@@ -330,89 +331,120 @@
         </span>
       </div>
 
-      <!-- 2-COLUMN SHOWCASE: INFOGRAPHIC LEFT, VIDEO PLAYER RIGHT -->
-      <div class="glass-punchout rounded-3xl p-6 sm:p-8 border-amber-500/40 shadow-2xl">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <!-- FEATURED SHOWCASE: ARTICLE ON TOP, WEEKLY VIDEO EMBEDDED BIG BELOW -->
+      <div class="glass-punchout rounded-3xl p-6 sm:p-10 border-amber-500/40 shadow-2xl space-y-8">
 
-          <!-- LEFT: INFOGRAPHIC PREVIEW & TOPIC DEEP-DIVE -->
-          <div class="lg:col-span-6 space-y-4">
+        <!-- PART 1: THE FEATURED ARTICLE ON TOP -->
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2">
               <span class="text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2.5 py-0.5 rounded-md">
                 AI Governance &bull; ISO 42001 &bull; EU AI Act
               </span>
               <span class="text-xs text-amber-400 font-mono font-bold">Volume #42</span>
             </div>
+            <span class="text-xs font-mono text-slate-400 bg-slate-950/70 border border-slate-800 px-3 py-1 rounded-lg">
+              Published: Wednesday, Sept 23, 2026
+            </span>
+          </div>
 
-            <h3 class="text-xl sm:text-2xl font-black text-white leading-tight">
-              Deconstructing the EU AI Act &amp; NIST AI RMF: Enterprise Risk Classification for High-Impact LLMs
-            </h3>
+          <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight">
+            Deconstructing the EU AI Act &amp; NIST AI RMF: Enterprise Risk Classification for High-Impact LLMs
+          </h3>
 
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              In this week's Wednesday executive deep-dive, we map the mandatory compliance requirements for corporate AI deployments. Learn how ISO 42001 continuous audit packs insulate enterprise infrastructure from steep regulatory penalties while hardening prompt pipelines.
-            </p>
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-4xl">
+            In this week's Wednesday executive deep-dive, we map the mandatory compliance requirements for corporate AI deployments. Learn how ISO 42001 continuous audit packs insulate enterprise infrastructure from steep regulatory penalties while hardening prompt pipelines.
+          </p>
 
-            <!-- INFOGRAPHIC HIGHLIGHT BOX -->
-            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5 font-mono text-xs text-slate-300">
-              <div class="text-amber-400 font-bold flex items-center gap-2">
-                <i class="fa-solid fa-chart-diagram"></i> Infographic Key Takeaways:
+          <!-- INFOGRAPHIC KEY TAKEAWAYS (3-CARD GRID) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
+              <div class="text-amber-400 font-bold mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group"></i> Risk Classification
               </div>
-              <ul class="space-y-1.5 pl-4 list-disc text-[11px] text-slate-300">
-                <li>Classification tiering between Minimal, Specific, and High-Risk AI models.</li>
-                <li>Turnkey policy authoring steps for Boardroom ISO 42001 attestation.</li>
-                <li>Red-teaming adversarial prompt injection and data exfiltration vectors.</li>
-              </ul>
+              <p class="text-[11px] text-slate-400 leading-normal">
+                Tiering between Minimal, Specific, and High-Risk AI enterprise model footprints.
+              </p>
             </div>
-
-            <div class="pt-2 flex items-center gap-4">
-              <a href="https://www.linkedin.com/company/anergi" target="_blank" rel="noopener" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
-                <i class="fa-brands fa-linkedin"></i> Read Full Post &amp; Discuss
-              </a>
-              <a href="contact.html" class="text-xs font-mono text-slate-300 hover:text-white underline">
-                Book AI Governance Review ➔
-              </a>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
+              <div class="text-cyan-400 font-bold mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-file-shield"></i> Policy Authoring
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal">
+                Turnkey compliance steps for Boardroom ISO 42001 attestation and audits.
+              </p>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
+              <div class="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-virus"></i> Adversarial Red-Teaming
+              </div>
+              <p class="text-[11px] text-slate-400 leading-normal">
+                Stress-testing prompt injection and training data exfiltration vectors.
+              </p>
             </div>
           </div>
 
-          <!-- RIGHT: YOUTUBE MATCHING VIDEO EMBED CONTAINER -->
-          <div class="lg:col-span-6 space-y-3">
-            <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-700 bg-slate-950 shadow-2xl group">
-              <!-- VIDEO THUMBNAIL OVERLAY / HUD -->
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10 flex flex-col justify-between p-4 sm:p-6">
-                <div class="flex items-center justify-between">
-                  <span class="bg-red-600/90 text-white font-mono text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
-                    <i class="fa-brands fa-youtube"></i> Anergi Tech Briefing
-                  </span>
-                  <span class="font-mono text-xs text-slate-400">Duration: 8:45</span>
-                </div>
-                <div class="text-center my-auto">
-                  <a href="https://youtu.be/9e6SZe3uKj4" target="_blank" rel="noopener" class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-red-600/90 text-white text-2xl shadow-2xl hover:scale-110 hover:bg-red-500 transition-all cursor-pointer" title="Play Video Briefing">
-                    <i class="fa-solid fa-play ml-1"></i>
-                  </a>
-                </div>
-                <div>
-                  <h4 class="text-sm font-bold text-white font-mono">Episode #42 // Watch the Video Breakdown</h4>
-                  <p class="text-[11px] text-slate-400">Hosted by Anergi Offensive Security Team</p>
-                </div>
-              </div>
-              <img src="skyscraper_anatomy.jpeg" alt="Episode Graphic" class="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-500" onerror="this.src='Lobby.png';">
-            </div>
-
-            <!-- NEXT OPTION VIDEO DISPATCH QUICK SELECTOR -->
-            <a href="https://youtu.be/w2hEmiBfLbo" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-900/90 border border-red-500/40 hover:border-red-400 text-xs font-mono transition-all group/next">
-              <div class="flex items-center gap-3">
-                <span class="w-7 h-7 rounded-lg bg-red-600/20 text-red-400 border border-red-500/40 flex items-center justify-center shrink-0 group-hover/next:bg-red-600 group-hover/next:text-white transition-colors">
-                  <i class="fa-solid fa-play text-xs"></i>
-                </span>
-                <div>
-                  <span class="text-[10px] uppercase font-bold text-red-400 tracking-wider block">Next Option in Queue &bull; Video Dispatch</span>
-                  <span class="text-white font-bold group-hover/next:text-red-300">Executive Briefing // Offensive Hardening Analysis</span>
-                </div>
-              </div>
-              <span class="text-slate-400 group-hover/next:text-white shrink-0 ml-2">Watch ➔</span>
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <a href="https://www.linkedin.com/company/anergi" target="_blank" rel="noopener" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
+              <i class="fa-brands fa-linkedin"></i> Read Full Post &amp; Discuss
+            </a>
+            <a href="contact.html" class="text-xs font-mono text-slate-300 hover:text-white underline flex items-center gap-1">
+              Book AI Governance Review ➔
             </a>
           </div>
-
         </div>
+
+        <!-- PART 2: THE WEEKLY VIDEO EMBEDDED BIG BELOW (ALREADY PLAYING ON MUTE) -->
+        <div class="pt-6 border-t border-slate-800/90 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-red-600/20 border border-red-500/40 text-red-400 text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+                Wednesday Weekly Video Feature &bull; Layman Cyber Briefing
+              </div>
+              <h4 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+                "Somebody's Watching Me" // Everyday Cybersecurity &amp; Threat Fundamentals
+              </h4>
+              <p class="text-xs text-slate-400 mt-1 max-w-3xl">
+                Weekly Wednesday video briefing breaking down digital exposure, tracking, and essential computer defense in straightforward layman terms.
+              </p>
+            </div>
+            <div class="shrink-0">
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg">
+                <i class="fa-solid fa-volume-xmark"></i> Playing Muted &bull; Tap for Audio
+              </span>
+            </div>
+          </div>
+
+          <!-- BIG HIGHLIGHTED RESPONSIVE VIDEO EMBED -->
+          <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-red-500/40 shadow-2xl bg-black">
+            <iframe 
+              class="absolute inset-0 w-full h-full"
+              src="https://www.youtube.com/embed/w2hEmiBfLbo?autoplay=1&mute=1&loop=1&playlist=w2hEmiBfLbo&controls=1&rel=0" 
+              title="Anergi Wednesday Weekly Cyber Briefing - Somebody's Watching Me"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" 
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <!-- BOTTOM ACTION DOCK FOR VIDEO -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs font-mono">
+            <span class="text-slate-400 text-[11px]">
+              <i class="fa-solid fa-info-circle text-cyan-400 mr-1"></i> Weekly Wednesday placeholder video series for workforce and leadership threat literacy.
+            </span>
+            <div class="flex items-center gap-3">
+              <a href="https://www.youtube.com/watch?v=w2hEmiBfLbo" target="_blank" rel="noopener" class="px-3.5 py-1.5 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 font-bold rounded-xl transition-all flex items-center gap-1.5">
+                <i class="fa-brands fa-youtube"></i> Full Screen on YouTube
+              </a>
+              <a href="https://youtu.be/9e6SZe3uKj4" target="_blank" rel="noopener" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-xl transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-play"></i> Channel Hub
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
