@@ -334,18 +334,51 @@
 
     /* HERO SHOWCASE (2-COLUMN: LOGO LEFT, HEADLINE & MISSION RIGHT) */
     .hero-showcase {
+      position: relative;
       display: grid;
       grid-template-columns: 360px 1fr;
       gap: 3rem;
       align-items: center;
       width: 100%;
-      padding: 1rem 0 0.5rem 0;
+      padding: 2.5rem 2rem;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(253, 153, 30, 0.35);
+      background: #111827;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    }
+    .hero-showcase-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.38;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-showcase-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 50%, rgba(15, 23, 42, 0.72) 0%, rgba(10, 15, 26, 0.94) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-logo-box,
+    .hero-text-content {
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 960px) {
       .hero-showcase {
         grid-template-columns: 1fr;
         gap: 2rem;
         text-align: center;
+        padding: 2rem 1.25rem;
       }
     }
     .hero-logo-box {
@@ -1754,6 +1787,13 @@
 
     <!-- HERO SHOWCASE (2-COLUMN: GIANT 3D REVOLVING CUBE LEFT, PAMPER ANATOMY HEADLINE RIGHT) -->
     <header class="hero-showcase">
+      <!-- HERO VIDEO BACKGROUND (ANIMATE GLOWING IMAGE & ARMOR) -->
+      <video autoplay loop muted playsinline class="hero-showcase-video">
+        <source src="treatment_hero_loop.mp4" type="video/mp4">
+        <source src="Animate_glowing_image_and_armor_20260921024137.mp4" type="video/mp4">
+      </video>
+      <div class="hero-showcase-overlay"></div>
+
       <!-- LEFT: GIANT 3D ROTATING CUBE WITH METALLIC ELECTRIC BLUE NERGI.IO BELOW -->
       <div class="hero-logo-box">
         <div class="hero-cube-scene">
@@ -1800,6 +1840,9 @@
         <div class="hero-actions">
           <a href="mini_spa.html" target="_blank" class="circuit-btn circuit-btn-primary">
             <i class="fa-solid fa-bolt"></i> Launch Mini S.P.A. ➔
+          </a>
+          <a href="msa.html" class="circuit-btn circuit-btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #38bdf8;">
+            <i class="fa-solid fa-shield-halved"></i> Launch Full S.P.A. ➔
           </a>
           <a href="contact.html" class="circuit-btn circuit-btn-dark">
             <i class="fa-solid fa-calendar-check"></i> Book Consultation ➔
@@ -2223,15 +2266,15 @@
 
           <!-- INTEGRATED CHASSIS LAUNCH BUTTONS -->
           <div class="pipboy-chassis-dock">
-            <a href="msa2.html" target="_blank" class="circuit-btn circuit-btn-primary">
+            <a href="msa.html" class="circuit-btn circuit-btn-primary">
               <i class="fa-solid fa-shield-halved"></i> Launch S.P.A. Suite ➔
             </a>
-            <a href="https://anergi.io/contact-us/" target="_blank" class="circuit-btn circuit-btn-dark">
+            <a href="contact.html" class="circuit-btn circuit-btn-dark">
               <i class="fa-solid fa-file-signature"></i> Deploy S.P.A. for Enterprise ➔
             </a>
             <div style="width: 100%; text-align: center; margin-top: 0.5rem;">
-              <a href="msa.html" target="_blank" style="font-family: var(--font-mono); font-size: 0.76rem; color: #94a3b8; text-decoration: underline;">
-                <i class="fa-solid fa-layer-group"></i> Prefer Cyber Blue theme? Switch to S.P.A. (Blue Edition) ➔
+              <a href="msa.html" style="font-family: var(--font-mono); font-size: 0.76rem; color: #94a3b8; text-decoration: underline;">
+                <i class="fa-solid fa-layer-group"></i> Full S.P.A. Dual-Engine Architecture &bull; Incident Response Suite ➔
               </a>
             </div>
           </div>
@@ -2253,11 +2296,14 @@
       </p>
 
       <div class="intake-btn-row">
-        <a href="https://anergi.io/contact-us/" target="_blank" class="circuit-btn circuit-btn-primary">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Contact Anergi.io Directly (anergi.io/contact-us) ➔
+        <a href="contact.html" class="circuit-btn circuit-btn-primary">
+          <i class="fa-solid fa-calendar-check"></i> Schedule Consultation (anergi.io/contact) ➔
         </a>
-        <a href="portfolio.html" class="circuit-btn circuit-btn-dark">
-          <i class="fa-solid fa-folder-open"></i> Return to Portfolio
+        <a href="msa.html" class="circuit-btn circuit-btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-color: #38bdf8;">
+          <i class="fa-solid fa-shield-halved"></i> Launch Full S.P.A. ➔
+        </a>
+        <a href="index.html" class="circuit-btn circuit-btn-dark">
+          <i class="fa-solid fa-folder-open"></i> Return to Homepage
         </a>
       </div>
 

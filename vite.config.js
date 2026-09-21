@@ -9,6 +9,12 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        pitch: resolve(__dirname, 'pitch.html'),
+        mini_spa: resolve(__dirname, 'mini_spa.html'),
+        msa: resolve(__dirname, 'msa.html'),
+        news: resolve(__dirname, 'news.html'),
+        contact: resolve(__dirname, 'contact.html'),
+        portfolioModern: resolve(__dirname, 'portfolio_modern.html'),
         portfolio: resolve(__dirname, 'portfolio.html'),
         brand: resolve(__dirname, 'brand-builder.html'),
         vox: resolve(__dirname, 'vox.html'),

@@ -215,11 +215,31 @@
       display: flex;
       align-items: flex-end; /* Slides content down into lower third */
       justify-content: center;
-      background: 
-        linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.35) 100%),
-        url('hero_collaborating.jpeg') center/cover no-repeat;
+      background: #111827;
+      overflow: hidden;
       padding: 4rem 1.5rem 4.5rem;
       border-bottom: 2px solid var(--border-subtle);
+    }
+
+    .hero-video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.95;
+    }
+
+    .hero-video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.45) 60%, rgba(0, 0, 0, 0.85) 100%);
+      z-index: 2;
     }
 
     .hero-container {
@@ -1096,6 +1116,8 @@
         <li><a href="index.html" class="nav-link">Home</a></li>
         <li><a href="#what-we-do" class="nav-link active">What We Do</a></li>
         <li><a href="pitch.html" class="nav-link">Treatment Stages</a></li>
+        <li><a href="mini_spa.html" target="_blank" class="nav-link">Mini S.P.A.</a></li>
+        <li><a href="msa.html" class="nav-link">Full S.P.A.</a></li>
         <li><a href="news.html" class="nav-link">News</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
       </ul>
@@ -1123,15 +1145,26 @@
        HERO SECTION (Unblocked Faces - Title & Centered Pill in Lower Third)
        ========================================================================== -->
   <header class="hero-section" id="home">
+    <!-- HERO VIDEO BACKGROUND (SLOWED BY 10%) -->
+    <video autoplay loop muted playsinline class="hero-video-bg" id="heroVideo" poster="hero_collaborating.jpeg">
+      <source src="hero_loop.mp4" type="video/mp4">
+      <source src="Professionals_interacting_with_h._20260921023302.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay"></div>
+
     <div class="hero-container">
       <h1 class="hero-title">
         Driving Security.<br>
         <span class="text-orange">Powering Performance.</span>
       </h1>
 
-      <div class="hero-cta-wrap">
+      <div class="hero-cta-wrap" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
         <a href="mini_spa.html" target="_blank" rel="noopener" class="btn-pill-orange">
           <span>Launch Mini S.P.A.</span>
+          <i class="fa-solid fa-bolt"></i>
+        </a>
+        <a href="msa.html" class="btn-pill-orange" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); box-shadow: 0 8px 25px rgba(2, 132, 199, 0.45);">
+          <span>Launch Full S.P.A.</span>
           <i class="fa-solid fa-shield-halved"></i>
         </a>
       </div>
@@ -1630,6 +1663,12 @@
             navMenu.style.display = 'none';
           }
         });
+      }
+
+      // Configure hero video playback rate (slowed down by 10%)
+      const heroVid = document.getElementById('heroVideo');
+      if (heroVid) {
+        heroVid.playbackRate = 0.9;
       }
     });
   </script>
