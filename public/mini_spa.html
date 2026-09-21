@@ -11,7 +11,7 @@
 
   <style>
     :root {
-      --bg-light: #e5e7eb; /* Light Medium Gray background matching brand */
+      --bg-light: #545454; /* Navbar Medium Grey Brand Background */
       --card-white: #ffffff;
       --text-dark: #0f172a;
       --text-muted: #475569;
@@ -24,7 +24,7 @@
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg-light);
-      color: var(--text-dark);
+      color: #ffffff;
       overflow-x: hidden;
     }
 
@@ -96,6 +96,50 @@
       50% { transform: rotateX(12deg) rotateY(180deg); }
       100% { transform: rotateX(-12deg) rotateY(360deg); }
     }
+
+    /* REVOLVING 3D ANERGI 'A' CUBE IN FOOTER */
+    .footer-cube-wrapper {
+      perspective: 400px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .footer-cube {
+      width: 26px;
+      height: 26px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: spinNavCube 9s infinite linear;
+    }
+
+    .footer-cube-face {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #64748b, #475569);
+      border: 1.2px solid #ffffff;
+      border-radius: 5px;
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4), 0 0 8px rgba(253, 153, 30, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--brand-orange);
+      text-shadow: 0 0 6px rgba(253, 153, 30, 0.9);
+    }
+
+    .footer-face-front  { transform: rotateY(0deg) translateZ(13px); }
+    .footer-face-back   { transform: rotateY(180deg) translateZ(13px); }
+    .footer-face-right  { transform: rotateY(90deg) translateZ(13px); }
+    .footer-face-left   { transform: rotateY(-90deg) translateZ(13px); }
+    .footer-face-top    { transform: rotateX(90deg) translateZ(13px); }
+    .footer-face-bottom { transform: rotateX(-90deg) translateZ(13px); }
 
     /* WHITE RAISED TEXTURE CARDS (Tactile Clinical Tech Feel) */
     .raised-card {
@@ -277,10 +321,7 @@
 
       <!-- TOP CTA BUTTON (BRAND ORANGE) -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="treatment.html" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-slate-700/80 hover:bg-slate-600 border border-slate-500/50 rounded-xl shadow-sm transition-all">
-          <i class="fa-solid fa-layer-group text-amber-400"></i> Full Stages
-        </a>
-        <a href="contact.html" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-xl shadow-md transition-all">
+        <a href="contact.html" class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-xl shadow-md transition-all">
           <i class="fa-solid fa-calendar-check"></i>
           <span>Book Consultation</span>
         </a>
@@ -296,19 +337,19 @@
     
     <!-- TOP CLINICAL BADGE -->
     <div class="text-center mb-6">
-      <span class="badge-clinical">
-        <i class="fa-solid fa-shield-halved text-sky-600"></i>
+      <span class="badge-clinical" style="background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); color: #ffffff;">
+        <i class="fa-solid fa-shield-halved text-amber-400"></i>
         <span>Anergi Diagnostic Engine // Free Point-In-Time Evaluation</span>
       </span>
     </div>
 
     <!-- JUMBO HEADLINE -->
     <div class="text-center max-w-3xl mx-auto mb-10">
-      <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+      <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight mb-4">
         Could Your Business Use a <br class="hidden sm:block">
-        <span class="bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 bg-clip-text text-transparent">Mini S.P.A.?</span>
+        <span class="bg-gradient-to-r from-cyan-300 via-sky-300 to-amber-400 bg-clip-text text-transparent">Mini S.P.A.?</span>
       </h1>
-      <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto leading-relaxed">
         Experience a pain-free, non-intrusive 60-second <strong>Security Posture Assessment (S.P.A.)</strong>. We examine the digital perimeter of your business—diagnosing exposed endpoints, cryptographic TLS alignment, and boundary health.
       </p>
     </div>
@@ -319,12 +360,12 @@
     <div class="max-w-3xl mx-auto mb-14">
       
       <!-- Thin hover/place letters right above the box -->
-      <div class="flex items-center justify-between px-4 mb-2.5 text-xs font-mono-code font-light tracking-wider text-slate-600">
-        <span class="flex items-center gap-2 font-normal text-sky-800 uppercase">
-          <i class="fa-solid fa-stethoscope text-amber-500"></i>
+      <div class="flex items-center justify-between px-4 mb-2.5 text-xs font-mono-code font-light tracking-wider text-slate-200">
+        <span class="flex items-center gap-2 font-normal text-amber-300 uppercase">
+          <i class="fa-solid fa-stethoscope text-amber-400"></i>
           Place business name or domain to start treatment diagnosis:
         </span>
-        <span class="text-slate-500 hidden sm:inline">60-Sec Non-Invasive</span>
+        <span class="text-slate-300 hidden sm:inline">60-Sec Non-Invasive</span>
       </div>
 
       <!-- Bigger Chat LLM Input Bar -->
@@ -365,12 +406,12 @@
         </button>
       </form>
 
-      <div class="flex items-center justify-center gap-6 mt-3 text-xs font-mono-code text-slate-500">
-        <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield text-emerald-600"></i> Zero Invasive Probes</span>
+      <div class="flex items-center justify-center gap-6 mt-3 text-xs font-mono-code text-slate-200">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield text-emerald-400"></i> Zero Invasive Probes</span>
         <span>&bull;</span>
-        <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-500"></i> 60-Sec Real-Time Analysis</span>
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-400"></i> 60-Sec Real-Time Analysis</span>
         <span>&bull;</span>
-        <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-sky-600"></i> Instant PDF Deliverable</span>
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-sky-400"></i> Instant PDF Deliverable</span>
       </div>
 
     </div>
@@ -660,28 +701,40 @@
   </main>
 
   <!-- ========================================================================= -->
-  <!-- FOOTER: UNIFORM ANERGI ECOSYSTEM                                          -->
+  <!-- FOOTER: UNIFORM ANERGI ECOSYSTEM WITH REVOLVING 3D 'A' CUBE                -->
   <!-- ========================================================================= -->
-  <footer class="bg-white border-t border-slate-200 py-8 px-4 sm:px-6 lg:px-8 text-slate-600 text-xs font-mono-code mt-auto">
+  <footer class="bg-[#444444] border-t border-white/15 py-8 px-4 sm:px-6 lg:px-8 text-slate-300 text-xs font-mono-code mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
       
       <div class="flex items-center gap-3">
+        <!-- 3D Revolving Anergi 'A' Cube in Footer -->
+        <div class="footer-cube-wrapper">
+          <div class="footer-cube">
+            <div class="footer-cube-face footer-face-front">A</div>
+            <div class="footer-cube-face footer-face-back">A</div>
+            <div class="footer-cube-face footer-face-right">A</div>
+            <div class="footer-cube-face footer-face-left">A</div>
+            <div class="footer-cube-face footer-face-top">A</div>
+            <div class="footer-cube-face footer-face-bottom">A</div>
+          </div>
+        </div>
+
         <div class="relative flex flex-col items-center">
           <svg class="w-16 h-3" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="3" stroke-linecap="round" />
           </svg>
-          <span class="text-lg font-black text-sky-600 tracking-tight">nergi.io</span>
+          <span class="text-lg font-black text-cyan-400 tracking-tight">nergi.io</span>
         </div>
-        <span class="text-slate-400">&copy; 2026 Anergi.io &bull; Security Posture Assessment (S.P.A.)</span>
+        <span class="text-slate-300">&copy; 2026 Anergi.io &bull; Security Posture Assessment (S.P.A.)</span>
       </div>
 
-      <div class="flex items-center gap-6 flex-wrap justify-center text-slate-500">
-        <a href="index.html" class="hover:text-sky-600 transition-colors">Home</a>
-        <a href="treatment.html" class="hover:text-sky-600 transition-colors">Treatment Stages</a>
-        <a href="mini_spa.html" class="text-amber-500 font-bold">Mini S.P.A.</a>
-        <a href="news.html" class="hover:text-sky-600 transition-colors">News</a>
-        <a href="contact.html" class="hover:text-sky-600 transition-colors">Contact</a>
-        <a href="msa.html" class="hover:text-sky-600 transition-colors">Full S.P.A. Suite</a>
+      <div class="flex items-center gap-6 flex-wrap justify-center text-slate-300">
+        <a href="index.html" class="hover:text-amber-400 transition-colors">Home</a>
+        <a href="treatment.html" class="hover:text-amber-400 transition-colors">Treatment Stages</a>
+        <a href="mini_spa.html" class="text-amber-400 font-bold">Mini S.P.A.</a>
+        <a href="news.html" class="hover:text-amber-400 transition-colors">News</a>
+        <a href="contact.html" class="hover:text-amber-400 transition-colors">Contact</a>
+        <a href="msa.html" class="hover:text-amber-400 transition-colors">Full S.P.A. Suite</a>
       </div>
 
     </div>
