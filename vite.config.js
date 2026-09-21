@@ -9,6 +9,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        treatment: resolve(__dirname, 'treatment.html'),
         pitch: resolve(__dirname, 'pitch.html'),
         mini_spa: resolve(__dirname, 'mini_spa.html'),
         msa: resolve(__dirname, 'msa.html'),

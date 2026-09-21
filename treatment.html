@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anergi S.P.A. Treatment Stages // Clinical Diagnostics & Hardened Resilience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-light: #f1f5f9;
+      --card-white: #ffffff;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --brand-orange: #fd991e;
+      --brand-cyan: #0284c7;
+      --brand-glow-cyan: #00e5ff;
+      --brand-emerald: #10b981;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .font-cyber {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* WHITE RAISED TEXTURE CARDS (Tactile Clinical Tech Feel) */
+    .raised-card {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 1.5rem;
+      box-shadow: 
+        0 10px 30px -5px rgba(15, 23, 42, 0.07),
+        0 4px 12px -2px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .raised-card:hover {
+      box-shadow: 
+        0 20px 40px -10px rgba(15, 23, 42, 0.12),
+        0 8px 20px -4px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      transform: translateY(-3px);
+    }
+
+    /* CLINICAL VIDEO BEZEL */
+    .video-bezel {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 1.25rem;
+      box-shadow: 
+        0 12px 28px -6px rgba(15, 23, 42, 0.1),
+        inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* REVOLVING 3D ANERGI 'A' CUBE MINI (LLM Chat Bar Companion) */
+    .chat-cube-wrapper {
+      perspective: 600px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chat-cube {
+      width: 38px;
+      height: 38px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: spinChatCube 10s infinite linear;
+    }
+
+    .chat-cube-face {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1.5px solid #38bdf8;
+      border-radius: 6px;
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8), 0 0 10px rgba(253, 153, 30, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 900;
+      font-size: 1.4rem;
+      color: var(--brand-orange);
+      text-shadow: 0 0 8px rgba(253, 153, 30, 0.9);
+    }
+
+    .face-front  { transform: rotateY(0deg) translateZ(19px); }
+    .face-back   { transform: rotateY(180deg) translateZ(19px); }
+    .face-right  { transform: rotateY(90deg) translateZ(19px); }
+    .face-left   { transform: rotateY(-90deg) translateZ(19px); }
+    .face-top    { transform: rotateX(90deg) translateZ(19px); }
+    .face-bottom { transform: rotateX(-90deg) translateZ(19px); }
+
+    @keyframes spinChatCube {
+      0% { transform: rotateX(-15deg) rotateY(0deg); }
+      50% { transform: rotateX(15deg) rotateY(180deg); }
+      100% { transform: rotateX(-15deg) rotateY(360deg); }
+    }
+
+    /* CHAT-LLM INPUT BAR STYLING */
+    .llm-input-container {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 9999px;
+      box-shadow: 
+        0 15px 35px -5px rgba(15, 23, 42, 0.1),
+        0 0 0 4px rgba(2, 132, 199, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .llm-input-container:focus-within {
+      border-color: #0284c7;
+      box-shadow: 
+        0 20px 45px -5px rgba(2, 132, 199, 0.18),
+        0 0 0 5px rgba(2, 132, 199, 0.15);
+    }
+
+    /* CLINICAL BADGES */
+    .badge-clinical {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      color: #0369a1;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 9999px;
+    }
+
+    .badge-orange {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #c2410c;
+    }
+
+    /* PULSING DIAGNOSTIC RADAR */
+    @keyframes radarPulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .pulse-radar {
+      animation: radarPulse 2s infinite ease-in-out;
+    }
+
+    /* PRINT / PDF STYLING */
+    @media print {
+      body { background: #ffffff !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- ========================================================================= -->
+  <!-- NAVIGATION BAR (Uniform Anergi Ecosystem Architecture)                     -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- LOGO / WORDMARK -->
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="relative flex flex-col items-center">
+          <svg class="w-20 h-4" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <span class="text-2xl font-black tracking-tight text-sky-600 group-hover:text-sky-500 transition-colors">nergi.io</span>
+        </div>
+        <div class="hidden sm:flex flex-col border-l border-slate-300 pl-3">
+          <span class="text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-800">Security Posture Assessment</span>
+          <span class="text-[9px] font-mono-code text-slate-500 uppercase">Clinical Enterprise Diagnostics</span>
+        </div>
+      </a>
+
+      <!-- NAV LINKS -->
+      <nav class="hidden md:flex items-center gap-1 sm:gap-2">
+        <a href="index.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">Home</a>
+        <a href="treatment.html" class="px-3.5 py-2 text-xs font-bold text-sky-700 bg-sky-50 border border-sky-200 rounded-xl transition-all">Treatment Stages</a>
+        <a href="mini_spa.html" target="_blank" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt text-amber-500"></i> Mini S.P.A.
+        </a>
+        <a href="news.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">News</a>
+        <a href="contact.html" class="px-3.5 py-2 text-xs font-bold text-slate-600 hover:text-sky-600 rounded-xl hover:bg-slate-100 transition-all">Contact</a>
+      </nav>
+
+      <!-- TOP CTA BUTTON -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="mini_spa.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:border-slate-400 rounded-xl shadow-sm transition-all">
+          <i class="fa-solid fa-bolt text-amber-500"></i> Quick Scan
+        </a>
+        <a href="contact.html" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 rounded-xl shadow-md hover:shadow-sky-500/20 transition-all">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Book Consultation</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO SECTION: CLINICAL TECH AESTHETIC WITH JUMBO HEADLINE & LLM BAR       -->
+  <!-- ========================================================================= -->
+  <section class="relative pt-10 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <!-- TOP CLINICAL STATUS CHIP -->
+    <div class="text-center mb-6">
+      <span class="badge-clinical">
+        <i class="fa-solid fa-shield-heart text-sky-600"></i>
+        <span>Clinical Cybersecurity Regimen // Dual-Engine Framework</span>
+      </span>
+    </div>
+
+    <!-- JUMBO HEADLINE & HERO CALLOUT -->
+    <div class="text-center max-w-4xl mx-auto mb-10">
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+        Get Your Business the <br class="hidden sm:block">
+        <span class="bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 bg-clip-text text-transparent">Treatment It Deserves.</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        Anergi <strong>Security Posture Assessment (S.P.A.)</strong> transforms cybersecurity from an invasive ordeal into an elite clinical diagnostic treatment. We examine the digital anatomy of your enterprise—diagnosing vulnerabilities, stress-testing exposed vectors, and prescribing fortified armor before adversaries strike.
+      </p>
+    </div>
+
+    <!-- HERO IMAGE: STATIC ROBOT OVERLOOKING CITY -->
+    <div class="max-w-5xl mx-auto mb-12">
+      <div class="raised-card overflow-hidden p-2.5 sm:p-3 bg-white border-2 border-slate-200">
+        <div class="relative rounded-2xl overflow-hidden aspect-[16/9] sm:aspect-[21/9] shadow-inner">
+          <img 
+            src="assets/treatment_hero_robot_city.jpeg" 
+            alt="Armored Enterprise Robot Overlooking Futuristic City - Get Your Business The Treatment It Deserves"
+            class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/30 border border-sky-400 text-sky-200 font-mono-code text-[11px] rounded-full uppercase tracking-wider w-fit mb-2 backdrop-blur-md">
+              <i class="fa-solid fa-hospital text-amber-400"></i> CLINICAL HEALTH CHECK // CONTINUOUS PERIMETER IMMUNITY
+            </div>
+            <h2 class="text-xl sm:text-3xl font-black tracking-tight text-white drop-shadow">
+              Pampering the Anatomy of Your Digital Enterprise
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-200 max-w-xl drop-shadow mt-1">
+              From preventative 60-second perimeter diagnostics to full anatomical pen-testing and continuous zero-trust armor.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- INTERACTIVE CHAT-LLM DIAGNOSTIC INPUT CONSOLE                           -->
+    <!-- ======================================================================= -->
+    <div class="max-w-3xl mx-auto mb-16">
+      
+      <!-- Label above chat bar -->
+      <div class="flex items-center justify-between px-3 mb-2.5 text-xs font-mono-code">
+        <span class="flex items-center gap-2 font-bold text-sky-800 uppercase tracking-wider">
+          <i class="fa-solid fa-stethoscope text-amber-500 text-sm"></i>
+          Input target business name or domain to start treatment diagnosis:
+        </span>
+        <span class="text-slate-500 hidden sm:inline">60-Sec Non-Invasive</span>
+      </div>
+
+      <!-- Chat LLM Pill Container -->
+      <form onsubmit="handleTreatmentDiagnosis(event)" class="llm-input-container p-2 sm:p-2.5 flex items-center gap-2 sm:gap-3 bg-white">
+        
+        <!-- Left: Revolving 3D Anergi Cube -->
+        <div class="chat-cube-wrapper pl-1">
+          <div class="chat-cube">
+            <div class="chat-cube-face face-front">A</div>
+            <div class="chat-cube-face face-back">A</div>
+            <div class="chat-cube-face face-right">A</div>
+            <div class="chat-cube-face face-left">A</div>
+            <div class="chat-cube-face face-top">A</div>
+            <div class="chat-cube-face face-bottom">A</div>
+          </div>
+        </div>
+
+        <!-- Middle: Expansive Input -->
+        <div class="flex-1 relative">
+          <input 
+            type="text" 
+            id="treatment-input"
+            value="anergi.io"
+            placeholder="e.g. acmehealth.com or Global Enterprise Inc." 
+            class="w-full bg-transparent px-3 py-3 text-sm sm:text-base font-semibold text-slate-900 placeholder-slate-400 focus:outline-none"
+          />
+        </div>
+
+        <!-- Right: Submit Action Button -->
+        <button 
+          type="submit" 
+          id="btn-diagnosis-submit"
+          class="px-5 sm:px-7 py-3 bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 hover:from-sky-500 hover:to-amber-400 text-white font-extrabold text-xs sm:text-sm rounded-full shadow-lg hover:shadow-sky-500/30 transition-all shrink-0 flex items-center gap-2 cursor-pointer"
+        >
+          <span>Start Diagnosis</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <p class="text-center text-[11px] font-mono-code text-slate-500 mt-2.5">
+        <i class="fa-solid fa-circle-info text-sky-500 mr-1"></i>
+        Executes point-in-time perimeter vitality, cryptographic posture, and vulnerability surface telemetry.
+      </p>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- DIAGNOSTIC TELEMETRY CONSOLE & CLINICAL REPORT (Hidden until triggered) -->
+    <!-- ======================================================================= -->
+    <div id="diagnostic-screen" class="max-w-4xl mx-auto mb-20 hidden">
+      
+      <!-- SCANNING THINKING ANIMATION -->
+      <div id="diagnostic-loader" class="raised-card p-8 text-center bg-white border-2 border-sky-200">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sky-50 text-sky-600 border border-sky-200 mb-4 pulse-radar">
+          <i class="fa-solid fa-wave-square text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-black text-slate-900">Conducting Clinical Examination...</h3>
+        <p class="text-xs font-mono-code text-slate-500 mt-1">Target Subject: <strong id="scan-target-label" class="text-sky-700">anergi.io</strong></p>
+
+        <div class="mt-6 bg-slate-950 p-4 rounded-xl text-left font-mono-code text-xs text-emerald-400 space-y-1.5 h-32 overflow-hidden shadow-inner border border-slate-800">
+          <p id="diag-log-1">[*] Initiating non-invasive TLS 1.3 cryptographic handshake socket...</p>
+          <p id="diag-log-2" class="opacity-0 transition-opacity duration-300">[*] Examining Anatomical Eyes: Boundary DNS records &amp; HTTP security headers...</p>
+          <p id="diag-log-3" class="opacity-0 transition-opacity duration-300">[*] Checking Arteries: Edge latency, Strict-Transport-Security (HSTS) enforcement...</p>
+          <p id="diag-log-4" class="opacity-0 transition-opacity duration-300">[+] Compiling executive clinical posture report &amp; treatment prescription...</p>
+        </div>
+      </div>
+
+      <!-- CLINICAL REPORT CARD (RENDERED AFTER SCAN) -->
+      <div id="clinical-report-card" class="raised-card p-6 sm:p-10 bg-white border-2 border-slate-200 hidden">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-200 mb-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono-code font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> DIAGNOSIS COMPLETE
+              </span>
+              <span class="text-xs font-mono-code text-slate-500" id="report-timestamp-now">2026-09-21 18:45 EDT</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1.5">
+              Clinical Security Posture Assessment Report
+            </h2>
+            <p class="text-xs font-mono-code text-slate-600">
+              Examined Entity: <strong id="report-domain-label" class="text-sky-700">anergi.io</strong> &bull; Protocol: <strong>Mini S.P.A. Clinical Diagnostic</strong>
+            </p>
+          </div>
+
+          <!-- DOWNLOAD PDF ACTION -->
+          <button 
+            onclick="downloadClinicalPDF()" 
+            class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>Export Clinical Report (PDF)</span>
+          </button>
+        </div>
+
+        <!-- DIAGNOSTIC SCORE MATRIX -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <span class="text-[10px] font-mono-code uppercase font-bold text-slate-500">Perimeter Eyes</span>
+            <div class="text-2xl font-black text-emerald-600 mt-1">94%</div>
+            <span class="text-[10px] text-slate-500 font-mono-code">Secured Surface</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <span class="text-[10px] font-mono-code uppercase font-bold text-slate-500">TLS Encryption</span>
+            <div class="text-2xl font-black text-emerald-600 mt-1">TLS 1.3</div>
+            <span class="text-[10px] text-slate-500 font-mono-code">Optimal Ciphers</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <span class="text-[10px] font-mono-code uppercase font-bold text-slate-500">HSTS Boundary</span>
+            <div class="text-2xl font-black text-emerald-600 mt-1">Enforced</div>
+            <span class="text-[10px] text-slate-500 font-mono-code">Strict Preload</span>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center">
+            <span class="text-[10px] font-mono-code uppercase font-bold text-slate-500">Posture Rating</span>
+            <div class="text-2xl font-black text-sky-600 mt-1">GRADE A</div>
+            <span class="text-[10px] text-slate-500 font-mono-code">Low Threat Index</span>
+          </div>
+        </div>
+
+        <!-- CLINICAL FINDINGS TABLE -->
+        <div class="mb-8 overflow-hidden rounded-2xl border border-slate-200">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-100 text-slate-700 uppercase font-mono-code text-[10px] border-b border-slate-200">
+              <tr>
+                <th class="p-3">Anatomical Focus</th>
+                <th class="p-3">Vector Tested</th>
+                <th class="p-3">Clinical Finding</th>
+                <th class="p-3">Prescription</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-600">
+              <tr>
+                <td class="p-3 font-bold text-slate-900">👁️ The Eyes</td>
+                <td class="p-3 font-mono-code">DNS Edge Records</td>
+                <td class="p-3"><span class="text-emerald-600 font-bold">SECURE:</span> No exposed legacy subdomains or dangling CNAMEs.</td>
+                <td class="p-3 text-slate-500">Maintain continuous edge DNS sync.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-slate-900">🩸 The Arteries</td>
+                <td class="p-3 font-mono-code">HTTP Response Headers</td>
+                <td class="p-3"><span class="text-amber-600 font-bold">ATTENTION:</span> Missing Content-Security-Policy (CSP) framing rule.</td>
+                <td class="p-3 text-slate-800 font-semibold">Deploy CSP frame-ancestors 'none'.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-slate-900">🦴 The Bones</td>
+                <td class="p-3 font-mono-code">TLS Cipher Suite</td>
+                <td class="p-3"><span class="text-emerald-600 font-bold">OPTIMAL:</span> ECDHE-RSA-AES128-GCM-SHA256 active.</td>
+                <td class="p-3 text-slate-500">Zero legacy cipher suites detected.</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-bold text-slate-900">🧠 The Brains</td>
+                <td class="p-3 font-mono-code">AI Governance Exposure</td>
+                <td class="p-3"><span class="text-sky-600 font-bold">UNATTESTED:</span> Cloud API endpoints lack ISO 42001 governance tag.</td>
+                <td class="p-3 text-sky-700 font-semibold">Advance to Phase 3 Forensic Hardening.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TREATMENT PRESCRIPTION CALLOUT -->
+        <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-user-doctor text-lg"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm">Recommended Next Stage: Anatomical S.P.A. Treatment</h4>
+              <p class="text-xs text-slate-600">The Mini S.P.A. provided initial vital metrics. For deep systemic penetration testing, advance through our 4 Treatment Stages below.</p>
+            </div>
+          </div>
+          <a href="#treatment-stages" class="px-4 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl shrink-0 hover:bg-slate-800 transition-all">
+            Review Stages ➔
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- THE 4 CLINICAL TREATMENT PHASES (WHITE RAISED TEXTURE WITH VIDEO CLIPS)    -->
+  <!-- ========================================================================= -->
+  <section id="treatment-stages" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <span class="badge-clinical mb-3">
+        <i class="fa-solid fa-list-check text-sky-600"></i>
+        <span>Clinical Methodology // 4 Progressive Stages</span>
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+        The Anatomy of Your Enterprise Security Treatment
+      </h2>
+      <p class="text-sm sm:text-base text-slate-600 mt-2">
+        Just as medical medicine begins with diagnostic vital signs and progresses to tailored clinical therapy and enduring physical vitality, Anergi delivers structured progression from initial surface checks to continuous enterprise immunity.
+      </p>
+    </div>
+
+    <div class="space-y-16">
+
+      <!-- ===================================================================== -->
+      <!-- STAGE 1: INITIAL DIAGNOSIS // MINI S.P.A. (VIDEO 1: 1111.mp4)         -->
+      <!-- ===================================================================== -->
+      <div class="raised-card p-6 sm:p-10 border-2 border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- LEFT CONTENT: STAGE INFO -->
+          <div class="lg:col-span-6 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="badge-clinical">Stage 01</span>
+              <span class="text-xs font-mono-code text-slate-500 font-bold uppercase">Rapid Perimeter Check</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Phase 1: Initial Diagnosis <br>
+              <span class="text-sky-600 font-bold">The Mini Security Posture Assessment</span>
+            </h3>
+            
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Before invasive procedures or heavy penetration testing, every enterprise needs an objective baseline. The <strong>Mini S.P.A.</strong> is a lightweight, non-intrusive 60-second examination of your external digital perimeter. 
+            </p>
+
+            <!-- Key Diagnosis Bullet Points -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>
+                <strong>Surface Tension:</strong> Edge DNS and gateway sanity.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>
+                <strong>TLS Cipher Audit:</strong> Downgrade vulnerability check.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>
+                <strong>HSTS Enforcement:</strong> Protocol hijacking defenses.
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>
+                <strong>Executive PDF:</strong> Instant point-in-time score card.
+              </div>
+            </div>
+
+            <div class="pt-4 flex flex-wrap gap-3">
+              <a href="mini_spa.html" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+                <i class="fa-solid fa-bolt text-amber-300"></i> Launch Standalone Mini S.P.A. ➔
+              </a>
+            </div>
+          </div>
+
+          <!-- RIGHT VIDEO: 1111.mp4 (CLINICAL BEZEL) -->
+          <div class="lg:col-span-6">
+            <div class="video-bezel">
+              <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] font-mono-code text-slate-500">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  PHASE 1 // DIAGNOSIS TELEMETRY
+                </span>
+                <span>CLIP 01 &bull; 10s LOOP</span>
+              </div>
+              <div class="relative aspect-video bg-black">
+                <video 
+                  src="assets/treatment_phase1_diagnosis.mp4" 
+                  autoplay 
+                  loop 
+                  muted 
+                  playsinline 
+                  class="w-full h-full object-cover"
+                ></video>
+                <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 text-white text-[10px] font-mono-code">
+                  Vital Signs Diagnostic Protocol
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- STAGE 2: THE S.P.A. ANATOMY // BONES, BRAINS, ARTERIES, EYES (2222)   -->
+      <!-- ===================================================================== -->
+      <div class="raised-card p-6 sm:p-10 border-2 border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- LEFT VIDEO: 2222.mp4 (CLINICAL BEZEL) -->
+          <div class="lg:col-span-6 order-2 lg:order-1">
+            <div class="video-bezel">
+              <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] font-mono-code text-slate-500">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+                  PHASE 2 // ANATOMICAL S.P.A. SUITE
+                </span>
+                <span>CLIP 02 &bull; 10s LOOP</span>
+              </div>
+              <div class="relative aspect-video bg-black">
+                <video 
+                  src="assets/treatment_phase2_spa_anatomy.mp4" 
+                  autoplay 
+                  loop 
+                  muted 
+                  playsinline 
+                  class="w-full h-full object-cover"
+                ></video>
+                <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 text-white text-[10px] font-mono-code">
+                  Dual-Engine Anatomical Stress Test
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT CONTENT: THE 4 ANATOMICAL ORGANS -->
+          <div class="lg:col-span-6 order-1 lg:order-2 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="badge-clinical">Stage 02</span>
+              <span class="text-xs font-mono-code text-slate-500 font-bold uppercase">Anatomical Examination</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Phase 2: Comprehensive S.P.A. <br>
+              <span class="text-sky-600 font-bold">The Bones, Brains, Arteries &amp; Eyes</span>
+            </h3>
+            
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Once initial indicators are established, we examine the four physiological pillars of your digital enterprise. We stress-test each organ with non-destructive simulation to ensure core functions withstand pressure.
+            </p>
+
+            <!-- 4 ORGANS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                  <span>🧠</span> The Brains // AI Governance
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  LLM runtime isolation, prompt boundary protection, and ISO 42001 / EU AI Act governance attestation.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                  <span>🦴</span> The Bones // Identity &amp; IAM
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  Zero-trust privilege architecture, Active Directory skeleton, and lateral privilege containment.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                  <span>🩸</span> The Arteries // VPC Network
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  Encrypted data-in-transit conduits, low-latency API transit pipelines, and transit VPC boundary locks.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs mb-1">
+                  <span>👁️</span> The Eyes // External Perimeter
+                </div>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                  Public attack surface detection, unmonitored DNS entrypoints, and rogue asset visibility.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3-HR SLA TIMER REFERENCE -->
+            <div class="p-3 bg-sky-50 rounded-xl border border-sky-200 flex items-center justify-between text-xs text-sky-800">
+              <span class="flex items-center gap-2 font-bold">
+                <i class="fa-solid fa-clock text-sky-600"></i>
+                Guaranteed 3-Hour Incident Containment SLA
+              </span>
+              <span class="font-mono-code font-bold">03:00:00</span>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- STAGE 3: DEEP FORENSIC HARDENING // THERAPEUTIC REGIMEN (33333.mp4)   -->
+      <!-- ===================================================================== -->
+      <div class="raised-card p-6 sm:p-10 border-2 border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- LEFT CONTENT: STAGE INFO -->
+          <div class="lg:col-span-6 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="badge-clinical">Stage 03</span>
+              <span class="text-xs font-mono-code text-slate-500 font-bold uppercase">Pathology &amp; Fortification</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Phase 3: Forensic Hardening <br>
+              <span class="text-sky-600 font-bold">Deep Pathology &amp; Regulatory Attestation</span>
+            </h3>
+            
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Just as deep medical pathology identifies latent internal disease (cellular decay, vascular blockage, or structural fragility) before clinical symptoms arise, Anergi conducts deep forensic penetration testing. We uncover hidden configuration drift, privilege escalation chains, and rogue endpoints.
+            </p>
+
+            <!-- Corporate Framework Alignment -->
+            <div class="space-y-2.5 pt-2">
+              <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                <i class="fa-solid fa-certificate text-sky-600 mt-0.5"></i>
+                <div>
+                  <strong class="text-slate-900">Executive Regulatory Attestation:</strong>
+                  <p class="text-slate-500 mt-0.5">Board-ready compliance verification satisfying NIST CSF 2.0, SOC 2 Type II, ISO 27001, and EU AI Act mandates.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                <i class="fa-solid fa-screwdriver-wrench text-amber-600 mt-0.5"></i>
+                <div>
+                  <strong class="text-slate-900">Customized Therapeutic Prescription:</strong>
+                  <p class="text-slate-500 mt-0.5">Turnkey engineering playbooks with precise step-by-step remediation instructions for dev and DevOps teams.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <span class="text-xs font-mono-code text-slate-500">
+                <i class="fa-solid fa-lock text-emerald-500 mr-1"></i> Zero-downtime, non-destructive clinical evaluation.
+              </span>
+            </div>
+          </div>
+
+          <!-- RIGHT VIDEO: 33333.mp4 (CLINICAL BEZEL) -->
+          <div class="lg:col-span-6">
+            <div class="video-bezel">
+              <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] font-mono-code text-slate-500">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                  PHASE 3 // FORENSIC FORTIFICATION
+                </span>
+                <span>CLIP 03 &bull; 10s LOOP</span>
+              </div>
+              <div class="relative aspect-video bg-black">
+                <video 
+                  src="assets/treatment_phase3_hardening.mp4" 
+                  autoplay 
+                  loop 
+                  muted 
+                  playsinline 
+                  class="w-full h-full object-cover"
+                ></video>
+                <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 text-white text-[10px] font-mono-code">
+                  Anatomy Receiving Fortified Cyber Armor
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- STAGE 4: CONTINUOUS FORTIFIED ARMOR // CITY OVERLOOK (4444.mp4)       -->
+      <!-- ===================================================================== -->
+      <div class="raised-card p-6 sm:p-10 border-2 border-slate-200">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- LEFT VIDEO: 4444.mp4 (CLINICAL BEZEL) -->
+          <div class="lg:col-span-6 order-2 lg:order-1">
+            <div class="video-bezel">
+              <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-[11px] font-mono-code text-slate-500">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  PHASE 4 // CONTINUOUS ENTERPRISE IMMUNITY
+                </span>
+                <span>CLIP 04 &bull; 10s LOOP</span>
+              </div>
+              <div class="relative aspect-video bg-black">
+                <video 
+                  src="assets/treatment_phase4_armored_city.mp4" 
+                  autoplay 
+                  loop 
+                  muted 
+                  playsinline 
+                  class="w-full h-full object-cover"
+                ></video>
+                <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 text-white text-[10px] font-mono-code">
+                  Armored Business Standing Resilient Over City
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT CONTENT: CONTINUOUS RESILIENCE -->
+          <div class="lg:col-span-6 order-1 lg:order-2 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="badge-clinical">Stage 04</span>
+              <span class="text-xs font-mono-code text-slate-500 font-bold uppercase">Continuous Resilience</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Phase 4: Fortified Armor <br>
+              <span class="text-sky-600 font-bold">Continuous Immunity Over the Enterprise</span>
+            </h3>
+            
+            <p class="text-sm text-slate-600 leading-relaxed">
+              The ultimate culmination of your Anergi treatment: a fully shielded, battle-hardened digital enterprise standing tall above competitive disruption. Continuous automated dual-engine telemetry monitors every pulse, while your executive team enjoys total operational peace of mind.
+            </p>
+
+            <div class="space-y-2 pt-2">
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center gap-2.5">
+                <i class="fa-solid fa-shield-virus text-emerald-600"></i>
+                <span><strong>Active Threat Neutralization:</strong> Zero-day mitigation within 3-hour window.</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center gap-2.5">
+                <i class="fa-solid fa-satellite text-sky-600"></i>
+                <span><strong>Global Telemetry Radar:</strong> 24/7 autonomous monitoring of external exposure.</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center gap-2.5">
+                <i class="fa-solid fa-handshake-angle text-amber-600"></i>
+                <span><strong>Dedicated Architectural Counsel:</strong> Direct executive hotline to principal engineers.</span>
+              </div>
+            </div>
+
+            <div class="pt-4 flex flex-wrap gap-3">
+              <a href="contact.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 text-white font-extrabold text-xs rounded-xl shadow-lg transition-all">
+                <i class="fa-solid fa-calendar-check"></i> Deploy Full S.P.A. Treatment ➔
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- BOTTOM CONVERSION FUNNEL: EXECUTIVE CONSULTATION & INTAKE                  -->
+  <!-- ========================================================================= -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+    <div class="raised-card p-8 sm:p-14 text-center bg-gradient-to-b from-white via-white to-slate-50 border-2 border-sky-300 shadow-2xl relative overflow-hidden">
+      
+      <!-- Decorative Ambient Glow -->
+      <div class="absolute -top-24 -left-24 w-60 h-60 bg-sky-400/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <span class="badge-clinical mb-4">
+        <i class="fa-solid fa-clipboard-check text-sky-600"></i>
+        <span>Official Diagnostic Intake // Anergi.io</span>
+      </span>
+
+      <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight max-w-2xl mx-auto leading-snug">
+        Ready to Prescribe Fortified Protection for Your Enterprise?
+      </h2>
+
+      <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto mt-3 leading-relaxed">
+        Whether your organization requires a rapid 60-second perimeter health check, a turnkey penetration testing audit, or continuous dual-engine S.P.A. monitoring, connect directly with Anergi executive leadership.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-sky-600 via-blue-600 to-amber-500 hover:from-sky-500 hover:to-amber-400 text-white font-black text-sm rounded-2xl shadow-xl hover:shadow-sky-500/25 transition-all">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Schedule Executive Consultation (anergi.io/contact) ➔</span>
+        </a>
+        <a href="mini_spa.html" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-800 font-extrabold text-sm rounded-2xl shadow-sm transition-all">
+          <i class="fa-solid fa-bolt text-amber-500"></i>
+          <span>Run Quick Mini S.P.A.</span>
+        </a>
+      </div>
+
+      <div class="mt-6 text-xs font-mono-code text-slate-500 flex items-center justify-center gap-4 flex-wrap">
+        <span><i class="fa-solid fa-shield-halved text-sky-600 mr-1"></i> NIST CSF 2.0</span>
+        <span>&bull;</span>
+        <span><i class="fa-solid fa-lock text-emerald-600 mr-1"></i> ISO 27001 &amp; 42001</span>
+        <span>&bull;</span>
+        <span><i class="fa-solid fa-scale-balanced text-amber-600 mr-1"></i> EU AI Act Ready</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER: UNIFORM ANERGI ECOSYSTEM                                          -->
+  <!-- ========================================================================= -->
+  <footer class="bg-white border-t border-slate-200 py-10 px-4 sm:px-6 lg:px-8 text-slate-600 text-xs font-mono-code mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <div class="relative flex flex-col items-center">
+          <svg class="w-16 h-3" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="3" stroke-linecap="round" />
+          </svg>
+          <span class="text-lg font-black text-sky-600 tracking-tight">nergi.io</span>
+        </div>
+        <span class="text-slate-400">&copy; 2026 Anergi.io &bull; Security Posture Assessment (S.P.A.)</span>
+      </div>
+
+      <div class="flex items-center gap-6 flex-wrap justify-center text-slate-500">
+        <a href="index.html" class="hover:text-sky-600 transition-colors">Home</a>
+        <a href="treatment.html" class="text-sky-600 font-bold">Treatment Stages</a>
+        <a href="mini_spa.html" target="_blank" class="hover:text-sky-600 transition-colors">Mini S.P.A.</a>
+        <a href="news.html" class="hover:text-sky-600 transition-colors">News</a>
+        <a href="contact.html" class="hover:text-sky-600 transition-colors">Contact</a>
+        <a href="msa.html" class="hover:text-sky-600 transition-colors">Full S.P.A. Suite</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: INTERACTIVE CLINICAL DIAGNOSTIC SCANNER & PDF GENERATION      -->
+  <!-- ========================================================================= -->
+  <script>
+    function handleTreatmentDiagnosis(event) {
+      event.preventDefault();
+      const inputVal = document.getElementById('treatment-input').value.trim() || 'anergi.io';
+      
+      const cleanDomain = inputVal.replace(/^https?:\/\//i, '').split('/')[0];
+      
+      // Reveal Diagnostic Screen & Show Loader
+      const diagScreen = document.getElementById('diagnostic-screen');
+      const loader = document.getElementById('diagnostic-loader');
+      const reportCard = document.getElementById('clinical-report-card');
+      
+      diagScreen.classList.remove('hidden');
+      loader.classList.remove('hidden');
+      reportCard.classList.add('hidden');
+      
+      document.getElementById('scan-target-label').textContent = cleanDomain;
+      document.getElementById('report-domain-label').textContent = cleanDomain;
+
+      // Smooth scroll to diagnostic console
+      diagScreen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Animate Terminal Logs
+      setTimeout(() => {
+        const l2 = document.getElementById('diag-log-2');
+        if (l2) l2.classList.remove('opacity-0');
+      }, 700);
+
+      setTimeout(() => {
+        const l3 = document.getElementById('diag-log-3');
+        if (l3) l3.classList.remove('opacity-0');
+      }, 1400);
+
+      setTimeout(() => {
+        const l4 = document.getElementById('diag-log-4');
+        if (l4) l4.classList.remove('opacity-0');
+      }, 2100);
+
+      // Render Full Clinical Report
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        reportCard.classList.remove('hidden');
+        
+        const now = new Date();
+        const dateStr = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+        const tsElem = document.getElementById('report-timestamp-now');
+        if (tsElem) tsElem.textContent = dateStr;
+      }, 2700);
+    }
+
+    // HTML2PDF Export Handler
+    function downloadClinicalPDF() {
+      const reportElement = document.getElementById('clinical-report-card');
+      const targetDomain = document.getElementById('report-domain-label').textContent || 'company';
+      
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Anergi_Clinical_SPA_Report_${targetDomain}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(reportElement).save();
+    }
+  </script>
+
+</body>
+</html>
