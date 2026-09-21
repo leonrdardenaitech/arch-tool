@@ -65,9 +65,51 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.5;
     }
+
+    /* GUIDED INPUT PULSING GLOW */
+    @keyframes pulse-amber-glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.4), inset 0 0 5px rgba(245, 158, 11, 0.2);
+        border-color: #f59e0b;
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(245, 158, 11, 0.8), inset 0 0 12px rgba(245, 158, 11, 0.4);
+        border-color: #fbbf24;
+      }
+    }
+    .guided-input-glow {
+      animation: pulse-amber-glow 2.2s infinite ease-in-out;
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-3 sm:p-6 select-none">
+
+  <!-- TOP GUIDANCE HERO BANNER: START WITH A MINI S.P.A. -->
+  <div class="max-w-4xl w-full mx-auto mb-4 bg-gradient-to-r from-amber-500/20 via-slate-900 to-amber-500/20 border border-amber-500/40 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-md">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+      <div class="flex items-center gap-3.5">
+        <div class="h-12 w-12 rounded-2xl bg-amber-500/20 border border-amber-500 text-amber-400 flex items-center justify-center text-2xl shrink-0 shadow-lg shadow-amber-500/10">
+          <i class="fa-solid fa-radar animate-pulse"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 justify-center md:justify-start">
+            <span class="text-[10px] uppercase tracking-widest font-black text-amber-400 font-mono-code">Anergi Diagnostic Engine</span>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">Free Instant Audit</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5">
+            Start With a Mini S.P.A.™
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-300 font-normal mt-0.5">
+            Input your website or company domain above to run an instant 8-second attack surface audit.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-amber-300 font-mono-code bg-slate-950/80 px-4 py-2.5 rounded-xl border border-amber-500/30 shrink-0">
+        <i class="fa-solid fa-arrow-down text-amber-400 animate-bounce"></i>
+        <span>Type domain &amp; click <strong>Run Audit</strong></span>
+      </div>
+    </div>
+  </div>
 
   <!-- TOP HEADER WITH REAL-TIME LED SWITCHBOARD & DOMAIN INPUT -->
   <header class="max-w-4xl w-full mx-auto mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
@@ -84,6 +126,10 @@
 
     <!-- ON-SCREEN LIVE DOMAIN URL INPUT -->
     <div class="w-full md:w-auto flex-1 max-w-md">
+      <div class="text-[10px] font-mono-code text-slate-400 mb-1 flex justify-between items-center px-1">
+        <span><i class="fa-solid fa-crosshairs text-amber-400 mr-1"></i> TEST ANY COMPANY DOMAIN:</span>
+        <span class="text-amber-400/90 font-bold">e.g. yoursite.com</span>
+      </div>
       <form onsubmit="handleNewScan(event)" class="flex items-center gap-2">
         <div class="relative flex-1">
           <input 
@@ -91,7 +137,7 @@
             id="target-input-box" 
             value="anergi.io" 
             placeholder="e.g. domain.com or https://site.com" 
-            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs font-mono-code text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+            class="w-full bg-slate-950 border-2 border-amber-500 rounded-xl px-3.5 py-2 text-xs font-mono-code text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400 guided-input-glow"
           />
         </div>
         <button 
@@ -142,6 +188,24 @@
     <!-- 2. CLIENT DASHBOARD UI CANVAS (Revealed upon scan complete) -->
     <div class="w-full bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 hidden opacity-0 transition-all duration-700 transform translate-y-4" id="report-canvas">
       
+      <!-- POST-DEMO AUDIT GUIDANCE BANNER -->
+      <div id="post-demo-guide" class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-amber-500/20 border border-amber-500/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left shadow-lg">
+        <div class="flex items-center gap-3">
+          <span class="text-amber-400 text-2xl shrink-0"><i class="fa-solid fa-arrow-trend-up"></i></span>
+          <div>
+            <p class="text-xs font-bold text-white uppercase tracking-wider font-mono-code">
+              Sample Audit on <span id="guide-target-name" class="text-amber-400">anergi.io</span> Complete!
+            </p>
+            <p class="text-xs text-slate-300">
+              Ready to inspect <strong>your own infrastructure</strong>? Enter your company's website in the box above and click <span class="text-amber-400 font-bold">Run Audit</span>.
+            </p>
+          </div>
+        </div>
+        <button onclick="focusTargetInput()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-xl shadow transition-all shrink-0 flex items-center gap-1.5 cursor-pointer">
+          <span>Audit Your Website</span> <i class="fa-solid fa-arrow-up"></i>
+        </button>
+      </div>
+
       <!-- Top Action Bar -->
       <div class="border-b border-slate-800 pb-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -386,11 +450,23 @@
       }, 1000);
     }
 
+    // Focus domain input and scroll up smoothly
+    function focusTargetInput() {
+      const box = document.getElementById('target-input-box');
+      if (box) {
+        box.focus();
+        box.select();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
     // Render Web UI Findings
     function renderWebFindings() {
       const wrapper = document.getElementById('findings-wrapper');
       document.getElementById('report-domain-heading').innerText = currentDomain;
       document.getElementById('loader-target-domain').innerText = currentDomain;
+      const guideTarget = document.getElementById('guide-target-name');
+      if (guideTarget) guideTarget.innerText = currentDomain;
 
       if (!currentFindings || currentFindings.length === 0) {
         wrapper.innerHTML = `
