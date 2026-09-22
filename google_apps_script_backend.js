@@ -1,94 +1,114 @@
 /**
  * =========================================================================
- * ANERGI.IO CONSULTATION & INTAKE GOOGLE APPS SCRIPT BACKEND
+ * ANERGI.IO MASTER OPERATIONS HUB - INTAKE WEBHOOK RECEIVER
  * =========================================================================
  * 
- * INSTRUCTIONS TO DEPLOY:
- * 1. Open Google Sheets (https://sheets.new) and name the spreadsheet: "Anergi Consultation Leads"
- * 2. Click Extensions > Apps Script
- * 3. Replace all default code with the contents of this file.
- * 4. Click Save (disk icon).
- * 5. Click Deploy > New deployment.
- * 6. Select type: "Web app".
- * 7. Set:
- *    - Description: "Anergi Consultation Webhook v1"
- *    - Execute as: "Me" (your Google account)
- *    - Who has access: "Anyone" (crucial for web forms to submit without Google login)
- * 8. Click Deploy.
- * 9. Copy the generated "Web App URL" (e.g., https://script.google.com/macros/s/.../exec).
- * 10. Paste the Web App URL into contact.html (variable GOOGLE_APPS_SCRIPT_URL).
+ * Google Sheet: Anergi.io - Master Operations Hub
+ * Sheet URL: https://docs.google.com/spreadsheets/d/1upMVnAbHQWeJFPsoesvTj_xutROxBnZ16sm4vfFaeKI/edit?usp=sharing
+ * Webhook URL: https://script.google.com/macros/s/AKfycbz8hiPcGHVL9Uk4UHTscm2ZXpVJf0vzP3kvMd9RRAxUbRH6ERwqKmaPeb7PzOIQSEUfUg/exec
+ * Target Tab: "Leads & Bookings"
+ * Alert Recipient: info@anergi.io
+ *
+ * Routes inbound prospect consultations from:
+ * 1. anergi.io/contact (Contact Intake Form & Calendar)
+ * 2. On-site Chatbot / Interactive AI Bot
  */
 
+const SHEET_NAME = "Leads & Bookings";
+const NOTIFICATION_EMAIL = "info@anergi.io";
+
 function doPost(e) {
-  var lock = LockService.getScriptLock();
+  const lock = LockService.getScriptLock();
   lock.tryLock(10000);
 
   try {
-    var sheet = getOrCreateLeadsSheet();
-    var data;
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName(SHEET_NAME);
 
-    // Parse incoming JSON or form-encoded payload
-    if (e.postData && e.postData.contents) {
+    // Auto-create sheet tab and headers if not yet created
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_NAME);
+      sheet.appendRow([
+        "Timestamp",
+        "Source",
+        "Full Name",
+        "Corporate Work Email",
+        "Target Company Domain",
+        "Desired Assessment Scope",
+        "Selected Window",
+        "Status",
+        "Notes & Next Steps"
+      ]);
+    }
+
+    // Parse URL-encoded form data or JSON (from chatbot or web form)
+    let data = {};
+    if (e && e.postData && e.postData.type && e.postData.type.indexOf("application/json") !== -1) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (err) {
+        data = {};
+      }
+    } else if (e && e.postData && e.postData.contents) {
       try {
         data = JSON.parse(e.postData.contents);
       } catch (err) {
         data = e.parameter || {};
       }
-    } else {
-      data = e.parameter || {};
+    } else if (e && e.parameter) {
+      data = e.parameter;
     }
 
-    var timestamp = data.submittedAt || new Date().toISOString();
-    var fullName = data.fullName || 'Unknown';
-    var email = data.email || 'No email provided';
-    var companyDomain = data.companyDomain || 'N/A';
-    var assessmentScope = data.assessmentScope || 'Consultation Intake';
-    var appointmentSlot = data.appointmentSlot || 'Not Specified';
-    var status = 'Pending Confirmation';
+    const timestamp = new Date();
+    const source = data.source || "Contacts Page";
+    const fullName = data.full_name || data.name || data.fullName || "N/A";
+    const email = data.corporate_email || data.email || "N/A";
+    const domain = data.target_domain || data.domain || data.companyDomain || "N/A";
+    const scope = data.assessment_scope || data.scope || data.assessmentScope || "Mini S.P.A. Surface Audit Review (Free)";
+    const windowSlot = data.selected_window || data.appointment_time || data.appointmentSlot || "Pending Confirmation";
+    const notes = data.notes || "";
 
-    // Append to Google Sheet
+    // Append lead row to spreadsheet
     sheet.appendRow([
       timestamp,
+      source,
       fullName,
       email,
-      companyDomain,
-      assessmentScope,
-      appointmentSlot,
-      status
+      domain,
+      scope,
+      windowSlot,
+      "New",
+      notes
     ]);
 
-    // Optional: Send Instant Email Alert to Architect / Leadership
-    try {
-      var recipientEmail = "leonrdarden@gmail.com";
-      var subject = "🚨 New Anergi Consultation Request: " + companyDomain + " (" + fullName + ")";
-      var body = "A new enterprise consultation request has been submitted on Anergi.io:\n\n" +
-                 "• Contact: " + fullName + "\n" +
-                 "• Email: " + email + "\n" +
-                 "• Company Domain: " + companyDomain + "\n" +
-                 "• Desired Scope: " + assessmentScope + "\n" +
-                 "• Requested Slot: " + appointmentSlot + "\n" +
-                 "• Submitted At: " + timestamp + "\n\n" +
-                 "Log into Google Sheets to review and confirm the appointment.";
-      
-      MailApp.sendEmail(recipientEmail, subject, body);
-    } catch (mailErr) {
-      Logger.log("Email notification failed: " + mailErr.toString());
+    // Dispatch email alert to owner (info@anergi.io)
+    if (NOTIFICATION_EMAIL) {
+      const subject = "🛡️ New Anergi Lead: " + fullName + " (" + domain + ")";
+      const body = 
+        "NEW ANERGI.IO INTAKE / APPOINTMENT:\n" +
+        "------------------------------------------\n" +
+        "Source:     " + source + "\n" +
+        "Name:       " + fullName + "\n" +
+        "Email:      " + email + "\n" +
+        "Domain:     " + domain + "\n" +
+        "Scope:      " + scope + "\n" +
+        "Window:     " + windowSlot + "\n" +
+        "Notes:      " + notes + "\n" +
+        "------------------------------------------\n\n" +
+        "Open Master Sheet: https://docs.google.com/spreadsheets/d/1upMVnAbHQWeJFPsoesvTj_xutROxBnZ16sm4vfFaeKI/edit";
+
+      MailApp.sendEmail(NOTIFICATION_EMAIL, subject, body, {
+        name: "Anergi.io Dispatch"
+      });
     }
 
     return ContentService
-      .createTextOutput(JSON.stringify({
-        status: 'success',
-        message: 'Consultation successfully recorded',
-        domain: companyDomain
-      }))
+      .createTextOutput(JSON.stringify({ status: "success", message: "Lead recorded", domain: domain }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
     return ContentService
-      .createTextOutput(JSON.stringify({
-        status: 'error',
-        message: error.toString()
-      }))
+      .createTextOutput(JSON.stringify({ status: "error", error: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
@@ -96,49 +116,5 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({
-      status: 'online',
-      service: 'Anergi.io Consultation Webhook Service',
-      timestamp: new Date().toISOString()
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-/**
- * Helper to get or create the Consultation_Leads sheet with formatted headers
- */
-function getOrCreateLeadsSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetName = "Consultation_Leads";
-  var sheet = ss.getSheetByName(sheetName);
-
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-    var headers = [
-      "Timestamp",
-      "Full Name",
-      "Corporate Email",
-      "Target Company Domain",
-      "Assessment Scope",
-      "Appointment Slot",
-      "Status"
-    ];
-    
-    sheet.appendRow(headers);
-    
-    // Style headers
-    var headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground("#0284c7");
-    headerRange.setFontColor("#ffffff");
-    headerRange.setFontWeight("bold");
-    sheet.setFrozenRows(1);
-    
-    // Auto-resize columns
-    for (var i = 1; i <= headers.length; i++) {
-      sheet.setColumnWidth(i, 180);
-    }
-  }
-
-  return sheet;
+  return ContentService.createTextOutput("Anergi.io Webhook Active.");
 }

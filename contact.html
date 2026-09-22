@@ -475,6 +475,22 @@
               </select>
             </div>
 
+            <!-- Scoping Notes / Objectives (Optional) -->
+            <div>
+              <label class="block text-xs font-mono uppercase tracking-wider text-slate-700 mb-1.5 font-bold">Scoping Notes &amp; Objectives (Optional)</label>
+              <textarea 
+                name="notes" 
+                id="notes" 
+                rows="2" 
+                placeholder="e.g. Compliance timeline, target cloud stack, or specific penetration testing goals..." 
+                class="w-full rounded-xl px-4 py-2 text-sm font-sans bg-slate-50 border-2 border-slate-200 text-slate-900 placeholder-slate-400 focus:bg-white focus:border-amber-500 focus:outline-none transition-all shadow-sm resize-none"
+              ></textarea>
+            </div>
+
+            <!-- Hidden inputs to constrain intake metadata -->
+            <input type="hidden" name="source" id="source" value="Contacts Page" />
+            <input type="hidden" name="selected_window" id="selected_window" value="September 24 @ 11:00 AM EST" />
+
             <!-- Selected Appointment Slot -->
             <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs font-mono">
               <span class="text-slate-600 font-medium">Selected Window:</span>
@@ -815,14 +831,14 @@
   <!-- SCRIPT LOGIC: CALENDAR, TIME SELECTION & GOOGLE APPS SCRIPT WEBHOOK        -->
   <!-- ========================================================================= -->
   <script>
-    // Selected appointment state
+    // Selected appointment state (Constrained to upcoming business days)
     let selectedDate = "September 24";
     let selectedTime = "11:00 AM EST";
 
-    // Google Apps Script Webhook URL (Connected to spreadsheet backend)
-    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFcGcZbia11zAfGGJapBrDLZhu-ZdsW888kL82e3ESbWPhpBp0emQCTs87Hy5k2QApag/exec';
+    // Google Apps Script Webhook URL (Connected to Anergi Master Operations Hub)
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8hiPcGHVL9Uk4UHTscm2ZXpVJf0vzP3kvMd9RRAxUbRH6ERwqKmaPeb7PzOIQSEUfUg/exec';
 
-    // Render Calendar for September 2026
+    // Render Calendar for September 2026 with Constraints (Business Days Only, Past Dates Disabled)
     function renderCalendar() {
       const container = document.getElementById('calendar-days-container');
       if (!container) return;
@@ -831,8 +847,9 @@
       // September 2026 starts on Tuesday (offset = 2)
       const daysInMonth = 30;
       const startDayOffset = 2;
+      const currentDayNum = 21; // Today is September 21, 2026
 
-      // Empty lead days
+      // Empty lead days for alignment
       for (let i = 0; i < startDayOffset; i++) {
         const empty = document.createElement('div');
         empty.className = 'py-2 text-slate-300';
@@ -840,30 +857,53 @@
         container.appendChild(empty);
       }
 
-      // Populate September days
+      // Populate September days with business-day constraints
       for (let day = 1; day <= daysInMonth; day++) {
+        const dayOfWeek = (startDayOffset + day - 1) % 7; // 0 = Sunday, 6 = Saturday
+        const isPast = day <= currentDayNum;
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.innerText = day;
-        btn.className = 'cal-day py-2 rounded-lg border border-transparent font-mono text-xs text-slate-700 font-semibold';
-        
-        // Highlight active day 24
-        if (day === 24) {
-          btn.classList.add('active');
-        }
 
-        btn.onclick = function() {
-          document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('active'));
-          btn.classList.add('active');
-          selectedDate = `September ${day}`;
-          updateDisplaySlot();
-        };
+        if (isPast) {
+          // Past Date: Disabled
+          btn.disabled = true;
+          btn.title = "Past date (Unavailable)";
+          btn.className = 'cal-day py-2 rounded-lg font-mono text-xs text-slate-400 opacity-30 cursor-not-allowed bg-transparent';
+        } else if (isWeekend) {
+          // Weekend: Disabled
+          btn.disabled = true;
+          btn.title = "Weekend (Closed for consultations)";
+          btn.className = 'cal-day py-2 rounded-lg font-mono text-xs text-slate-400 opacity-40 cursor-not-allowed bg-transparent';
+        } else {
+          // Valid upcoming business day: Selectable
+          btn.className = 'cal-day py-2 rounded-lg border border-transparent font-mono text-xs text-slate-800 font-semibold hover:bg-amber-100 hover:text-amber-900 cursor-pointer transition-all';
+          btn.title = `Book September ${day}, 2026`;
+
+          // Default highlight on September 24
+          if (day === 24) {
+            btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-black', 'border-2', 'border-amber-500', 'shadow-md');
+          }
+
+          btn.onclick = function() {
+            document.querySelectorAll('.cal-day:not([disabled])').forEach(d => {
+              d.classList.remove('active', 'bg-amber-500', 'text-slate-950', 'font-black', 'border-2', 'border-amber-500', 'shadow-md');
+              d.classList.add('border-transparent', 'text-slate-800');
+            });
+            btn.classList.remove('border-transparent', 'text-slate-800');
+            btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-black', 'border-2', 'border-amber-500', 'shadow-md');
+            selectedDate = `September ${day}`;
+            updateDisplaySlot();
+          };
+        }
 
         container.appendChild(btn);
       }
     }
 
-    // Handle Time Slot Selection
+    // Handle Time Slot Selection with Mutual Exclusion Constraint
     function selectTimeSlot(elem) {
       document.querySelectorAll('.time-slot').forEach(slot => {
         slot.classList.remove('active', 'bg-amber-500', 'text-slate-950', 'font-bold', 'border-amber-500');
@@ -875,46 +915,71 @@
       updateDisplaySlot();
     }
 
+    // Synchronize Display Slot & Hidden Input
     function updateDisplaySlot() {
+      const slotString = `${selectedDate} @ ${selectedTime}`;
       const display = document.getElementById('display-selected-slot');
       if (display) {
-        display.innerText = `${selectedDate} @ ${selectedTime}`;
+        display.innerText = slotString;
+      }
+      const hiddenInput = document.getElementById('selected_window');
+      if (hiddenInput) {
+        hiddenInput.value = slotString;
       }
     }
 
-    // Form Submission with Webhook and Local Storage Queuing
+    // Form Submission with Webhook & Master Operations Hub Logging
     function handleFormSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit');
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Logging Consultation...</span>`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Logging Consultation to Master Hub...</span>`;
 
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const companyDomain = document.getElementById('companyDomain').value.trim();
+      const assessmentScope = document.getElementById('assessmentScope').value;
+      const notes = document.getElementById('notes') ? document.getElementById('notes').value.trim() : '';
+      const selectedWindow = `${selectedDate} @ ${selectedTime}`;
+
+      // Payload matching Anergi.io Intake Webhook Receiver schema
       const payload = {
-        fullName: document.getElementById('fullName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        companyDomain: document.getElementById('companyDomain').value.trim(),
-        assessmentScope: document.getElementById('assessmentScope').value,
-        appointmentSlot: `${selectedDate} @ ${selectedTime}`,
+        source: "Contacts Page",
+        full_name: fullName,
+        name: fullName,
+        fullName: fullName,
+        corporate_email: email,
+        email: email,
+        target_domain: companyDomain,
+        domain: companyDomain,
+        companyDomain: companyDomain,
+        assessment_scope: assessmentScope,
+        scope: assessmentScope,
+        assessmentScope: assessmentScope,
+        selected_window: selectedWindow,
+        appointment_time: selectedWindow,
+        appointmentSlot: selectedWindow,
+        notes: notes || "Direct consultation booking from anergi.io/contact",
         submittedAt: new Date().toISOString()
       };
 
-      // Save locally
+      // Save locally to localStorage
       try {
         const stored = JSON.parse(localStorage.getItem('anergi_consultations') || '[]');
         stored.push(payload);
         localStorage.setItem('anergi_consultations', JSON.stringify(stored));
       } catch (err) {
-        console.warn("Storage warning:", err);
+        console.warn("Local storage write warning:", err);
       }
 
-      // POST to Google Apps Script Webhook
+      // POST to Google Apps Script Webhook (Routes to Leads & Bookings in Master Hub)
       if (GOOGLE_APPS_SCRIPT_URL) {
         fetch(GOOGLE_APPS_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
-        }).catch(err => console.warn("Webhook async sent"));
+        }).catch(err => console.warn("Webhook dispatch completed (no-cors)"));
       }
 
       setTimeout(() => {
@@ -922,10 +987,37 @@
         btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Appointment Confirmed</span>`;
         document.getElementById('form-success-banner').classList.remove('hidden');
         document.getElementById('consultation-form').reset();
+        updateDisplaySlot();
       }, 700);
     }
 
-    // Initialize calendar on load
+    // Global Reusable Helper for On-Site Chatbot & External Integrations
+    window.AnergiIntake = {
+      webhookUrl: GOOGLE_APPS_SCRIPT_URL,
+      submitLead: function(leadData, source = "Chatbot") {
+        const payload = {
+          source: source,
+          full_name: leadData.full_name || leadData.name || leadData.fullName || "N/A",
+          name: leadData.full_name || leadData.name || leadData.fullName || "N/A",
+          corporate_email: leadData.corporate_email || leadData.email || "N/A",
+          email: leadData.corporate_email || leadData.email || "N/A",
+          target_domain: leadData.target_domain || leadData.domain || leadData.companyDomain || "N/A",
+          domain: leadData.target_domain || leadData.domain || leadData.companyDomain || "N/A",
+          assessment_scope: leadData.assessment_scope || leadData.scope || leadData.assessmentScope || "Mini S.P.A. Surface Audit Review (Free)",
+          selected_window: leadData.selected_window || leadData.appointment_time || leadData.appointmentSlot || "Pending Confirmation",
+          notes: leadData.notes || ""
+        };
+
+        return fetch(this.webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+    };
+
+    // Initialize constrained calendar on load
     renderCalendar();
   </script>
 </body>
