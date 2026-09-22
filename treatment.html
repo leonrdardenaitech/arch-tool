@@ -274,6 +274,96 @@
       animation: radarPulse 2s infinite ease-in-out;
     }
 
+    /* ==========================================================================
+       ANIMATED CIRCUIT BACKGROUND CANVAS (Medium Grey Brand Schematic)
+       ========================================================================== */
+    .circuit-background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .circuit-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .circuit-path {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.18);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .flow-path {
+      fill: none;
+      stroke: rgba(0, 229, 255, 0.92); /* Anergi Electric Cyan */
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.9)) drop-shadow(0 0 8px rgba(0, 229, 255, 0.55));
+      stroke-dasharray: 40 1200;
+      stroke-dashoffset: 1240;
+    }
+
+    .flow-path.flow-orange {
+      stroke: rgba(253, 153, 30, 0.95); /* Anergi Brand Orange */
+      filter: drop-shadow(0 0 3px rgba(253, 153, 30, 0.95)) drop-shadow(0 0 8px rgba(253, 153, 30, 0.55));
+    }
+
+    @keyframes circuitFlowForward {
+      0% { stroke-dashoffset: 1240; }
+      100% { stroke-dashoffset: -40; }
+    }
+    
+    @keyframes circuitFlowReverse {
+      0% { stroke-dashoffset: -40; }
+      100% { stroke-dashoffset: 1240; }
+    }
+
+    .flow-1 { animation: circuitFlowForward 7s linear infinite; }
+    .flow-2 { animation: circuitFlowForward 10s linear infinite; animation-delay: 2s; }
+    .flow-3 { animation: circuitFlowForward 8s linear infinite; animation-delay: 5s; }
+    .flow-4 { animation: circuitFlowReverse 9s linear infinite; animation-delay: 1s; }
+    .flow-5 { animation: circuitFlowReverse 12s linear infinite; animation-delay: 0s; }
+    .flow-6 { animation: circuitFlowForward 11s linear infinite; animation-delay: 4s; }
+    .flow-7 { animation: circuitFlowReverse 14s linear infinite; animation-delay: 7s; }
+    .flow-8 { animation: circuitFlowForward 9s linear infinite; animation-delay: 3s; }
+    .flow-9 { animation: circuitFlowReverse 13s linear infinite; animation-delay: 1.5s; }
+
+    .circuit-node {
+      fill: #545454;
+      stroke: rgba(255, 255, 255, 0.3);
+      stroke-width: 2;
+    }
+
+    .circuit-node-glow {
+      fill: #00e5ff;
+      animation: circuitPulseCyan 3s infinite alternate;
+    }
+
+    .circuit-node-glow-orange {
+      fill: #fd991e;
+      animation: circuitPulseOrange 3.5s infinite alternate;
+    }
+
+    @keyframes circuitPulseCyan {
+      0% { opacity: 0.25; filter: drop-shadow(0 0 1px rgba(0, 229, 255, 0.7)); }
+      100% { opacity: 0.95; filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.95)); }
+    }
+
+    @keyframes circuitPulseOrange {
+      0% { opacity: 0.25; filter: drop-shadow(0 0 1px rgba(253, 153, 30, 0.7)); }
+      100% { opacity: 0.95; filter: drop-shadow(0 0 6px rgba(253, 153, 30, 0.95)); }
+    }
+
     /* PRINT / PDF STYLING */
     @media print {
       body { background: #ffffff !important; }
@@ -281,7 +371,102 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between relative">
+
+  <!-- ========================================================================= -->
+  <!-- ANIMATED CIRCUIT BACKGROUND CANVAS (Medium Grey Brand Schematic)           -->
+  <!-- ========================================================================= -->
+  <div class="circuit-background-container" aria-hidden="true">
+    <svg class="circuit-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      
+      <!-- Static Base Circuit Paths -->
+      <g class="circuit-base">
+        <!-- Top Left -->
+        <path class="circuit-path" d="M 0 100 L 150 100 L 200 150 L 350 150 L 400 100 L 550 100" />
+        <path class="circuit-path" d="M 100 0 L 100 80 L 170 150 L 170 250 L 250 330" />
+        
+        <!-- Bottom Left -->
+        <path class="circuit-path" d="M 0 550 L 120 550 L 180 610 L 180 750 L 250 820" />
+        <path class="circuit-path" d="M 150 900 L 150 650 L 280 520 L 450 520" />
+
+        <!-- Center/Jagged -->
+        <path class="circuit-path" d="M 400 300 L 450 250 L 550 250 L 600 300 L 750 300 L 800 350 L 900 350" />
+        <path class="circuit-path" d="M 450 450 L 520 450 L 580 390 L 700 390 L 750 440 L 850 440" />
+        <path class="circuit-path" d="M 600 150 L 650 200 L 650 300 L 720 370" />
+
+        <!-- Top Right -->
+        <path class="circuit-path" d="M 750 0 L 750 120 L 820 190 L 980 190 L 1050 260 L 1200 260" />
+        <path class="circuit-path" d="M 900 0 L 900 80 L 980 160 L 1200 160" />
+
+        <!-- Bottom Right -->
+        <path class="circuit-path" d="M 800 900 L 800 780 L 870 710 L 1050 710 L 1100 660 L 1200 660" />
+        <path class="circuit-path" d="M 950 550 L 1020 620 L 1020 750" />
+      </g>
+
+      <!-- Animated Glowing Data Flow Pulses -->
+      <g class="circuit-flows">
+        <!-- Top Left Horizontal (Cyan) -->
+        <path class="flow-path flow-1" d="M 0 100 L 150 100 L 200 150 L 350 150 L 400 100 L 550 100" />
+        <!-- Top Left Vertical (Orange) -->
+        <path class="flow-path flow-orange flow-2" d="M 100 0 L 100 80 L 170 150 L 170 250 L 250 330" />
+        <!-- Bottom Left Horizontal (Orange) -->
+        <path class="flow-path flow-orange flow-8" d="M 0 550 L 120 550 L 180 610 L 180 750 L 250 820" />
+        <!-- Bottom Left Diagonal (Cyan) -->
+        <path class="flow-path flow-3" d="M 150 900 L 150 650 L 280 520 L 450 520" />
+        <!-- Center Jagged (Cyan) -->
+        <path class="flow-path flow-4" d="M 400 300 L 450 250 L 550 250 L 600 300 L 750 300 L 800 350 L 900 350" />
+        <!-- Center Lower Jagged (Orange) -->
+        <path class="flow-path flow-orange flow-5" d="M 450 450 L 520 450 L 580 390 L 700 390 L 750 440 L 850 440" />
+        <!-- Top Right (Cyan) -->
+        <path class="flow-path flow-6" d="M 750 0 L 750 120 L 820 190 L 980 190 L 1050 260 L 1200 260" />
+        <!-- Top Right Diagonal (Orange) -->
+        <path class="flow-path flow-orange flow-9" d="M 900 0 L 900 80 L 980 160 L 1200 160" />
+        <!-- Bottom Right (Orange) -->
+        <path class="flow-path flow-orange flow-7" d="M 800 900 L 800 780 L 870 710 L 1050 710 L 1100 660 L 1200 660" />
+      </g>
+
+      <!-- Static & Glowing Terminus Nodes -->
+      <g class="circuit-nodes">
+        <!-- Static Terminus Nodes -->
+        <circle cx="150" cy="100" r="4" class="circuit-node" />
+        <circle cx="350" cy="150" r="4" class="circuit-node" />
+        <circle cx="100" cy="80" r="4" class="circuit-node" />
+        <circle cx="170" cy="250" r="4" class="circuit-node" />
+        <circle cx="120" cy="550" r="4" class="circuit-node" />
+        <circle cx="180" cy="750" r="4" class="circuit-node" />
+        <circle cx="280" cy="520" r="4" class="circuit-node" />
+        <circle cx="550" cy="250" r="4" class="circuit-node" />
+        <circle cx="750" cy="300" r="4" class="circuit-node" />
+        <circle cx="580" cy="390" r="4" class="circuit-node" />
+        <circle cx="750" cy="440" r="4" class="circuit-node" />
+        <circle cx="650" cy="200" r="4" class="circuit-node" />
+        <circle cx="750" cy="120" r="4" class="circuit-node" />
+        <circle cx="980" cy="190" r="4" class="circuit-node" />
+        <circle cx="900" cy="80" r="4" class="circuit-node" />
+        <circle cx="870" cy="710" r="4" class="circuit-node" />
+        <circle cx="1100" cy="660" r="4" class="circuit-node" />
+
+        <!-- Glowing Pulsing Cyan & Orange Nodes -->
+        <circle cx="200" cy="150" r="3" class="circuit-node-glow" style="animation-delay: 0.2s;" />
+        <circle cx="400" cy="100" r="3" class="circuit-node-glow-orange" style="animation-delay: 1.5s;" />
+        <circle cx="170" cy="150" r="3" class="circuit-node-glow" style="animation-delay: 0.8s;" />
+        <circle cx="250" cy="330" r="3" class="circuit-node-glow" style="animation-delay: 2.1s;" />
+        <circle cx="180" cy="610" r="3" class="circuit-node-glow-orange" style="animation-delay: 0.5s;" />
+        <circle cx="150" cy="650" r="3" class="circuit-node-glow" style="animation-delay: 1.2s;" />
+        <circle cx="450" cy="250" r="3" class="circuit-node-glow" style="animation-delay: 2.8s;" />
+        <circle cx="600" cy="300" r="3" class="circuit-node-glow-orange" style="animation-delay: 0.1s;" />
+        <circle cx="800" cy="350" r="3" class="circuit-node-glow" style="animation-delay: 1.9s;" />
+        <circle cx="520" cy="450" r="3" class="circuit-node-glow" style="animation-delay: 0.7s;" />
+        <circle cx="700" cy="390" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.4s;" />
+        <circle cx="820" cy="190" r="3" class="circuit-node-glow" style="animation-delay: 1.1s;" />
+        <circle cx="1050" cy="260" r="3" class="circuit-node-glow" style="animation-delay: 0.4s;" />
+        <circle cx="980" cy="160" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.2s;" />
+        <circle cx="800" cy="780" r="3" class="circuit-node-glow" style="animation-delay: 1.6s;" />
+        <circle cx="1050" cy="710" r="3" class="circuit-node-glow" style="animation-delay: 0.9s;" />
+        <circle cx="1020" cy="620" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.7s;" />
+      </g>
+    </svg>
+  </div>
 
   <!-- ========================================================================= -->
   <!-- NAVIGATION BAR (Medium Grey Anergi Brand Theme With 3D Revolving A Cube)   -->
@@ -398,7 +583,7 @@
   <!-- ========================================================================= -->
   <!-- ANATOMY OVERVIEW: PAMPERING THE ANATOMY OF YOUR DIGITAL ENTERPRISE         -->
   <!-- ========================================================================= -->
-  <section id="anatomy-overview" class="w-full bg-[#545454] py-12 px-4 sm:px-6 lg:px-8 border-t border-b border-white/15">
+  <section id="anatomy-overview" class="relative z-10 w-full py-12 px-4 sm:px-6 lg:px-8 border-t border-b border-white/15">
     <div class="max-w-7xl mx-auto">
       <div class="bg-gradient-to-b from-[#585858] to-[#424242] p-8 sm:p-12 rounded-3xl border border-white/20 shadow-2xl text-white">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
@@ -431,7 +616,7 @@
   <!-- ========================================================================= -->
   <!-- THE 4 CLINICAL TREATMENT PHASES (WHITE RAISED TEXTURE WITH VIDEO CLIPS)    -->
   <!-- ========================================================================= -->
-  <section id="treatment-stages" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+  <section id="treatment-stages" class="relative z-10 py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
     
     <div class="text-center max-w-3xl mx-auto mb-14">
       <span class="badge-clinical mb-3" style="background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); color: #ffffff;">
@@ -785,7 +970,7 @@
   <!-- ========================================================================= -->
   <!-- BOTTOM CONVERSION FUNNEL: EXECUTIVE CONSULTATION & INTAKE                  -->
   <!-- ========================================================================= -->
-  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+  <section class="relative z-10 py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
     <div class="raised-card p-8 sm:p-14 text-center bg-gradient-to-b from-white via-white to-slate-50 border-2 border-sky-300 shadow-2xl relative overflow-hidden">
       
       <!-- Decorative Ambient Glow -->
@@ -830,7 +1015,7 @@
   <!-- ========================================================================= -->
   <!-- FOOTER: UNIFORM ANERGI ECOSYSTEM WITH REVOLVING 3D 'A' CUBE                -->
   <!-- ========================================================================= -->
-  <footer class="bg-[#444444] border-t border-white/15 py-10 px-4 sm:px-6 lg:px-8 text-slate-300 text-xs font-mono-code mt-auto">
+  <footer class="relative z-10 bg-[#444444] border-t border-white/15 py-10 px-4 sm:px-6 lg:px-8 text-slate-300 text-xs font-mono-code mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
       
       <div class="flex items-center gap-3">
