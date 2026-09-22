@@ -674,12 +674,12 @@
 
             <!-- Hidden inputs to constrain intake metadata -->
             <input type="hidden" name="source" id="source" value="Contacts Page" />
-            <input type="hidden" name="selected_window" id="selected_window" value="September 24 @ 11:00 AM EST" />
+            <input type="hidden" name="selected_window" id="selected_window" value="September 24, 2026 @ 11:00 AM EST" />
 
             <!-- Selected Appointment Slot -->
             <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs font-mono">
               <span class="text-slate-600 font-medium">Selected Window:</span>
-              <span id="display-selected-slot" class="text-amber-600 font-bold">September 24 @ 11:00 AM EST</span>
+              <span id="display-selected-slot" class="text-amber-600 font-bold">September 24, 2026 @ 11:00 AM EST</span>
             </div>
 
             <!-- Submit Button -->
@@ -714,7 +714,15 @@
               <i class="fa-solid fa-calendar-days text-sky-600"></i>
               <span>Select Date</span>
             </h2>
-            <span class="text-xs font-mono text-sky-700 font-bold bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200" id="cal-month-year">September 2026</span>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="cal-prev-btn" onclick="prevMonth()" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer" title="Previous Month">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <span class="text-xs font-mono text-sky-700 font-bold bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200 min-w-[130px] text-center" id="cal-month-year">September 2026</span>
+              <button type="button" id="cal-next-btn" onclick="nextMonth()" class="w-7 h-7 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer" title="Next Month">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+              </button>
+            </div>
           </div>
 
           <!-- CALENDAR GRID -->
@@ -911,7 +919,7 @@
                 Phase 04 // Resilience
               </span>
               <span class="text-xs text-slate-500 font-mono font-bold flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 10s Clip
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 20s Extended Cut
               </span>
             </div>
 
@@ -927,7 +935,7 @@
                   class="w-full h-full object-cover"
                 ></video>
                 <div class="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2.5 py-0.5 rounded text-white text-[10px] font-mono">
-                  Continuous Immunity Over City
+                  Armored Robot Overlooking City &bull; Continuous Immunity
                 </div>
               </div>
             </div>
@@ -1016,23 +1024,63 @@
   <!-- SCRIPT LOGIC: CALENDAR, TIME SELECTION & GOOGLE APPS SCRIPT WEBHOOK        -->
   <!-- ========================================================================= -->
   <script>
-    // Selected appointment state (Constrained to upcoming business days)
-    let selectedDate = "September 24";
+    // Multi-month calendar state (September 2026 through December 2026)
+    const availableMonths = [
+      { name: "September", year: 2026, monthIndex: 8 },
+      { name: "October", year: 2026, monthIndex: 9 },
+      { name: "November", year: 2026, monthIndex: 10 },
+      { name: "December", year: 2026, monthIndex: 11 }
+    ];
+
+    let currentMonthIdx = 0; // Starts at September 2026
+    let selectedDay = 24;
+    let selectedMonthName = "September";
+    let selectedYear = 2026;
+    let selectedDate = `${selectedMonthName} ${selectedDay}, ${selectedYear}`;
     let selectedTime = "11:00 AM EST";
 
     // Google Apps Script Webhook URL (Connected to Anergi Master Operations Hub)
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8hiPcGHVL9Uk4UHTscm2ZXpVJf0vzP3kvMd9RRAxUbRH6ERwqKmaPeb7PzOIQSEUfUg/exec';
 
-    // Render Calendar for September 2026 with Constraints (Business Days Only, Past Dates Disabled)
+    function nextMonth() {
+      if (currentMonthIdx < availableMonths.length - 1) {
+        currentMonthIdx++;
+        renderCalendar();
+      }
+    }
+
+    function prevMonth() {
+      if (currentMonthIdx > 0) {
+        currentMonthIdx--;
+        renderCalendar();
+      }
+    }
+
+    // Render Calendar with Constraints (Business Days Only, Past Dates Disabled, Supports Sep-Dec 2026)
     function renderCalendar() {
       const container = document.getElementById('calendar-days-container');
+      const monthYearLabel = document.getElementById('cal-month-year');
+      const prevBtn = document.getElementById('cal-prev-btn');
+      const nextBtn = document.getElementById('cal-next-btn');
       if (!container) return;
       container.innerHTML = '';
 
-      // September 2026 starts on Tuesday (offset = 2)
-      const daysInMonth = 30;
-      const startDayOffset = 2;
-      const currentDayNum = 21; // Today is September 21, 2026
+      const curMonthObj = availableMonths[currentMonthIdx];
+      if (monthYearLabel) {
+        monthYearLabel.innerText = `${curMonthObj.name} ${curMonthObj.year}`;
+      }
+
+      if (prevBtn) prevBtn.disabled = (currentMonthIdx === 0);
+      if (nextBtn) nextBtn.disabled = (currentMonthIdx === availableMonths.length - 1);
+
+      const year = curMonthObj.year;
+      const month = curMonthObj.monthIndex;
+      const firstDay = new Date(year, month, 1);
+      const startDayOffset = firstDay.getDay(); // 0 = Sun, 6 = Sat
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Today reference: September 22, 2026
+      const today = new Date(2026, 8, 22);
 
       // Empty lead days for alignment
       for (let i = 0; i < startDayOffset; i++) {
@@ -1042,10 +1090,11 @@
         container.appendChild(empty);
       }
 
-      // Populate September days with business-day constraints
+      // Populate month days with business-day constraints
       for (let day = 1; day <= daysInMonth; day++) {
-        const dayOfWeek = (startDayOffset + day - 1) % 7; // 0 = Sunday, 6 = Saturday
-        const isPast = day <= currentDayNum;
+        const checkDate = new Date(year, month, day);
+        const dayOfWeek = checkDate.getDay(); // 0 = Sunday, 6 = Saturday
+        const isPast = (checkDate < today);
         const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
 
         const btn = document.createElement('button');
@@ -1065,10 +1114,10 @@
         } else {
           // Valid upcoming business day: Selectable
           btn.className = 'cal-day py-2 rounded-lg border border-transparent font-mono text-xs text-slate-800 font-semibold hover:bg-amber-100 hover:text-amber-900 cursor-pointer transition-all';
-          btn.title = `Book September ${day}, 2026`;
+          btn.title = `Book ${curMonthObj.name} ${day}, ${year}`;
 
-          // Default highlight on September 24
-          if (day === 24) {
+          // Highlight if currently selected
+          if (curMonthObj.name === selectedMonthName && day === selectedDay && curMonthObj.year === selectedYear) {
             btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-black', 'border-2', 'border-amber-500', 'shadow-md');
           }
 
@@ -1079,7 +1128,10 @@
             });
             btn.classList.remove('border-transparent', 'text-slate-800');
             btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-black', 'border-2', 'border-amber-500', 'shadow-md');
-            selectedDate = `September ${day}`;
+            selectedDay = day;
+            selectedMonthName = curMonthObj.name;
+            selectedYear = year;
+            selectedDate = `${curMonthObj.name} ${day}, ${year}`;
             updateDisplaySlot();
           };
         }
