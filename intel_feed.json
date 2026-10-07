@@ -1,0 +1,62 @@
+[
+  {
+    "category": "Zero-Day Defense",
+    "date": "October 06, 2026",
+    "title": "Microsoft Exchange High-Severity Privilege Escalation (CVE-2026-96940)",
+    "image": "public/secritygrfff88.jpg",
+    "excerpt": "Out-of-band updates address perimeter authentication bypass allowing attackers to read confidential corporate mailboxes. Automated mass-scanning compromises legacy assets in under 29 minutes post-disclosure.",
+    "read_time": "4 min read",
+    "badge_color": "amber",
+    "link": "mini_spa.html"
+  },
+  {
+    "category": "Ransomware Alert",
+    "date": "October 04, 2026",
+    "title": "Dual-Extortion Ransomware Targets Healthcare & Critical Infrastructure",
+    "image": "public/seqscan188.png",
+    "excerpt": "Adversaries weaponize living-off-the-land binaries to execute lateral movement in under 18 minutes post initial credential compromise. Backups are actively targeted before encryption is triggered.",
+    "read_time": "6 min read",
+    "badge_color": "red",
+    "link": "treatment.html"
+  },
+  {
+    "category": "Executive GRC",
+    "date": "October 01, 2026",
+    "title": "SEC Cybersecurity Disclosure Enforcement: $38M Fine for Latent Breach Coverup",
+    "image": "public/chart floating88.jpg",
+    "excerpt": "Regulatory audits mandate 4-day material incident reporting. Why delayed forensic dwell time creates personal CISO liability and invalidates cyber insurance policies.",
+    "read_time": "5 min read",
+    "badge_color": "amber",
+    "link": "contact.html"
+  },
+  {
+    "category": "Autonomous Cloak",
+    "date": "September 28, 2026",
+    "title": "Ricochet Ephemeral Protocol: Sub-Millisecond Deception Replaces Static Firewalls",
+    "image": "public/4in1overlay88.png",
+    "excerpt": "How synthetic honeynet flytraps absorb adversary reconnaissance while cloaked production enclaves drop all public listening ports. Contains breakout attempts in under 20 microseconds.",
+    "read_time": "5 min read",
+    "badge_color": "amber",
+    "link": "mini_spa.html"
+  },
+  {
+    "category": "AI Governance",
+    "date": "September 23, 2026",
+    "title": "ISO 42001 & EU AI Act: Enterprise Risk Classification for High-Impact LLMs",
+    "image": "public/3d-brain88.jpg",
+    "excerpt": "Mandatory compliance requirements for corporate AI deployments. How continuous audit packs insulate enterprise infrastructure from steep regulatory penalties.",
+    "read_time": "6 min read",
+    "badge_color": "amber",
+    "link": "contact.html"
+  },
+  {
+    "category": "Surface Defense",
+    "date": "September 18, 2026",
+    "title": "HSTS & Cryptographic Cipher Spoofing: Hardening Edge Boundaries Across TLS 1.3",
+    "image": "public/nebulagazer1.jpg",
+    "excerpt": "Why outdated edge proxies fail to enforce HSTS preloading and how adversary downgrade attacks compromise session confidentiality across hybrid cloud environments.",
+    "read_time": "5 min read",
+    "badge_color": "amber",
+    "link": "treatment.html"
+  }
+]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anergi News &amp; Intelligence // Wednesday Executive Briefings</title>
+  <title>Anergi Command Deck // 2026 Breach Ledger &amp; Intelligence Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,13 +12,17 @@
     :root {
       --accent-orange: #fd991e;
       --electric-blue: #00e5ff;
+      --anergi-grey-bg: #141923;
+      --anergi-card: #1c2331;
+      --anergi-card-hover: #242d3e;
+      --anergi-border: #2d384c;
       --font-sans: 'Space Grotesk', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
     body {
       font-family: var(--font-sans);
-      background: linear-gradient(180deg, rgba(13, 18, 28, 0.40) 0%, rgba(15, 23, 42, 0.50) 50%, rgba(10, 15, 26, 0.62) 100%),
+      background: linear-gradient(180deg, rgba(16, 21, 30, 0.88) 0%, rgba(20, 26, 38, 0.93) 50%, rgba(13, 17, 24, 0.97) 100%),
                   url('hero_collaborating.jpeg') center/cover fixed no-repeat;
       color: #f1f5f9;
       min-height: 100vh;
@@ -26,18 +30,18 @@
       position: relative;
     }
 
-    /* CIRCUIT BACKGROUND OVERLAY */
+    /* VISIBLE CIRCUIT BACKGROUND OVERLAY */
     .circuit-bg-overlay {
       position: fixed;
       inset: 0;
       pointer-events: none;
       background-image: 
-        radial-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(to right, rgba(0, 229, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
-      background-size: 40px 40px, 80px 80px, 80px 80px;
+        radial-gradient(rgba(0, 229, 255, 0.08) 1.5px, transparent 1.5px),
+        linear-gradient(to right, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+      background-size: 36px 36px, 72px 72px, 72px 72px;
       z-index: 0;
-      opacity: 0.5;
+      opacity: 0.85;
     }
 
     /* 3D ROTATING CUBE LOGO */
@@ -64,10 +68,10 @@
       position: absolute;
       width: 36px;
       height: 36px;
-      background: #4b5563;
+      background: #374151;
       border: 2px solid #ffffff;
       border-radius: 6px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 0 0 10px rgba(253,153,30,0.4);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.6), 0 0 10px rgba(253,153,30,0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -79,7 +83,7 @@
       font-size: 1.45rem;
       color: var(--accent-orange);
       line-height: 1;
-      text-shadow: 0 0 8px rgba(253,153,30,0.6);
+      text-shadow: 0 0 8px rgba(253,153,30,0.7);
     }
     .cube-front  { transform: rotateY(0deg) translateZ(18px); }
     .cube-back   { transform: rotateY(180deg) translateZ(18px); }
@@ -96,17 +100,17 @@
 
     /* GIANT REVOLVING 3D CUBE FOR HERO */
     .news-cube-scene {
-      width: 130px;
-      height: 130px;
-      perspective: 500px;
+      width: 90px;
+      height: 90px;
+      perspective: 450px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
     }
     .news-cube {
-      width: 100px;
-      height: 100px;
+      width: 72px;
+      height: 72px;
       position: relative;
       transform-style: preserve-3d;
       animation: spinNewsCube 14s infinite linear;
@@ -117,12 +121,12 @@
     }
     .news-cube-face {
       position: absolute;
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(135deg, #4b5563, #374151);
-      border: 2.5px solid #ffffff;
-      border-radius: 14px;
-      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.6), 0 0 20px rgba(253, 153, 30, 0.5);
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #374151, #1f2937);
+      border: 2px solid #ffffff;
+      border-radius: 12px;
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7), 0 0 16px rgba(253, 153, 30, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -131,17 +135,17 @@
     .news-cube-face span {
       font-family: var(--font-mono);
       font-weight: 900;
-      font-size: 3.8rem;
+      font-size: 2.8rem;
       color: var(--accent-orange);
       line-height: 1;
-      text-shadow: 0 0 16px rgba(253, 153, 30, 0.8);
+      text-shadow: 0 0 14px rgba(253, 153, 30, 0.8);
     }
-    .news-cube-front  { transform: rotateY(0deg) translateZ(50px); }
-    .news-cube-back   { transform: rotateY(180deg) translateZ(50px); }
-    .news-cube-right  { transform: rotateY(90deg) translateZ(50px); }
-    .news-cube-left   { transform: rotateY(-90deg) translateZ(50px); }
-    .news-cube-top    { transform: rotateX(90deg) translateZ(50px); }
-    .news-cube-bottom { transform: rotateX(-90deg) translateZ(50px); }
+    .news-cube-front  { transform: rotateY(0deg) translateZ(36px); }
+    .news-cube-back   { transform: rotateY(180deg) translateZ(36px); }
+    .news-cube-right  { transform: rotateY(90deg) translateZ(36px); }
+    .news-cube-left   { transform: rotateY(-90deg) translateZ(36px); }
+    .news-cube-top    { transform: rotateX(90deg) translateZ(36px); }
+    .news-cube-bottom { transform: rotateX(-90deg) translateZ(36px); }
 
     @keyframes spinNewsCube {
       0% { transform: rotateX(-14deg) rotateY(0deg); }
@@ -149,7 +153,7 @@
       100% { transform: rotateX(-14deg) rotateY(360deg); }
     }
 
-    /* ELECTRIC BLUE WORDMARK WITH ORANGE ARCH */
+    /* WORDMARK & ARCH */
     .brand-wordmark {
       font-family: var(--font-sans);
       font-weight: 800;
@@ -168,15 +172,18 @@
       filter: drop-shadow(0 0 4px rgba(253, 153, 30, 0.6));
     }
 
-    /* GLASS PUNCHOUT CARDS */
-    .glass-punchout {
-      background: rgba(22, 30, 46, 0.75);
-      border: 1px solid rgba(0, 229, 255, 0.25);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    /* ANERGI GREY GLASS CARDS */
+    .anergi-card {
+      background: rgba(26, 33, 46, 0.88);
+      border: 1px solid rgba(75, 85, 99, 0.5);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(12px);
     }
+    .anergi-card:hover {
+      border-color: rgba(253, 153, 30, 0.5);
+    }
 
-    /* SCROLLING TICKER ANIMATION */
+    /* SCROLLING TICKER */
     @keyframes tickerScroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -184,22 +191,66 @@
     .ticker-track {
       display: inline-flex;
       white-space: nowrap;
-      animation: tickerScroll 35s linear infinite;
+      animation: tickerScroll 40s linear infinite;
     }
-    .ticker-track:hover {
+    .ticker-container:hover .ticker-track {
       animation-play-state: paused;
+    }
+
+    /* HYPERFRAME CONTAINER */
+    .hyperframe-container {
+      position: relative;
+      background: linear-gradient(135deg, rgba(22, 28, 40, 0.96), rgba(15, 20, 29, 0.98));
+      border: 1.5px solid rgba(75, 85, 99, 0.6);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.8);
+      border-radius: 20px;
+      padding: 12px;
+    }
+    .hyperframe-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .hyperframe-tl { top: -2px; left: -2px; border-top: 3px solid #fd991e; border-left: 3px solid #fd991e; border-top-left-radius: 8px; }
+    .hyperframe-tr { top: -2px; right: -2px; border-top: 3px solid #fd991e; border-right: 3px solid #fd991e; border-top-right-radius: 8px; }
+    .hyperframe-bl { bottom: -2px; left: -2px; border-bottom: 3px solid #fd991e; border-left: 3px solid #fd991e; border-bottom-left-radius: 8px; }
+    .hyperframe-br { bottom: -2px; right: -2px; border-bottom: 3px solid #fd991e; border-right: 3px solid #fd991e; border-bottom-right-radius: 8px; }
+
+    /* CUSTOM ANERGI SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(17, 24, 39, 0.8);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(75, 85, 99, 0.7);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-orange);
+    }
+
+    /* CARD SELECTION GLOW */
+    .active-ledger-card {
+      border-color: var(--accent-orange) !important;
+      background: rgba(253, 153, 30, 0.12) !important;
+      box-shadow: 0 0 18px rgba(253, 153, 30, 0.3) !important;
     }
   </style>
 </head>
 <body class="relative min-h-screen flex flex-col justify-between">
 
-  <!-- CIRCUIT BACKGROUND OVERLAY -->
+  <!-- CIRCUIT BACKGROUND OVERLAY (VIVID OVER ANERGI GREY) -->
   <div class="circuit-bg-overlay"></div>
 
   <!-- TOP NAVIGATION BAR -->
-  <nav class="relative z-10 w-full bg-slate-900/90 border-b border-slate-800 backdrop-blur-md px-4 sm:px-8 py-3.5 shadow-xl">
+  <nav class="relative z-20 w-full bg-slate-900/95 border-b border-slate-700/80 backdrop-blur-md px-4 sm:px-8 py-3.5 shadow-2xl">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <!-- BRAND LOGO WITH 3D ROTATING A CUBE -->
+      <!-- BRAND LOGO WITH 3D ROTATING CUBE -->
       <a href="index.html" class="flex items-center gap-3 text-decoration-none">
         <div class="cube-scene">
           <div class="cube" title="Anergi 3D Interactive Logo">
@@ -220,59 +271,61 @@
       </a>
 
       <!-- NAV LINKS -->
-      <div class="hidden md:flex items-center gap-6 font-mono text-xs uppercase font-bold tracking-wider">
+      <div class="hidden md:flex items-center gap-7 font-mono text-xs uppercase font-bold tracking-wider">
         <a href="index.html" class="text-slate-300 hover:text-amber-400 transition-colors">Home</a>
         <a href="treatment.html" class="text-slate-300 hover:text-amber-400 transition-colors">Treatment Stages</a>
         <a href="mini_spa.html" target="_blank" class="text-slate-300 hover:text-amber-400 transition-colors">Mini S.P.A.</a>
-        <a href="news.html" class="text-amber-400 border-b-2 border-amber-400 pb-0.5">News</a>
+        <a href="news.html" class="text-amber-400 border-b-2 border-amber-400 pb-0.5">Command Deck</a>
         <a href="contact.html" class="text-slate-300 hover:text-amber-400 transition-colors">Contact</a>
       </div>
 
-      <!-- CTA BUTTON -->
+      <!-- SINGLE PRIMARY CTA BUTTON -->
       <a href="contact.html" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-1.5">
         <i class="fa-solid fa-calendar-check"></i> Book Consultation
       </a>
     </div>
   </nav>
 
-  <!-- LIVE CYBERSECURITY TICKER -->
-  <div class="relative z-10 w-full bg-slate-950 border-y border-cyan-500/20 py-2.5 overflow-hidden font-mono text-xs">
+  <!-- LIVE CYBERSECURITY TICKER (HOVER TO PAUSE & INSPECT STATS) -->
+  <div class="relative z-10 w-full bg-slate-950 border-y border-slate-800 py-2.5 overflow-hidden font-mono text-xs ticker-container cursor-pointer" title="Hover pauses ticker">
     <div class="max-w-7xl mx-auto flex items-center px-4">
-      <span class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-widest text-[10px] mr-3 shrink-0 flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span> INTEL FEED
+      <span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-0.5 rounded-md font-bold uppercase tracking-widest text-[11px] mr-3 shrink-0 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> 2026 AUDIT TICKER
       </span>
       <div class="overflow-hidden relative w-full">
         <div class="ticker-track text-slate-300 gap-10">
-          <span class="flex items-center gap-2"><strong class="text-amber-400">[CVE-2026-8812]</strong> Edge Proxy Strict-Transport-Security Boundary Bypass Disclosed</span>
+          <span class="flex items-center gap-2"><strong class="text-red-400">[2026 AUDIT TOTALS]</strong> 18 Tracked Incidents &bull; Financial Penalties Exceed $2,561,040,000</span>
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-cyan-400">[AI GOVERNANCE]</strong> ISO 42001 &amp; EU AI Act Audit Attestation Protocol Mandated for Enterprise Cloud Models</span>
+          <span class="flex items-center gap-2"><strong class="text-amber-400">[CHANGE HEALTHCARE]</strong> Remote Citrix Portal Compromised Without MFA ($2.45B Cost &bull; 192.7M Records)</span>
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-emerald-400">[SURFACE TELEMETRY]</strong> Anergi Mini S.P.A. Security Posture Assessment Integrates Automated HSTS &amp; Cipher Fingerprinting</span>
+          <span class="flex items-center gap-2"><strong class="text-cyan-400">[FREE MOBILE $29M]</strong> Subscriber Portal Breach Exfiltrates IBANs (France CNIL Fine)</span>
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-orange-400">[DEFENSE ALERT]</strong> Critical Infrastructure Firmware Flaws Prompt NIST CSF 2.0 Hardening Orders</span>
-          <!-- Duplicate for seamless infinite loop -->
-          <span class="flex items-center gap-2"><strong class="text-amber-400">[CVE-2026-8812]</strong> Edge Proxy Strict-Transport-Security Boundary Bypass Disclosed</span>
+          <span class="flex items-center gap-2"><strong class="text-orange-400">[FBI RECRUITMENT]</strong> Contractor PeopleSoft Zero-Day Exfiltrates Applicant Dossiers</span>
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-cyan-400">[AI GOVERNANCE]</strong> ISO 42001 &amp; EU AI Act Audit Attestation Protocol Mandated for Enterprise Cloud Models</span>
+          <span class="flex items-center gap-2"><strong class="text-emerald-400">[SEC ITEM 1.05]</strong> 4-Day Material Disclosure Rules Enforced on Latent Dwell Time</span>
+          <!-- Duplicate for seamless loop -->
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-emerald-400">[SURFACE TELEMETRY]</strong> Anergi Mini S.P.A. Security Posture Assessment Integrates Automated HSTS &amp; Cipher Fingerprinting</span>
+          <span class="flex items-center gap-2"><strong class="text-red-400">[2026 AUDIT TOTALS]</strong> 18 Tracked Incidents &bull; Financial Penalties Exceed $2,561,040,000</span>
           <span class="text-slate-600">&bull;</span>
-          <span class="flex items-center gap-2"><strong class="text-orange-400">[DEFENSE ALERT]</strong> Critical Infrastructure Firmware Flaws Prompt NIST CSF 2.0 Hardening Orders</span>
+          <span class="flex items-center gap-2"><strong class="text-amber-400">[CHANGE HEALTHCARE]</strong> Remote Citrix Portal Compromised Without MFA ($2.45B Cost &bull; 192.7M Records)</span>
+          <span class="text-slate-600">&bull;</span>
+          <span class="flex items-center gap-2"><strong class="text-cyan-400">[FREE MOBILE $29M]</strong> Subscriber Portal Breach Exfiltrates IBANs (France CNIL Fine)</span>
         </div>
       </div>
+      <span class="hidden sm:inline-block text-[11px] text-slate-500 shrink-0 ml-3 font-mono">
+        (Hover pauses)
+      </span>
     </div>
   </div>
 
-  <!-- MAIN CONTAINER -->
-  <main class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 my-auto">
-
-    <!-- HERO HEADER (REVOLVING A WITH TITLE) -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center mb-10 pb-8 border-b border-slate-800">
+  <!-- HERO HEADER (ANERGI CHARCOAL & GREY STYLING) -->
+  <header class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-7 pb-4">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center border-b border-slate-800 pb-5">
       
-      <!-- LEFT: 3D ROTATING A CUBE -->
-      <div class="md:col-span-4 text-center">
-        <div class="news-cube-scene mb-3">
-          <div class="news-cube" title="Anergi 3D Interactive Kinetic Mark">
+      <!-- HERO LEFT: REVOLVING A LOGO -->
+      <div class="md:col-span-3 text-center md:text-left flex items-center justify-center md:justify-start gap-4">
+        <div class="news-cube-scene">
+          <div class="news-cube" title="Anergi Kinetic Mark">
             <div class="news-cube-face news-cube-front"><span>A</span></div>
             <div class="news-cube-face news-cube-back"><span>A</span></div>
             <div class="news-cube-face news-cube-right"><span>A</span></div>
@@ -281,283 +334,314 @@
             <div class="news-cube-face news-cube-bottom"><span>A</span></div>
           </div>
         </div>
-        <div class="relative flex flex-col items-center justify-center">
-          <svg class="brand-arch" style="top: -4px; height: 16px;" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="3" stroke-linecap="round" />
-          </svg>
-          <span class="text-2xl font-black text-cyan-400 tracking-tight" style="text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);">nergi.io</span>
-          <span class="text-[10px] font-mono uppercase tracking-widest text-slate-400 mt-1">Intelligence Desk &bull; CISO Briefings</span>
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold block">Anergi.io Command</span>
+          <span class="text-2xl font-black text-white tracking-tight">Threat Hub</span>
         </div>
       </div>
 
-      <!-- RIGHT: HEADLINE & MISSION -->
-      <div class="md:col-span-8 text-center md:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold uppercase tracking-widest mb-3">
-          <i class="fa-solid fa-satellite-dish"></i> Strategic Cybersecurity Briefings
+      <!-- HERO RIGHT: HEADLINE & MISSION -->
+      <div class="md:col-span-9 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold uppercase tracking-widest mb-1.5">
+            <i class="fa-solid fa-satellite-dish"></i> 2026 Master Breach Ledger &bull; Editorial Intelligence Desk
+          </div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+            Offensive Case Studies &amp; <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Quarterly Fine Ledger</span>
+          </h1>
+          <p class="text-slate-300 text-sm mt-1 max-w-2xl leading-relaxed">
+            Deconstructing real-world enterprise vectors, regulatory fines, and proactive perimeter defense. Click any breach or news brief to view full title, image, and analysis in the Center Stage.
+          </p>
         </div>
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
-          Anergi <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Intelligence &amp; News</span>
-        </h1>
-        <p class="text-slate-300 text-sm sm:text-base mt-2.5 max-w-2xl leading-relaxed">
-          Weekly offensive security insights, regulatory compliance breakdowns, and executive vulnerability case studies authored by Anergi practitioners.
-        </p>
-        <div class="mt-4 flex flex-wrap items-center gap-3 justify-center md:justify-start">
-          <a href="https://www.linkedin.com/company/anergi" target="_blank" rel="noopener" class="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-300 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-2">
-            <i class="fa-brands fa-linkedin"></i> Connect on LinkedIn
-          </a>
-          <a href="https://youtu.be/9e6SZe3uKj4" target="_blank" rel="noopener" class="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 font-mono text-xs font-bold rounded-xl transition-all flex items-center gap-2">
-            <i class="fa-brands fa-youtube"></i> Watch on YouTube
+        <div class="shrink-0 flex items-center gap-2 font-mono text-xs">
+          <a href="#mini-spa-runway" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-xl transition-all flex items-center gap-2">
+            <i class="fa-solid fa-arrow-down text-amber-400"></i> Mini S.P.A. Guide
           </a>
         </div>
       </div>
 
     </div>
+  </header>
 
-    <!-- ===================================================================
-         FEATURED WEDNESDAY THOUGHT LEADERSHIP (THE OWNER'S PRIORITY FEATURE)
-         =================================================================== -->
-    <section class="mb-14">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold flex items-center gap-2">
-            <i class="fa-solid fa-star text-amber-400"></i> Wednesday Weekly Executive Showcase
-          </span>
-          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
-            This Week's Featured Briefing
-          </h2>
-        </div>
-        <span class="text-xs font-mono text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl hidden sm:inline-block">
-          Published: Wednesday, Sept 23, 2026
-        </span>
-      </div>
+  <!-- ===================================================================
+       THE 3-COLUMN COMMAND DECK
+       LEFT: 2026 Breach Ledger (18 Rows from Excel)
+       CENTER: Title, Featured Image, Article & Chevron Switcher
+       RIGHT: Sleek News Feed (Thumbnail Image + Title + Date)
+       =================================================================== -->
+  <main class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-      <!-- FEATURED SHOWCASE: ARTICLE ON TOP, WEEKLY VIDEO EMBEDDED BIG BELOW -->
-      <div class="glass-punchout rounded-3xl p-6 sm:p-10 border-amber-500/40 shadow-2xl space-y-8">
-
-        <!-- PART 1: THE FEATURED ARTICLE ON TOP -->
-        <div class="space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3">
+      <!-- ===============================================================
+           LEFT COLUMN (COL-SPAN-4): 2026 MASTER BREACH & FINE LEDGER
+           =============================================================== -->
+      <div class="lg:col-span-4 anergi-card rounded-3xl p-5 border-slate-700 flex flex-col h-[780px]">
+        
+        <!-- LEDGER HEADER WITH DYNAMIC LOSS HUD -->
+        <div class="border-b border-slate-800 pb-3 mb-3">
+          <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2.5 py-0.5 rounded-md">
-                AI Governance &bull; ISO 42001 &bull; EU AI Act
-              </span>
-              <span class="text-xs text-amber-400 font-mono font-bold">Volume #42</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+              <h2 class="text-sm font-black text-white font-mono uppercase tracking-wider">
+                2026 Breach Ledger
+              </h2>
             </div>
-            <span class="text-xs font-mono text-slate-400 bg-slate-950/70 border border-slate-800 px-3 py-1 rounded-lg">
-              Published: Wednesday, Sept 23, 2026
+            <span class="text-xs font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+              18 Incidents
             </span>
           </div>
 
-          <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight">
-            Deconstructing the EU AI Act &amp; NIST AI RMF: Enterprise Risk Classification for High-Impact LLMs
-          </h3>
-
-          <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-4xl">
-            In this week's Wednesday executive deep-dive, we map the mandatory compliance requirements for corporate AI deployments. Learn how ISO 42001 continuous audit packs insulate enterprise infrastructure from steep regulatory penalties while hardening prompt pipelines.
-          </p>
-
-          <!-- INFOGRAPHIC KEY TAKEAWAYS (3-CARD GRID) -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
-              <div class="text-amber-400 font-bold mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-layer-group"></i> Risk Classification
-              </div>
-              <p class="text-[11px] text-slate-400 leading-normal">
-                Tiering between Minimal, Specific, and High-Risk AI enterprise model footprints.
-              </p>
-            </div>
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
-              <div class="text-cyan-400 font-bold mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-file-shield"></i> Policy Authoring
-              </div>
-              <p class="text-[11px] text-slate-400 leading-normal">
-                Turnkey compliance steps for Boardroom ISO 42001 attestation and audits.
-              </p>
-            </div>
-            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 font-mono text-xs text-slate-300">
-              <div class="text-emerald-400 font-bold mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-virus"></i> Adversarial Red-Teaming
-              </div>
-              <p class="text-[11px] text-slate-400 leading-normal">
-                Stress-testing prompt injection and training data exfiltration vectors.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2 flex flex-wrap items-center gap-4">
-            <a href="https://www.linkedin.com/company/anergi" target="_blank" rel="noopener" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center gap-2">
-              <i class="fa-brands fa-linkedin"></i> Read Full Post &amp; Discuss
-            </a>
-            <a href="contact.html" class="text-xs font-mono text-slate-300 hover:text-white underline flex items-center gap-1">
-              Book AI Governance Review ➔
-            </a>
+          <!-- DYNAMIC LOSS TOTAL COUNTER -->
+          <div id="loss-counter" class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2 text-center font-mono">
+            <span class="text-[11px] text-slate-400 uppercase tracking-widest block">Tracked Financial Penalties:</span>
+            <span class="text-amber-400 font-extrabold text-base sm:text-lg">$2,561,040,000+</span>
           </div>
         </div>
 
-        <!-- PART 2: THE WEEKLY VIDEO EMBEDDED BIG BELOW (ALREADY PLAYING ON MUTE) -->
-        <div class="pt-6 border-t border-slate-800/90 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-red-600/20 border border-red-500/40 text-red-400 text-[10px] font-mono font-bold uppercase tracking-wider mb-1.5">
-                <span class="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
-                Wednesday Weekly Video Feature &bull; Layman Cyber Briefing
-              </div>
-              <h4 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-                "Somebody's Watching Me" // Everyday Cybersecurity &amp; Threat Fundamentals
-              </h4>
-              <p class="text-xs text-slate-400 mt-1 max-w-3xl">
-                Weekly Wednesday video briefing breaking down digital exposure, tracking, and essential computer defense in straightforward layman terms.
-              </p>
-            </div>
-            <div class="shrink-0">
-              <span class="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg">
-                <i class="fa-solid fa-volume-xmark"></i> Playing Muted &bull; Tap for Audio
-              </span>
-            </div>
-          </div>
+        <!-- STICKY QUARTER FILTER TABS -->
+        <div class="flex items-center justify-between gap-1 mb-3 font-mono text-xs font-bold">
+          <button onclick="filterQuarter('ALL')" id="tab-ALL" class="flex-1 py-1.5 rounded-lg bg-amber-500 text-slate-950 transition-all text-center">ALL (18)</button>
+          <button onclick="filterQuarter('Q1 2026')" id="tab-Q1" class="flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all text-center">Q1</button>
+          <button onclick="filterQuarter('Q2 2026')" id="tab-Q2" class="flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all text-center">Q2</button>
+          <button onclick="filterQuarter('Q3 2026')" id="tab-Q3" class="flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all text-center">Q3</button>
+          <button onclick="filterQuarter('Q4 2026')" id="tab-Q4" class="flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all text-center">Q4</button>
+        </div>
 
-          <!-- BIG HIGHLIGHTED RESPONSIVE VIDEO EMBED -->
-          <div class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-red-500/40 shadow-2xl bg-black">
-            <iframe 
-              class="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/w2hEmiBfLbo?autoplay=1&mute=1&loop=1&playlist=w2hEmiBfLbo&controls=1&rel=0" 
-              title="Anergi Wednesday Weekly Cyber Briefing - Somebody's Watching Me"
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              referrerpolicy="strict-origin-when-cross-origin" 
-              allowfullscreen>
-            </iframe>
-          </div>
+        <!-- CASCADED SCROLLABLE BREACH LIST -->
+        <div id="breach-ledger-container" class="overflow-y-auto flex-1 space-y-2.5 pr-1">
+          <!-- Populated dynamically by JavaScript from breach_ledger.json with static fallback -->
+        </div>
 
-          <!-- BOTTOM ACTION DOCK FOR VIDEO -->
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs font-mono">
-            <span class="text-slate-400 text-[11px]">
-              <i class="fa-solid fa-info-circle text-cyan-400 mr-1"></i> Weekly Wednesday placeholder video series for workforce and leadership threat literacy.
+        <div class="pt-3 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+          <span><i class="fa-solid fa-hand-pointer text-amber-400 mr-1"></i> Tap to project to Center Stage</span>
+          <span class="text-slate-500">Synced via Excel</span>
+        </div>
+      </div>
+
+      <!-- ===============================================================
+           CENTER COLUMN (COL-SPAN-5): MAIN PRESENTATION STAGE
+           Displays: Title + Featured Cyber Image + Article Analysis + Chevron Switcher
+           =============================================================== -->
+      <div class="lg:col-span-5 flex flex-col space-y-4">
+
+        <!-- CHEVRON CONTROLLER & TRACK INDICATOR -->
+        <div class="anergi-card rounded-2xl p-3 flex items-center justify-between border-slate-800 text-xs font-mono">
+          <button onclick="prevStoryOrVideo()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 rounded-lg transition-all flex items-center gap-1.5 font-bold" title="Previous Item">
+            <i class="fa-solid fa-chevron-left"></i> <span>Prev</span>
+          </button>
+          
+          <!-- ACTIVE BADGE & CATEGORY -->
+          <div class="text-center px-2 truncate">
+            <span id="center-stage-badge" class="text-xs uppercase tracking-widest text-amber-400 font-bold bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/30">
+              Q3 2026 FEATURE &bull; CRITICAL RANSOMWARE
             </span>
-            <div class="flex items-center gap-3">
-              <a href="https://www.youtube.com/watch?v=w2hEmiBfLbo" target="_blank" rel="noopener" class="px-3.5 py-1.5 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-300 font-bold rounded-xl transition-all flex items-center gap-1.5">
-                <i class="fa-brands fa-youtube"></i> Full Screen on YouTube
-              </a>
-              <a href="https://youtu.be/9e6SZe3uKj4" target="_blank" rel="noopener" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold rounded-xl transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-play"></i> Channel Hub
+          </div>
+
+          <button onclick="nextStoryOrVideo()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 text-slate-950 font-bold rounded-lg transition-all flex items-center gap-1.5 shadow" title="Next Item">
+            <span>Next</span> <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- THE MAIN DISPLAY CONTAINER (TITLE + FEATURED IMAGE + ARTICLE) -->
+        <div class="hyperframe-container space-y-4">
+          <div class="hyperframe-corner hyperframe-tl"></div>
+          <div class="hyperframe-corner hyperframe-tr"></div>
+          <div class="hyperframe-corner hyperframe-bl"></div>
+          <div class="hyperframe-corner hyperframe-br"></div>
+
+          <!-- TOP HUD BAR -->
+          <div class="flex items-center justify-between px-3 py-1.5 border-b border-slate-800 text-xs font-mono bg-slate-950/80 rounded-t-xl">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+              <span class="text-red-400 font-bold uppercase tracking-wider">CENTER STAGE // LIVE DOSSIER</span>
+            </div>
+            <span id="center-stage-date" class="text-slate-400 font-mono text-xs">
+              September 2026
+            </span>
+          </div>
+
+          <!-- 1. TITLE (LARGE & READABLE) -->
+          <div class="px-2">
+            <h2 id="center-stage-title" class="text-xl sm:text-2xl font-black text-white leading-tight">
+              Change Healthcare: Remote Citrix Server Lacking MFA Yields $2.45B Ransomware Crisis
+            </h2>
+            <div class="flex items-center gap-3 mt-1.5 text-xs font-mono text-slate-400">
+              <span id="center-stage-industry" class="text-cyan-400 font-bold">Healthcare &bull; 192.7M Records</span>
+              <span>&bull;</span>
+              <span id="center-stage-impact" class="text-red-400 font-bold">$2.45B - $3.09B Fallout</span>
+            </div>
+          </div>
+
+          <!-- 2. FEATURED CYBER GRAPHIC (LARGE RESPONSIVE VISUAL) -->
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-700 bg-black shadow-2xl">
+            <img 
+              id="center-stage-image" 
+              src="public/seqscan3.png" 
+              alt="Cyber Threat Analysis Graphic" 
+              class="w-full h-full object-cover"
+            />
+            
+            <!-- VIDEO OVERLAY ACTION IF A VIDEO IS LINKED -->
+            <div id="video-action-overlay" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 text-center">
+              <div class="w-14 h-14 rounded-full bg-red-600/90 text-white flex items-center justify-center text-xl shadow-2xl mb-2 hover:scale-110 transition-transform cursor-pointer" onclick="openActiveVideo()">
+                <i class="fa-solid fa-play ml-1"></i>
+              </div>
+              <span id="video-overlay-text" class="text-white font-mono text-xs font-bold bg-slate-950/80 px-3 py-1 rounded-lg border border-slate-700">
+                July Quarter Video Briefing (Digital Street Smarts)
+              </span>
+              <div class="mt-2 flex items-center gap-2">
+                <button onclick="openActiveVideo()" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 shadow">
+                  <i class="fa-brands fa-youtube"></i> Watch on YouTube ➔
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. ARTICLE / FORENSIC VECTOR ANALYSIS (READABLE BODY FONT) -->
+          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 font-sans text-sm text-slate-300 leading-relaxed space-y-2.5">
+            <div class="flex items-center gap-2 font-mono text-xs font-bold text-amber-400">
+              <i class="fa-solid fa-bug"></i> <span>Primary Vector &amp; Root Cause:</span>
+            </div>
+            <p id="center-stage-body" class="text-slate-300 text-sm leading-relaxed">
+              Adversaries identified an internet-facing Citrix remote portal that lacked multi-factor authentication (MFA). Attackers utilized previously harvested credentials to establish an initial foothold, moved laterally across enterprise Active Directory in under 22 days, poisoned backup snapshots, and exfiltrated 192.7 million records before detonating the ransomware payload.
+            </p>
+            <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+              <span class="text-slate-400">
+                <i class="fa-solid fa-shield-virus text-amber-400 mr-1"></i> Remediation Target: <strong id="center-stage-cta-label" class="text-white">Perimeter &amp; MFA Remote Access Audit</strong>
+              </span>
+              <a href="#mini-spa-runway" class="text-amber-400 hover:text-amber-300 font-bold">
+                Learn Remediation Steps ➔
               </a>
             </div>
           </div>
+
+          <!-- CHEVRON UP NEXT PREVIEW PILL -->
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400 px-1">
+            <span id="next-preview-pill" class="text-amber-400 font-bold truncate pr-2">
+              <i class="fa-solid fa-forward text-xs mr-1"></i> Up Next: "Somebody's Watching Me" // Everyday Threat Basics
+            </span>
+            <button onclick="nextStoryOrVideo()" class="text-xs text-slate-300 hover:text-white underline shrink-0">
+              Next Entry ➔
+            </button>
+          </div>
+
         </div>
 
       </div>
-    </section>
+
+      <!-- ===============================================================
+           RIGHT COLUMN (COL-SPAN-3): SLEEK NEWS FEED (IMAGE + TITLE + DATE)
+           =============================================================== -->
+      <div class="lg:col-span-3 anergi-card rounded-3xl p-5 border-slate-700 flex flex-col h-[780px]">
+        
+        <div class="border-b border-slate-800 pb-3 mb-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <h2 class="text-sm font-black text-white font-mono uppercase tracking-wider">
+              News Feed
+            </h2>
+          </div>
+          <span class="text-xs font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+            6 Articles
+          </span>
+        </div>
+
+        <!-- CASCADED SLEEK NEWS FEED CARDS (IMAGE + TITLE + DATE) -->
+        <div id="intel-feed-container" class="overflow-y-auto flex-1 space-y-2.5 pr-1">
+          <!-- Dynamically populated from intel_feed.json with static fallback -->
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+          <span><i class="fa-solid fa-hand-pointer text-emerald-400 mr-1"></i> Click to read full article</span>
+          <a href="https://www.linkedin.com/company/anergi" target="_blank" class="text-amber-400 hover:underline">LinkedIn Desk</a>
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- ===================================================================
-         CURATED CYBERSECURITY INTELLIGENCE ARTICLES
+         BOTTOM CONVERSION RUNWAY: "MINI S.P.A. FOR DUMMIES"
+         The ONE unified, authoritative Mini S.P.A. destination on the page
          =================================================================== -->
-    <section>
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">Advisory Ledger</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">
-            Recent Intelligence Bulletins
-          </h2>
-        </div>
+    <section id="mini-spa-runway" class="mt-14 anergi-card rounded-3xl p-6 sm:p-10 border-slate-700 shadow-2xl relative overflow-hidden">
+      
+      <!-- SUBTLE GLOW & CIRCUIT ACCENT -->
+      <div class="absolute -right-20 -top-20 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <span class="px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-xs font-bold uppercase tracking-widest inline-block mb-2">
+          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Single-Destination Perimeter Defense
+        </span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
+          The 60-Second <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Mini S.P.A. Surface Check</span>
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base mt-2 leading-relaxed">
+          How Anergi tests your external digital perimeter before adversary botnets exploit it. Zero installation, zero credentials, zero network disruption.
+        </p>
       </div>
 
-      <!-- ARTICLE CARDS GRID -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- ARTICLE 1 -->
-        <div class="glass-punchout rounded-2xl p-6 border-slate-800 flex flex-col justify-between hover:border-cyan-500/40 transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-3 text-[10px] font-mono">
-              <span class="text-cyan-400 font-bold uppercase bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/30">Zero-Day Defense</span>
-              <span class="text-slate-500">Sept 18, 2026</span>
-            </div>
-            <h3 class="text-base font-bold text-white leading-snug">
-              HSTS &amp; Cryptographic Cipher Spoofing: Hardening Edge Boundaries Across TLS 1.3
-            </h3>
-            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
-              Why outdated edge proxies fail to enforce HSTS preloading and how adversary downgrade attacks compromise session confidentiality.
-            </p>
+      <!-- 3-STEP WALKTHROUGH (CLEAR & READABLE FONTS) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        
+        <!-- STEP 1 -->
+        <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-lg mb-3 border border-amber-500/40">
+            01
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-            <span class="text-slate-400">5 min read</span>
-            <a href="pitch.html#services" class="text-amber-400 hover:text-amber-300 font-bold">Read Protocol ➔</a>
-          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">Enter Public Domain</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-sans">
+            Input your public company website (e.g. yourcompany.com). No passwords, internal credentials, or software agents needed.
+          </p>
         </div>
 
-        <!-- ARTICLE 2 -->
-        <div class="glass-punchout rounded-2xl p-6 border-slate-800 flex flex-col justify-between hover:border-amber-500/40 transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-3 text-[10px] font-mono">
-              <span class="text-amber-400 font-bold uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Executive GRC</span>
-              <span class="text-slate-500">Sept 15, 2026</span>
-            </div>
-            <h3 class="text-base font-bold text-white leading-snug">
-              NIST CSF 2.0 Governance Pillar: What CISOs Need to Prove in Q4 Boardroom Audits
-            </h3>
-            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
-              An actionable roadmap for integrating the new Govern (GV) function into technical telemetry dashboards and insurance defense packs.
-            </p>
+        <!-- STEP 2 -->
+        <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-lg mb-3 border border-amber-500/40">
+            02
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-            <span class="text-slate-400">7 min read</span>
-            <a href="contact.html" class="text-amber-400 hover:text-amber-300 font-bold">Request Scope ➔</a>
-          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">60-Sec Automated Telemetry</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-sans">
+            Our engine scans HSTS enforcement, SSL ciphers, open ports, unmonitored staging subdomains, and un-MFA'd login gates.
+          </p>
         </div>
 
-        <!-- ARTICLE 3 -->
-        <div class="glass-punchout rounded-2xl p-6 border-slate-800 flex flex-col justify-between hover:border-emerald-500/40 transition-all">
-          <div>
-            <div class="flex items-center justify-between mb-3 text-[10px] font-mono">
-              <span class="text-emerald-400 font-bold uppercase bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">Case Study</span>
-              <span class="text-slate-500">Sept 11, 2026</span>
-            </div>
-            <h3 class="text-base font-bold text-white leading-snug">
-              Kinetic Ricochet Protocol: Neutralizing Simulated Ransomware Handshakes in Real Time
-            </h3>
-            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
-              How ephemeral bastion honey-tokens isolate lateral movement attempts and backdate forensic state before data loss occurs.
-            </p>
+        <!-- STEP 3 -->
+        <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-lg mb-3 border border-amber-500/40">
+            03
           </div>
-          <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-            <span class="text-slate-400">4 min read</span>
-            <a href="mini_spa.html" target="_blank" class="text-amber-400 hover:text-amber-300 font-bold">Test Surface ➔</a>
-          </div>
-        </div>
-
-        <!-- ARTICLE 4: NEXT OPTION VIDEO DISPATCH -->
-        <div class="glass-punchout rounded-2xl p-6 border-red-500/40 flex flex-col justify-between hover:border-red-400 transition-all bg-slate-900/80">
-          <div>
-            <div class="flex items-center justify-between mb-3 text-[10px] font-mono">
-              <span class="text-red-400 font-bold uppercase bg-red-500/10 px-2 py-0.5 rounded border border-red-500/30 flex items-center gap-1">
-                <i class="fa-solid fa-circle-play text-[9px] animate-pulse"></i> Next Option &bull; Video
-              </span>
-              <span class="text-slate-500">Sept 21, 2026</span>
-            </div>
-            <h3 class="text-base font-bold text-white leading-snug">
-              Forensic Hardening Protocol: Technical Briefing &amp; Threat Defense Case Study
-            </h3>
-            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
-              In-depth executive video breakdown walking through ephemeral honeypots, surface validation protocols, and dual-engine SOC attestation.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-            <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-brands fa-youtube text-red-500"></i> Video Dispatch</span>
-            <a href="https://youtu.be/w2hEmiBfLbo" target="_blank" rel="noopener" class="text-red-400 hover:text-red-300 font-bold flex items-center gap-1">
-              Watch Now ➔
-            </a>
-          </div>
+          <h3 class="text-base font-bold text-white mb-1.5">Boardroom Scorecard</h3>
+          <p class="text-sm text-slate-400 leading-relaxed font-sans">
+            Receive an instant exposure rating with actionable technical remediation steps to satisfy NIST CSF 2.0 governance.
+          </p>
         </div>
 
       </div>
+
+      <!-- SINGLE PRIMARY MINI S.P.A. LAUNCHER FORM -->
+      <div class="max-w-xl mx-auto bg-slate-900/95 border border-slate-700 focus-within:border-amber-500 rounded-2xl p-3 shadow-2xl">
+        <form class="flex flex-col sm:flex-row items-center gap-2" onsubmit="event.preventDefault(); launchMiniSpaFromRunway();">
+          <div class="relative flex-1 w-full">
+            <span class="absolute left-3.5 top-3.5 text-slate-500 font-mono text-sm">https://</span>
+            <input id="runway-domain-input" type="text" placeholder="yourcompany.com" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-400 text-white text-sm font-mono pl-18 pr-3 py-3 rounded-xl outline-none placeholder-slate-500 transition-colors">
+          </div>
+          <button type="submit" class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm font-mono rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-bolt"></i> RUN 60-SEC SURFACE CHECK
+          </button>
+        </form>
+      </div>
+
     </section>
 
   </main>
 
   <!-- FOOTER -->
-  <footer class="relative z-10 w-full bg-slate-950 border-t border-slate-800/80 py-6 px-4 text-center text-xs font-mono text-slate-500">
+  <footer class="relative z-10 w-full bg-slate-950 border-t border-slate-800 py-6 px-4 text-center text-xs font-mono text-slate-500 mt-12">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <span>&copy; 2026 Anergi.io &bull; Intelligence &amp; Editorial Desk</span>
-      <div class="flex items-center gap-4">
+      <span>&copy; 2026 Anergi.io &bull; Master Breach Ledger &amp; Editorial Desk</span>
+      <div class="flex items-center gap-5">
         <a href="treatment.html" class="hover:text-slate-300">Treatment Stages</a>
         <a href="mini_spa.html" target="_blank" class="hover:text-slate-300">Mini S.P.A.</a>
         <a href="contact.html" class="hover:text-slate-300">Contact</a>
@@ -565,6 +649,389 @@
       </div>
     </div>
   </footer>
+
+  <!-- ===================================================================
+       CLIENT-SIDE CONTROLLER & DATA ENGINE
+       =================================================================== -->
+  <script>
+    // STORIES & VIDEOS PLAYLIST STATE
+    const PLAYLIST = [
+      {
+        id: "change-healthcare-q3",
+        title: "Change Healthcare: Remote Citrix Server Lacking MFA Yields $2.45B Ransomware Crisis",
+        badge: "Q3 2026 FEATURE • CRITICAL RANSOMWARE",
+        date: "September 2026",
+        industry: "Healthcare • 192.7M Records",
+        impact: "$2.45B - $3.09B Fallout",
+        image: "public/seqscan3.png",
+        body: "Adversaries identified an internet-facing Citrix remote portal that lacked multi-factor authentication (MFA). Attackers utilized previously harvested credentials to establish an initial foothold, moved laterally across enterprise Active Directory in under 22 days, poisoned backup snapshots, and exfiltrated 192.7 million records before detonating the ransomware payload.",
+        ctaLabel: "Perimeter & MFA Remote Access Audit",
+        videoUrl: "https://www.youtube.com/shorts/F7q4wGMr0MY",
+        videoTitle: "July Quarter Video Briefing (Digital Street Smarts)",
+        nextPreview: "Up Next: \"Somebody's Watching Me\" // Everyday Threat Basics"
+      },
+      {
+        id: "somebodys-watching-me",
+        title: "\"Somebody's Watching Me\" // Everyday Digital Tracking & Threat Fundamentals",
+        badge: "WEDNESDAY SERIES • LAYMAN BRIEFING",
+        date: "Wednesday Series",
+        industry: "Enterprise Workforce • Literacy",
+        impact: "Proactive Defense Education",
+        image: "public/4in1overlay88.png",
+        body: "Weekly Wednesday executive briefing breaking down digital exposure, tracking cookies, shadow applications, and essential defense in straightforward layman terms. Delivered by Robo Lamp and Cyber Cup at the desk studio.",
+        ctaLabel: "Proactive Workforce Security Review",
+        videoUrl: "https://www.youtube.com/watch?v=w2hEmiBfLbo",
+        videoTitle: "\"Somebody's Watching Me\" Video Briefing",
+        nextPreview: "Up Next: FBI Contractor Zero-Day Exfiltration"
+      },
+      {
+        id: "fbi-jobs-portal",
+        title: "FBI Recruitment Portal: Contractor Oracle PeopleSoft Zero-Day Exfiltrates Dossiers",
+        badge: "Q3 2026 FEATURE • ZERO-DAY EXPLOIT",
+        date: "September 2026",
+        industry: "Defense & Government",
+        impact: "SSNs, Medical & Applicant Dossiers",
+        image: "public/secritygrfff88.jpg",
+        body: "Threat actor group ShinyHunters weaponized an unpatched remote code execution vulnerability in contractor-hosted Oracle PeopleSoft infrastructure, permitting unauthorized extraction of thousands of federal job applicant background profiles and clearance dossiers.",
+        ctaLabel: "Third-Party Vendor Surface Pentest",
+        videoUrl: "https://www.youtube.com/shorts/F7q4wGMr0MY",
+        videoTitle: "July Quarter Breach Dispatch (Digital Street Smarts)",
+        nextPreview: "Up Next: Microsoft Exchange Zero-Day Advisory"
+      },
+      {
+        id: "exchange-cve-2026",
+        title: "Microsoft Exchange High-Severity Privilege Escalation (CVE-2026-96940)",
+        badge: "ZERO-DAY DEFENSE • CRITICAL ADVISORY",
+        date: "October 06, 2026",
+        industry: "Enterprise Infrastructure",
+        impact: "Confidential Mailbox Compromise",
+        image: "public/secritygrfff88.jpg",
+        body: "Out-of-band updates address perimeter authentication bypass allowing attackers to read confidential corporate mailboxes. Automated mass-scanning compromises legacy assets in under 29 minutes post-disclosure.",
+        ctaLabel: "Surface & Cipher Integrity Scan",
+        videoUrl: "",
+        videoTitle: "",
+        nextPreview: "Up Next: Change Healthcare Case Study"
+      }
+    ];
+
+    let currentPlaylistIndex = 0;
+    let breachData = [];
+    let newsArticles = [];
+    let activeFilter = 'ALL';
+
+    // INITIALIZE DATA & UI
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBreachLedger();
+      loadIntelFeed();
+      renderCenterStage();
+    });
+
+    // 1. RENDER CENTER STAGE ITEM
+    function renderCenterStage() {
+      const item = PLAYLIST[currentPlaylistIndex];
+      if (!item) return;
+
+      document.getElementById('center-stage-badge').innerText = item.badge;
+      document.getElementById('center-stage-date').innerText = item.date;
+      document.getElementById('center-stage-title').innerText = item.title;
+      document.getElementById('center-stage-industry').innerText = item.industry;
+      document.getElementById('center-stage-impact').innerText = item.impact;
+      document.getElementById('center-stage-image').src = item.image;
+      document.getElementById('center-stage-body').innerText = item.body;
+      document.getElementById('center-stage-cta-label').innerText = item.ctaLabel;
+      document.getElementById('next-preview-pill').innerHTML = `<i class="fa-solid fa-forward text-xs mr-1"></i> ${item.nextPreview}`;
+
+      // Video overlay toggle
+      const overlay = document.getElementById('video-action-overlay');
+      const overlayText = document.getElementById('video-overlay-text');
+      if (item.videoUrl) {
+        overlay.classList.remove('hidden');
+        overlayText.innerText = item.videoTitle || "Watch Analysis Video";
+      } else {
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function openActiveVideo() {
+      const item = PLAYLIST[currentPlaylistIndex];
+      if (item && item.videoUrl) {
+        window.open(item.videoUrl, '_blank');
+      }
+    }
+
+    function nextStoryOrVideo() {
+      currentPlaylistIndex = (currentPlaylistIndex + 1) % PLAYLIST.length;
+      renderCenterStage();
+    }
+
+    function prevStoryOrVideo() {
+      currentPlaylistIndex = (currentPlaylistIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+      renderCenterStage();
+    }
+
+    // 2. LOAD BREACH LEDGER (breach_ledger.json)
+    function loadBreachLedger() {
+      fetch('breach_ledger.json')
+        .then(res => res.json())
+        .then(data => {
+          breachData = data;
+          renderBreachLedger();
+        })
+        .catch(err => {
+          console.warn('Using embedded breach ledger cache', err);
+          breachData = getFallbackBreachData();
+          renderBreachLedger();
+        });
+    }
+
+    function renderBreachLedger() {
+      const container = document.getElementById('breach-ledger-container');
+      if (!container) return;
+
+      const filtered = activeFilter === 'ALL' 
+        ? breachData 
+        : breachData.filter(item => item.quarter.includes(activeFilter.replace(' 2026', '')));
+
+      // Calculate filtered total penalties
+      const totalPenalties = filtered.reduce((acc, cur) => acc + (cur.penalty_usd || 0), 0);
+      const lossCounterEl = document.getElementById('loss-counter');
+      if (lossCounterEl) {
+        const formattedTotal = totalPenalties > 0 
+          ? '$' + totalPenalties.toLocaleString() + '+' 
+          : 'Active Investigations';
+        lossCounterEl.innerHTML = `
+          <span class="text-[11px] text-slate-400 uppercase tracking-widest block">${activeFilter} Financial Penalties:</span>
+          <span class="text-amber-400 font-extrabold text-base sm:text-lg">${formattedTotal} (${filtered.length} Disclosures)</span>
+        `;
+      }
+
+      container.innerHTML = filtered.map((item, idx) => {
+        const ledColor = item.badge_color === 'red' ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : (item.badge_color === 'amber' ? 'bg-amber-400 shadow-[0_0_8px_#f59e0b]' : 'bg-cyan-400 shadow-[0_0_8px_#06b6d4]');
+        return `
+          <div onclick="projectBreachToCenter('${item.id}')" class="ledger-card bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-amber-500/60 rounded-xl p-3.5 cursor-pointer transition-all font-mono text-xs group" id="card-${item.id}">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full ${ledColor}"></span>
+                <span class="text-white font-bold text-sm group-hover:text-amber-300 transition-colors">${item.target}</span>
+              </div>
+              <span class="text-[11px] text-slate-400 bg-slate-950 border border-slate-800 px-2 py-0.5 rounded">${item.quarter}</span>
+            </div>
+            <p class="text-xs text-slate-400 line-clamp-1 mb-2 font-sans">${item.vector}</p>
+            <div class="flex items-center justify-between text-xs pt-1.5 border-t border-slate-950 font-mono">
+              <span class="text-amber-400 font-bold">${item.impact}</span>
+              <span class="text-slate-400 group-hover:text-amber-400 group-hover:underline">Inspect ➔</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterQuarter(quarter) {
+      activeFilter = quarter;
+      ['ALL', 'Q1', 'Q2', 'Q3', 'Q4'].forEach(q => {
+        const btn = document.getElementById(`tab-${q}`);
+        if (!btn) return;
+        if (quarter.includes(q)) {
+          btn.className = "flex-1 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-center";
+        } else {
+          btn.className = "flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all text-center";
+        }
+      });
+      renderBreachLedger();
+    }
+
+    // PROJECT BREACH DIRECTLY INTO THE CENTER STAGE
+    function projectBreachToCenter(id) {
+      const item = breachData.find(b => b.id === id);
+      if (!item) return;
+
+      document.querySelectorAll('.ledger-card').forEach(c => c.classList.remove('active-ledger-card'));
+      const activeEl = document.getElementById(`card-${id}`);
+      if (activeEl) activeEl.classList.add('active-ledger-card');
+
+      // Populate center stage
+      document.getElementById('center-stage-badge').innerText = `${item.quarter} • ${item.severity.toUpperCase()}`;
+      document.getElementById('center-stage-date').innerText = item.date;
+      document.getElementById('center-stage-title').innerText = `${item.target}: ${item.vector}`;
+      document.getElementById('center-stage-industry').innerText = item.industry;
+      document.getElementById('center-stage-impact').innerText = item.impact;
+      document.getElementById('center-stage-image').src = item.image || "public/4in1overlay88.png";
+      document.getElementById('center-stage-body').innerText = `Root Cause Vector: ${item.vector} This vulnerability permitted adversary infiltration, resulting in ${item.impact}. Organizations running similar assets require immediate validation.`;
+      document.getElementById('center-stage-cta-label').innerText = item.service_cta;
+
+      // Video check
+      const overlay = document.getElementById('video-action-overlay');
+      const overlayText = document.getElementById('video-overlay-text');
+      if (item.media_video) {
+        overlay.classList.remove('hidden');
+        overlayText.innerText = "July Quarter Breach Video (Digital Street Smarts)";
+      } else {
+        overlay.classList.add('hidden');
+      }
+
+      // Smooth scroll to center stage on mobile
+      if (window.innerWidth < 1024) {
+        document.getElementById('center-stage-title').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // 3. LOAD SLEEK INTEL FEED (THUMBNAIL IMAGE + TITLE + DATE)
+    function loadIntelFeed() {
+      fetch('intel_feed.json')
+        .then(res => res.json())
+        .then(data => {
+          newsArticles = data;
+          renderIntelFeed();
+        })
+        .catch(err => {
+          console.warn('Using fallback news articles', err);
+          newsArticles = getFallbackNewsArticles();
+          renderIntelFeed();
+        });
+    }
+
+    function renderIntelFeed() {
+      const container = document.getElementById('intel-feed-container');
+      if (!container) return;
+
+      container.innerHTML = newsArticles.map((art, idx) => {
+        return `
+          <div onclick="projectNewsArticleToCenter(${idx})" class="bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-amber-500/50 rounded-xl p-3 cursor-pointer transition-all flex items-center gap-3 group">
+            <img src="${art.image || 'public/secritygrfff88.jpg'}" alt="Thumb" class="w-14 h-14 rounded-lg object-cover border border-slate-700 shrink-0 group-hover:border-amber-400 transition-colors" />
+            <div class="overflow-hidden flex-1">
+              <span class="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider block">${art.category}</span>
+              <h4 class="text-white font-bold text-xs group-hover:text-amber-300 transition-colors line-clamp-2 leading-snug my-0.5">${art.title}</h4>
+              <span class="text-[11px] font-mono text-slate-400 block">${art.date}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function projectNewsArticleToCenter(idx) {
+      const art = newsArticles[idx];
+      if (!art) return;
+
+      document.getElementById('center-stage-badge').innerText = `EDITORIAL DESK • ${art.category.toUpperCase()}`;
+      document.getElementById('center-stage-date').innerText = art.date;
+      document.getElementById('center-stage-title').innerText = art.title;
+      document.getElementById('center-stage-industry').innerText = "Strategic Briefing";
+      document.getElementById('center-stage-impact').innerText = `${art.read_time || '5 min read'}`;
+      document.getElementById('center-stage-image').src = art.image || "public/secritygrfff88.jpg";
+      document.getElementById('center-stage-body').innerText = art.excerpt;
+      document.getElementById('center-stage-cta-label').innerText = "Surface Defense Verification";
+
+      // Hide video overlay for pure articles unless linked
+      const overlay = document.getElementById('video-action-overlay');
+      overlay.classList.add('hidden');
+
+      if (window.innerWidth < 1024) {
+        document.getElementById('center-stage-title').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // 4. LAUNCH MINI S.P.A. SCAN FROM SINGLE RUNWAY FORM
+    function launchMiniSpaFromRunway() {
+      const domain = document.getElementById('runway-domain-input').value.trim();
+      const targetUrl = domain ? `mini_spa.html?target=${encodeURIComponent(domain)}` : 'mini_spa.html';
+      window.open(targetUrl, '_blank');
+    }
+
+    // STATIC FALLBACK DATA
+    function getFallbackBreachData() {
+      return [
+        {
+          "id": "breach-q3-change-healthcare",
+          "quarter": "Q3 2026",
+          "date": "Q3 2026",
+          "target": "Change Healthcare",
+          "industry": "Healthcare",
+          "vector": "Remote Citrix server lacking MFA; BlackCat/ALPHV ransomware.",
+          "impact": "192.7M Records ($2.45B Cost)",
+          "penalty_usd": 2450000000.0,
+          "service_cta": "MFA & Remote Access Audit",
+          "severity": "Critical Attack",
+          "badge_color": "red",
+          "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
+          "image": "public/seqscan3.png"
+        },
+        {
+          "id": "breach-q3-fbi-recruitment",
+          "quarter": "Q3 2026",
+          "date": "Sept 2026",
+          "target": "FBI Recruitment (fbijob.gov)",
+          "industry": "Defense / Gov",
+          "vector": "Contractor zero-day in Oracle PeopleSoft (ShinyHunters).",
+          "impact": "Exfiltrated SSNs & Applicant Dossiers",
+          "penalty_usd": 0.0,
+          "service_cta": "Third-Party Vendor Pentest",
+          "severity": "Critical Attack",
+          "badge_color": "red",
+          "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
+          "image": "public/4in1overlay88.png"
+        },
+        {
+          "id": "breach-q1-free-mobile",
+          "quarter": "Q1 2026",
+          "date": "Jan 2026",
+          "target": "Free Mobile",
+          "industry": "Telecom",
+          "vector": "Unsecured subscriber portal; exfiltrated IBAN banking details.",
+          "impact": "$29M Fine (€27M) (France CNIL)",
+          "penalty_usd": 29000000.0,
+          "service_cta": "Perimeter & Access Control Audit",
+          "severity": "Regulatory Fine",
+          "badge_color": "amber",
+          "media_video": "",
+          "image": "public/seqscan2.png"
+        },
+        {
+          "id": "breach-q1-kaiser-permanente",
+          "quarter": "Q1 2026",
+          "date": "Jan 2026",
+          "target": "Kaiser Permanente",
+          "industry": "Healthcare",
+          "vector": "Unsanitized third-party web tracking tools on patient portals.",
+          "impact": "$47.5M Settlement",
+          "penalty_usd": 47500000.0,
+          "service_cta": "Web Tracker & EXIF Sanitization",
+          "severity": "Regulatory Fine",
+          "badge_color": "amber",
+          "media_video": "",
+          "image": "public/cybergirlheadfix88.jpg"
+        }
+      ];
+    }
+
+    function getFallbackNewsArticles() {
+      return [
+        {
+          "category": "Zero-Day Defense",
+          "date": "October 06, 2026",
+          "title": "Microsoft Exchange High-Severity Privilege Escalation (CVE-2026-96940)",
+          "image": "public/secritygrfff88.jpg",
+          "excerpt": "Out-of-band updates address perimeter authentication bypass allowing attackers to read confidential corporate mailboxes.",
+          "read_time": "4 min read"
+        },
+        {
+          "category": "Ransomware Alert",
+          "date": "October 04, 2026",
+          "title": "Dual-Extortion Ransomware Targets Healthcare & Critical Infrastructure",
+          "image": "public/seqscan188.png",
+          "excerpt": "Adversaries weaponize living-off-the-land binaries to execute lateral movement in under 18 minutes post initial credential compromise.",
+          "read_time": "6 min read"
+        },
+        {
+          "category": "Executive GRC",
+          "date": "October 01, 2026",
+          "title": "SEC Cybersecurity Disclosure Enforcement: $38M Fine for Latent Breach Coverup",
+          "image": "public/chart floating88.jpg",
+          "excerpt": "Regulatory audits mandate 4-day material incident reporting. Why delayed forensic dwell time creates personal CISO liability.",
+          "read_time": "5 min read"
+        }
+      ];
+    }
+  </script>
 
 </body>
 </html>
