@@ -11,24 +11,24 @@ EXCEL_PATH = r"C:\Users\Leonr\Downloads\anergi-2026-breach-ledger.xlsx"
 OUTPUT_JSON = r"C:\Users\Leonr\projects\arch-tool\breach_ledger.json"
 
 IMAGE_MAP = {
-    "Change Healthcare": "public/seqscan3.png",
-    "FBI Recruitment": "public/4in1overlay88.png",
-    "Defense Manpower Data Center": "public/secritygrfff88.jpg",
-    "Free Mobile": "public/seqscan2.png",
-    "Free (Iliad)": "public/seqscan188.png",
-    "France Travail": "public/weekly2.jpg",
-    "Kaiser Permanente": "public/cybergirlheadfix88.jpg",
-    "Reddit": "public/3d cloud88.png",
-    "The Walt Disney Co.": "public/weekly3.jpg",
-    "PlayOn Sports (GoFan)": "public/nebulagazer1.jpg",
-    "Instructure Canvas": "public/3d-brain88.jpg",
-    "IQVIA Operations": "public/chart floating88.jpg",
-    "South Staffordshire Water": "public/seqscan2.png",
-    "Amadeus IT Group": "public/seqscan188.png",
-    "General Motors": "public/weekly3.jpg",
-    "Arizona Court System": "public/secritygrfff88.jpg",
-    "SolarWinds & CISO": "public/chart floating88.jpg",
-    "Anergi Operations": "public/4in1overlay88.png"
+    "Change Healthcare": "seqscan3.png",
+    "FBI Recruitment": "4in1overlay88.png",
+    "Defense Manpower Data Center": "secritygrfff88.jpg",
+    "Free Mobile": "seqscan2.png",
+    "Free (Iliad)": "seqscan188.png",
+    "France Travail": "weekly2.jpg",
+    "Kaiser Permanente": "cybergirlheadfix88.jpg",
+    "Reddit": "3d_cloud88.png",
+    "The Walt Disney Co.": "weekly3.jpg",
+    "PlayOn Sports (GoFan)": "nebulagazer1.jpg",
+    "Instructure Canvas": "3d-brain88.jpg",
+    "IQVIA Operations": "chart_floating88.jpg",
+    "South Staffordshire Water": "seqscan2.png",
+    "Amadeus IT Group": "cybergirl.jpg",
+    "General Motors": "weekly3.jpg",
+    "Arizona Court System": "secritygrfff88.jpg",
+    "SolarWinds & CISO": "chart_floating88.jpg",
+    "Anergi Operations": "4in1overlay88.png"
 }
 
 def parse_breach_ledger():

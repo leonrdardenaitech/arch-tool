@@ -13,7 +13,7 @@
     "severity": "Critical Attack",
     "badge_color": "red",
     "media_video": "",
-    "image": "public/seqscan2.png"
+    "image": "seqscan2.png"
   },
   {
     "id": "breach-q1-2026-free-iliad",
@@ -29,7 +29,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/seqscan188.png"
+    "image": "seqscan188.png"
   },
   {
     "id": "breach-q1-2026-france-travail",
@@ -45,7 +45,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/weekly2.jpg"
+    "image": "weekly2.jpg"
   },
   {
     "id": "breach-q1-2026-kaiser-permanen",
@@ -61,7 +61,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/cybergirlheadfix88.jpg"
+    "image": "cybergirlheadfix88.jpg"
   },
   {
     "id": "breach-q1-2026-reddit",
@@ -77,7 +77,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/3d cloud88.png"
+    "image": "3d_cloud88.png"
   },
   {
     "id": "breach-q1-2026-the-walt-disney",
@@ -93,7 +93,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/weekly3.jpg"
+    "image": "weekly3.jpg"
   },
   {
     "id": "breach-q1-2026-playon-sports-g",
@@ -109,7 +109,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/nebulagazer1.jpg"
+    "image": "nebulagazer1.jpg"
   },
   {
     "id": "breach-q1-2026-instructure-can",
@@ -125,7 +125,7 @@
     "severity": "Surface Exposure",
     "badge_color": "cyan",
     "media_video": "",
-    "image": "public/3d-brain88.jpg"
+    "image": "3d-brain88.jpg"
   },
   {
     "id": "breach-q2-2026-iqvia-operation",
@@ -141,7 +141,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/chart floating88.jpg"
+    "image": "chart_floating88.jpg"
   },
   {
     "id": "breach-q2-2026-south-staffords",
@@ -157,7 +157,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/seqscan2.png"
+    "image": "seqscan2.png"
   },
   {
     "id": "breach-q2-2026-amadeus-it-grou",
@@ -173,7 +173,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/seqscan188.png"
+    "image": "cybergirl.jpg"
   },
   {
     "id": "breach-q2-2026-general-motors",
@@ -189,7 +189,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "",
-    "image": "public/weekly3.jpg"
+    "image": "weekly3.jpg"
   },
   {
     "id": "breach-q3-2026-fbi-recruitment",
@@ -205,7 +205,7 @@
     "severity": "Critical Attack",
     "badge_color": "red",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
-    "image": "public/4in1overlay88.png"
+    "image": "4in1overlay88.png"
   },
   {
     "id": "breach-q3-2026-defense-manpowe",
@@ -221,7 +221,7 @@
     "severity": "Surface Exposure",
     "badge_color": "cyan",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
-    "image": "public/secritygrfff88.jpg"
+    "image": "secritygrfff88.jpg"
   },
   {
     "id": "breach-q3-2026-arizona-court-s",
@@ -237,7 +237,7 @@
     "severity": "Surface Exposure",
     "badge_color": "cyan",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
-    "image": "public/secritygrfff88.jpg"
+    "image": "secritygrfff88.jpg"
   },
   {
     "id": "breach-q3-2026-change-healthca",
@@ -253,7 +253,7 @@
     "severity": "Critical Attack",
     "badge_color": "red",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
-    "image": "public/seqscan3.png"
+    "image": "seqscan3.png"
   },
   {
     "id": "breach-q3-2026-solarwinds-&-ci",
@@ -269,7 +269,7 @@
     "severity": "Regulatory Fine",
     "badge_color": "amber",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
-    "image": "public/chart floating88.jpg"
+    "image": "chart_floating88.jpg"
   },
   {
     "id": "breach-q4-2026-anergi-operatio",
@@ -285,6 +285,6 @@
     "severity": "Surface Exposure",
     "badge_color": "cyan",
     "media_video": "",
-    "image": "public/4in1overlay88.png"
+    "image": "4in1overlay88.png"
   }
 ]

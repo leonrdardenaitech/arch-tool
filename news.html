@@ -10,9 +10,8 @@
 
   <style>
     :root {
-      /* Anergi Signature Brand Theme (Matching index.html & treatment.html) */
+      /* Anergi Medium Grey Sitewide Brand Theme (from treatment.html & index.html) */
       --bg-medium-grey: #545454;
-      --bg-navbar-dark: #4a4a4a;
       --card-white: #ffffff;
       --border-subtle: #e2e8f0;
       --text-dark: #0f172a;
@@ -29,35 +28,112 @@
     body {
       font-family: var(--font-body);
       background-color: var(--bg-medium-grey);
-      background-image: linear-gradient(180deg, rgba(84, 84, 84, 0.95) 0%, rgba(74, 74, 74, 0.97) 100%);
       color: #0f172a;
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* VIVID CIRCUIT BACKGROUND OVERLAY (OVER GREY THEME) */
-    .circuit-bg-overlay {
+    /* ==========================================================================
+       ANIMATED CIRCUIT BACKGROUND CANVAS (EXACT BURST EFFECT FROM TREATMENT.HTML)
+       ========================================================================== */
+    .circuit-background-container {
       position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: 
-        radial-gradient(rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px),
-        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 36px 36px, 72px 72px, 72px 72px;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 0;
-      opacity: 0.9;
+      pointer-events: none;
+      overflow: hidden;
     }
 
-    /* NAVBAR: MEDIUM GREY BRAND THEME */
+    .circuit-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .circuit-path {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.22);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .flow-path {
+      fill: none;
+      stroke: rgba(0, 229, 255, 0.95); /* Electric Cyan Flow Burst */
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 3px rgba(0, 229, 255, 0.9)) drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
+      stroke-dasharray: 40 1200;
+      stroke-dashoffset: 1240;
+    }
+
+    .flow-path.flow-orange {
+      stroke: rgba(253, 153, 30, 0.95); /* Brand Orange Flow Burst */
+      filter: drop-shadow(0 0 3px rgba(253, 153, 30, 0.95)) drop-shadow(0 0 8px rgba(253, 153, 30, 0.6));
+    }
+
+    @keyframes circuitFlowForward {
+      0% { stroke-dashoffset: 1240; }
+      100% { stroke-dashoffset: -40; }
+    }
+    
+    @keyframes circuitFlowReverse {
+      0% { stroke-dashoffset: -40; }
+      100% { stroke-dashoffset: 1240; }
+    }
+
+    .flow-1 { animation: circuitFlowForward 7s linear infinite; }
+    .flow-2 { animation: circuitFlowForward 10s linear infinite; animation-delay: 2s; }
+    .flow-3 { animation: circuitFlowForward 8s linear infinite; animation-delay: 5s; }
+    .flow-4 { animation: circuitFlowReverse 9s linear infinite; animation-delay: 1s; }
+    .flow-5 { animation: circuitFlowReverse 12s linear infinite; animation-delay: 0s; }
+    .flow-6 { animation: circuitFlowForward 11s linear infinite; animation-delay: 4s; }
+    .flow-7 { animation: circuitFlowReverse 14s linear infinite; animation-delay: 7s; }
+    .flow-8 { animation: circuitFlowForward 9s linear infinite; animation-delay: 3s; }
+    .flow-9 { animation: circuitFlowReverse 13s linear infinite; animation-delay: 1.5s; }
+
+    .circuit-node {
+      fill: #545454;
+      stroke: rgba(255, 255, 255, 0.35);
+      stroke-width: 2;
+    }
+
+    .circuit-node-glow {
+      fill: #00e5ff;
+      animation: circuitPulseCyan 3s infinite alternate;
+    }
+
+    .circuit-node-glow-orange {
+      fill: #fd991e;
+      animation: circuitPulseOrange 3.5s infinite alternate;
+    }
+
+    @keyframes circuitPulseCyan {
+      0% { opacity: 0.25; filter: drop-shadow(0 0 1px rgba(0, 229, 255, 0.7)); }
+      100% { opacity: 0.95; filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.95)); }
+    }
+
+    @keyframes circuitPulseOrange {
+      0% { opacity: 0.25; filter: drop-shadow(0 0 1px rgba(253, 153, 30, 0.7)); }
+      100% { opacity: 0.95; filter: drop-shadow(0 0 6px rgba(253, 153, 30, 0.95)); }
+    }
+
+    /* ==========================================================================
+       NAVBAR (Medium Grey Anergi Brand Theme)
+       ========================================================================== */
     .anergi-navbar {
       background: linear-gradient(180deg, #585858 0%, #4a4a4a 100%);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    /* 3D ROTATING CUBE IN NAVBAR */
+    /* 3D REVOLVING A CUBE */
     .nav-cube-wrapper {
       perspective: 500px;
       width: 40px;
@@ -127,7 +203,7 @@
       filter: drop-shadow(0 0 4px rgba(253, 153, 30, 0.6));
     }
 
-    /* WHITE CARDS (MATCHING SITEWIDE DESIGN SYSTEM) */
+    /* WHITE RAISED CARDS */
     .white-card {
       background: #ffffff;
       border: 1px solid var(--border-subtle);
@@ -136,7 +212,7 @@
       transition: all 0.25s ease;
     }
 
-    /* SCROLLING TICKER */
+    /* TICKER */
     @keyframes tickerScroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -150,7 +226,7 @@
       animation-play-state: paused;
     }
 
-    /* CUSTOM SLEEK SCROLLBAR */
+    /* CUSTOM SCROLLBAR */
     ::-webkit-scrollbar {
       width: 7px;
       height: 7px;
@@ -167,7 +243,7 @@
       background: var(--brand-orange);
     }
 
-    /* ACTIVE CARD HIGHLIGHT */
+    /* ACTIVE LEDGER CARD */
     .active-ledger-card {
       border-color: var(--brand-orange) !important;
       background: #fff7ed !important;
@@ -177,8 +253,99 @@
 </head>
 <body class="relative min-h-screen flex flex-col justify-between">
 
-  <!-- VIVID CIRCUIT BACKGROUND OVERLAY -->
-  <div class="circuit-bg-overlay"></div>
+  <!-- ========================================================================= -->
+  <!-- ANIMATED CIRCUIT BACKGROUND CANVAS (Medium Grey Brand Schematic)           -->
+  <!-- ========================================================================= -->
+  <div class="circuit-background-container" aria-hidden="true">
+    <svg class="circuit-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      
+      <!-- Static Base Circuit Paths -->
+      <g class="circuit-base">
+        <!-- Top Left -->
+        <path class="circuit-path" d="M 0 100 L 150 100 L 200 150 L 350 150 L 400 100 L 550 100" />
+        <path class="circuit-path" d="M 100 0 L 100 80 L 170 150 L 170 250 L 250 330" />
+        
+        <!-- Bottom Left -->
+        <path class="circuit-path" d="M 0 550 L 120 550 L 180 610 L 180 750 L 250 820" />
+        <path class="circuit-path" d="M 150 900 L 150 650 L 280 520 L 450 520" />
+
+        <!-- Center/Jagged -->
+        <path class="circuit-path" d="M 400 300 L 450 250 L 550 250 L 600 300 L 750 300 L 800 350 L 900 350" />
+        <path class="circuit-path" d="M 450 450 L 520 450 L 580 390 L 700 390 L 750 440 L 850 440" />
+        <path class="circuit-path" d="M 600 150 L 650 200 L 650 300 L 720 370" />
+
+        <!-- Top Right -->
+        <path class="circuit-path" d="M 750 0 L 750 120 L 820 190 L 980 190 L 1050 260 L 1200 260" />
+        <path class="circuit-path" d="M 900 0 L 900 80 L 980 160 L 1200 160" />
+
+        <!-- Bottom Right -->
+        <path class="circuit-path" d="M 800 900 L 800 780 L 870 710 L 1050 710 L 1100 660 L 1200 660" />
+        <path class="circuit-path" d="M 950 550 L 1020 620 L 1020 750" />
+      </g>
+
+      <!-- Animated Glowing Data Flow Pulses (Burst Effect) -->
+      <g class="circuit-flows">
+        <!-- Top Left Horizontal (Cyan) -->
+        <path class="flow-path flow-1" d="M 0 100 L 150 100 L 200 150 L 350 150 L 400 100 L 550 100" />
+        <!-- Top Left Vertical (Orange) -->
+        <path class="flow-path flow-orange flow-2" d="M 100 0 L 100 80 L 170 150 L 170 250 L 250 330" />
+        <!-- Bottom Left Horizontal (Orange) -->
+        <path class="flow-path flow-orange flow-8" d="M 0 550 L 120 550 L 180 610 L 180 750 L 250 820" />
+        <!-- Bottom Left Diagonal (Cyan) -->
+        <path class="flow-path flow-3" d="M 150 900 L 150 650 L 280 520 L 450 520" />
+        <!-- Center Jagged (Cyan) -->
+        <path class="flow-path flow-4" d="M 400 300 L 450 250 L 550 250 L 600 300 L 750 300 L 800 350 L 900 350" />
+        <!-- Center Lower Jagged (Orange) -->
+        <path class="flow-path flow-orange flow-5" d="M 450 450 L 520 450 L 580 390 L 700 390 L 750 440 L 850 440" />
+        <!-- Top Right (Cyan) -->
+        <path class="flow-path flow-6" d="M 750 0 L 750 120 L 820 190 L 980 190 L 1050 260 L 1200 260" />
+        <!-- Top Right Diagonal (Orange) -->
+        <path class="flow-path flow-orange flow-9" d="M 900 0 L 900 80 L 980 160 L 1200 160" />
+        <!-- Bottom Right (Orange) -->
+        <path class="flow-path flow-orange flow-7" d="M 800 900 L 800 780 L 870 710 L 1050 710 L 1100 660 L 1200 660" />
+      </g>
+
+      <!-- Static & Glowing Terminus Nodes -->
+      <g class="circuit-nodes">
+        <circle cx="150" cy="100" r="4" class="circuit-node" />
+        <circle cx="350" cy="150" r="4" class="circuit-node" />
+        <circle cx="100" cy="80" r="4" class="circuit-node" />
+        <circle cx="170" cy="250" r="4" class="circuit-node" />
+        <circle cx="120" cy="550" r="4" class="circuit-node" />
+        <circle cx="180" cy="750" r="4" class="circuit-node" />
+        <circle cx="280" cy="520" r="4" class="circuit-node" />
+        <circle cx="550" cy="250" r="4" class="circuit-node" />
+        <circle cx="750" cy="300" r="4" class="circuit-node" />
+        <circle cx="580" cy="390" r="4" class="circuit-node" />
+        <circle cx="750" cy="440" r="4" class="circuit-node" />
+        <circle cx="650" cy="200" r="4" class="circuit-node" />
+        <circle cx="750" cy="120" r="4" class="circuit-node" />
+        <circle cx="980" cy="190" r="4" class="circuit-node" />
+        <circle cx="900" cy="80" r="4" class="circuit-node" />
+        <circle cx="870" cy="710" r="4" class="circuit-node" />
+        <circle cx="1100" cy="660" r="4" class="circuit-node" />
+
+        <!-- Glowing Pulsing Cyan & Orange Nodes -->
+        <circle cx="200" cy="150" r="3" class="circuit-node-glow" style="animation-delay: 0.2s;" />
+        <circle cx="400" cy="100" r="3" class="circuit-node-glow-orange" style="animation-delay: 1.5s;" />
+        <circle cx="170" cy="150" r="3" class="circuit-node-glow" style="animation-delay: 0.8s;" />
+        <circle cx="250" cy="330" r="3" class="circuit-node-glow" style="animation-delay: 2.1s;" />
+        <circle cx="180" cy="610" r="3" class="circuit-node-glow-orange" style="animation-delay: 0.5s;" />
+        <circle cx="150" cy="650" r="3" class="circuit-node-glow" style="animation-delay: 1.2s;" />
+        <circle cx="450" cy="250" r="3" class="circuit-node-glow" style="animation-delay: 2.8s;" />
+        <circle cx="600" cy="300" r="3" class="circuit-node-glow-orange" style="animation-delay: 0.1s;" />
+        <circle cx="800" cy="350" r="3" class="circuit-node-glow" style="animation-delay: 1.9s;" />
+        <circle cx="520" cy="450" r="3" class="circuit-node-glow" style="animation-delay: 0.7s;" />
+        <circle cx="700" cy="390" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.4s;" />
+        <circle cx="820" cy="190" r="3" class="circuit-node-glow" style="animation-delay: 1.1s;" />
+        <circle cx="1050" cy="260" r="3" class="circuit-node-glow" style="animation-delay: 0.4s;" />
+        <circle cx="980" cy="160" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.2s;" />
+        <circle cx="800" cy="780" r="3" class="circuit-node-glow" style="animation-delay: 1.6s;" />
+        <circle cx="1050" cy="710" r="3" class="circuit-node-glow" style="animation-delay: 0.9s;" />
+        <circle cx="1020" cy="620" r="3" class="circuit-node-glow-orange" style="animation-delay: 2.7s;" />
+      </g>
+    </svg>
+  </div>
 
   <!-- TOP NAVIGATION BAR (MEDIUM GREY BRAND THEME) -->
   <nav class="anergi-navbar relative z-20 w-full px-4 sm:px-8 py-3.5 shadow-2xl">
@@ -236,7 +403,7 @@
           <span class="flex items-center gap-2"><strong class="text-amber-400">[FBI RECRUITMENT]</strong> Contractor PeopleSoft Zero-Day Exfiltrates Applicant Dossiers</span>
           <span class="text-slate-500">&bull;</span>
           <span class="flex items-center gap-2"><strong class="text-emerald-400">[SEC ITEM 1.05]</strong> 4-Day Material Disclosure Rules Enforced on Latent Dwell Time</span>
-          <!-- Duplicate for seamless loop -->
+          <!-- Duplicate for continuous loop -->
           <span class="text-slate-500">&bull;</span>
           <span class="flex items-center gap-2"><strong class="text-amber-400">[2026 AUDIT TOTALS]</strong> 18 Tracked Incidents &bull; Financial Penalties Exceed $2,561,040,000</span>
           <span class="text-slate-500">&bull;</span>
@@ -396,8 +563,28 @@
             </div>
           </div>
 
-          <!-- 2. MAIN BASE VIDEO EMBEDDED DIRECTLY (1Vd3IxL1C_Q) -->
-          <div id="video-embed-container" class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-black shadow-lg">
+          <!-- 2. PRIMARY CYBER FORENSIC GRAPHIC CONTAINER -->
+          <div id="image-embed-container" class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-xl group">
+            <img 
+              id="center-stage-image" 
+              src="seqscan3.png" 
+              alt="Cyber Threat Analysis Graphic" 
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              onerror="handleImgError(this)"
+            />
+            <!-- HUD TELEMETRY BADGE OVERLAY -->
+            <div class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md text-emerald-400 border border-emerald-500/40 text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg flex items-center gap-2 shadow-lg">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="center-stage-graphic-label">FORENSIC TELEMETRY GRAPHIC</span>
+            </div>
+            <!-- QUICK LAUNCH YOUTUBE PILL OVERLAY -->
+            <a id="image-overlay-yt-link" href="https://youtu.be/1Vd3IxL1C_Q" target="_blank" rel="noopener" class="absolute bottom-3 right-3 bg-red-600/90 hover:bg-red-600 text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg backdrop-blur transition-all">
+              <i class="fa-brands fa-youtube"></i> Watch Video ➔
+            </a>
+          </div>
+
+          <!-- OPTIONAL INLINE VIDEO EMBED CONTAINER -->
+          <div id="video-embed-container" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-black shadow-xl">
             <iframe 
               id="main-base-video-iframe"
               class="absolute inset-0 w-full h-full"
@@ -410,25 +597,18 @@
             </iframe>
           </div>
 
-          <!-- OPTIONAL FEATURED IMAGE CONTAINER (IF INSPECTING AN ARTICLE/CASE STUDY) -->
-          <div id="image-embed-container" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-lg">
-            <img 
-              id="center-stage-image" 
-              src="public/seqscan3.png" 
-              alt="Cyber Threat Analysis Graphic" 
-              class="w-full h-full object-cover"
-            />
-          </div>
-
-          <!-- DIRECT YOUTUBE ACTION LINK DOCK -->
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between text-xs font-mono">
+          <!-- DUAL ACTION DOCK: YOUTUBE DIRECT LINK + OPTIONAL PLAYER TOGGLE -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
             <div class="flex items-center gap-2">
               <i class="fa-brands fa-youtube text-red-600 text-lg"></i>
-              <span class="text-slate-700 font-bold">Watch directly on YouTube:</span>
+              <a id="direct-youtube-link" href="https://youtu.be/1Vd3IxL1C_Q" target="_blank" rel="noopener" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all flex items-center gap-1.5 shadow">
+                <span>Watch on YouTube</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </a>
             </div>
-            <a id="direct-youtube-link" href="https://youtu.be/1Vd3IxL1C_Q" target="_blank" rel="noopener" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all flex items-center gap-1.5 shadow">
-              <span>Open on YouTube</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
+            <button id="toggle-embed-btn" onclick="toggleVideoGraphicView()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-lg transition-all flex items-center gap-1.5 border border-slate-300 cursor-pointer">
+              <i class="fa-solid fa-film text-amber-600"></i>
+              <span id="toggle-embed-btn-text">Inline Video Player</span>
+            </button>
           </div>
 
           <!-- 3. ARTICLE / FORENSIC VECTOR ANALYSIS (CRISP BODY COPY) -->
@@ -584,6 +764,37 @@
        CLIENT-SIDE CONTROLLER & DATA ENGINE
        =================================================================== -->
   <script>
+    // SMART IMAGE ERROR HANDLER (Ensures images load regardless of public/ path, spaces, or deployment context)
+    function handleImgError(img) {
+      const currentSrc = img.src || '';
+      const fileName = currentSrc.split('/').pop().split('?')[0];
+
+      if (!img.dataset.fallbackStep) {
+        img.dataset.fallbackStep = "1";
+        if (currentSrc.includes('/public/')) {
+          img.src = fileName;
+        } else {
+          img.src = 'public/' + fileName;
+        }
+      } else if (img.dataset.fallbackStep === "1") {
+        img.dataset.fallbackStep = "2";
+        img.src = 'secritygrfff88.jpg';
+      }
+    }
+
+    function cleanImgSrc(path) {
+      if (!path) return 'secritygrfff88.jpg';
+      let clean = path.replace('public/', '');
+      clean = clean.replace(/ /g, '_');
+      return clean;
+    }
+
+    function setImgWithFallback(imgEl, src) {
+      if (!imgEl) return;
+      delete imgEl.dataset.fallbackStep;
+      imgEl.src = cleanImgSrc(src);
+    }
+
     // STORIES & VIDEOS PLAYLIST STATE
     const PLAYLIST = [
       {
@@ -593,7 +804,7 @@
         date: "October 2026",
         industry: "Defense & Healthcare • 192.7M Records",
         impact: "Multi-Billion Dollar Fallout",
-        image: "public/seqscan3.png",
+        image: "seqscan3.png",
         videoEmbedUrl: "https://www.youtube.com/embed/1Vd3IxL1C_Q?autoplay=0&controls=1&rel=0",
         youtubeUrl: "https://youtu.be/1Vd3IxL1C_Q",
         body: "In this comprehensive 2026 intelligence briefing, we deconstruct how automated threat syndicates weaponize unmonitored external attack surfaces. Covering both the contractor-hosted Oracle PeopleSoft zero-day that leaked FBI applicant dossiers and the single un-MFA Citrix portal that resulted in Change Healthcare's $2.45B ransomware catastrophe.",
@@ -607,7 +818,7 @@
         date: "July 2026 / Q3",
         industry: "Enterprise Security • Lateral Velocity",
         impact: "Breach Velocity Breakdown",
-        image: "public/4in1overlay88.png",
+        image: "4in1overlay88.png",
         videoEmbedUrl: "https://www.youtube.com/embed/F7q4wGMr0MY?autoplay=0&controls=1&rel=0",
         youtubeUrl: "https://www.youtube.com/shorts/F7q4wGMr0MY",
         body: "Breaking down the July quarter breach vectors: why initial unauthorized touch attempts turn into complete lateral compromise in under 29 minutes when organizations rely on static logging instead of proactive perimeter deception.",
@@ -621,7 +832,7 @@
         date: "Wednesday Series",
         industry: "Workforce Security • Threat Literacy",
         impact: "Proactive Defense Education",
-        image: "public/secritygrfff88.jpg",
+        image: "secritygrfff88.jpg",
         videoEmbedUrl: "https://www.youtube.com/embed/w2hEmiBfLbo?autoplay=0&controls=1&rel=0",
         youtubeUrl: "https://www.youtube.com/watch?v=w2hEmiBfLbo",
         body: "Weekly Wednesday executive briefing breaking down digital exposure, tracking cookies, shadow applications, and essential defense in straightforward layman terms. Delivered by Robo Lamp and Cyber Cup at the desk studio.",
@@ -634,6 +845,25 @@
     let breachData = [];
     let newsArticles = [];
     let activeFilter = 'ALL';
+    let showingVideoEmbed = false;
+
+    // TOGGLE BETWEEN CYBER FORENSIC GRAPHIC AND INLINE VIDEO EMBED
+    function toggleVideoGraphicView() {
+      showingVideoEmbed = !showingVideoEmbed;
+      const videoBox = document.getElementById('video-embed-container');
+      const imageBox = document.getElementById('image-embed-container');
+      const toggleText = document.getElementById('toggle-embed-btn-text');
+
+      if (showingVideoEmbed) {
+        if (imageBox) imageBox.classList.add('hidden');
+        if (videoBox) videoBox.classList.remove('hidden');
+        if (toggleText) toggleText.innerText = "Show Cyber Graphic";
+      } else {
+        if (videoBox) videoBox.classList.add('hidden');
+        if (imageBox) imageBox.classList.remove('hidden');
+        if (toggleText) toggleText.innerText = "Inline Video Player";
+      }
+    }
 
     // INITIALIZE DATA & UI
     document.addEventListener('DOMContentLoaded', () => {
@@ -642,7 +872,7 @@
       renderCenterStage();
     });
 
-    // 1. RENDER CENTER STAGE ITEM
+    // 1. RENDER CENTER STAGE ITEM (DEFAULTS TO HIGH-RES CYBER GRAPHIC)
     function renderCenterStage() {
       const item = PLAYLIST[currentPlaylistIndex];
       if (!item) return;
@@ -656,24 +886,36 @@
       document.getElementById('center-stage-cta-label').innerText = item.ctaLabel;
       document.getElementById('next-preview-pill').innerHTML = `<i class="fa-solid fa-forward text-xs mr-1"></i> ${item.nextPreview}`;
 
-      // Update video embed iframe & direct YouTube link
-      const iframe = document.getElementById('main-base-video-iframe');
-      const ytLink = document.getElementById('direct-youtube-link');
-      const videoBox = document.getElementById('video-embed-container');
-      const imageBox = document.getElementById('image-embed-container');
+      // Set primary forensic graphic image
+      setImgWithFallback(document.getElementById('center-stage-image'), item.image);
 
-      if (item.videoEmbedUrl) {
-        videoBox.classList.remove('hidden');
-        imageBox.classList.add('hidden');
-        if (iframe) iframe.src = item.videoEmbedUrl;
-      } else {
-        videoBox.classList.add('hidden');
-        imageBox.classList.remove('hidden');
-        document.getElementById('center-stage-image').src = item.image;
+      const graphicLabel = document.getElementById('center-stage-graphic-label');
+      if (graphicLabel) {
+        graphicLabel.innerText = `${item.date} • FORENSIC TELEMETRY GRAPHIC`;
       }
 
-      if (ytLink && item.youtubeUrl) {
-        ytLink.href = item.youtubeUrl;
+      // Update YouTube links (direct launch & overlay pill)
+      const targetYt = item.youtubeUrl || "https://youtu.be/1Vd3IxL1C_Q";
+      const ytLink = document.getElementById('direct-youtube-link');
+      if (ytLink) ytLink.href = targetYt;
+      const overlayYt = document.getElementById('image-overlay-yt-link');
+      if (overlayYt) overlayYt.href = targetYt;
+
+      // Update video embed iframe
+      const iframe = document.getElementById('main-base-video-iframe');
+      if (iframe && item.videoEmbedUrl) {
+        iframe.src = item.videoEmbedUrl;
+      }
+
+      // Default to cyber image display
+      const videoBox = document.getElementById('video-embed-container');
+      const imageBox = document.getElementById('image-embed-container');
+      if (showingVideoEmbed && item.videoEmbedUrl) {
+        if (videoBox) videoBox.classList.remove('hidden');
+        if (imageBox) imageBox.classList.add('hidden');
+      } else {
+        if (videoBox) videoBox.classList.add('hidden');
+        if (imageBox) imageBox.classList.remove('hidden');
       }
     }
 
@@ -725,19 +967,28 @@
 
       container.innerHTML = filtered.map((item, idx) => {
         const ledColor = item.badge_color === 'red' ? 'bg-red-500' : (item.badge_color === 'amber' ? 'bg-amber-500' : 'bg-sky-500');
+        const imgSrc = cleanImgSrc(item.image);
         return `
-          <div onclick="projectBreachToCenter('${item.id}')" class="ledger-card bg-slate-50 hover:bg-amber-50/60 border border-slate-200 hover:border-amber-400 rounded-xl p-3.5 cursor-pointer transition-all font-mono text-xs group shadow-sm" id="card-${item.id}">
-            <div class="flex items-center justify-between mb-1.5">
-              <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full ${ledColor}"></span>
-                <span class="text-slate-900 font-bold text-sm group-hover:text-amber-600 transition-colors">${item.target}</span>
+          <div onclick="projectBreachToCenter('${item.id}')" class="ledger-card bg-slate-50 hover:bg-amber-50/60 border border-slate-200 hover:border-amber-400 rounded-xl p-3 cursor-pointer transition-all font-mono text-xs group shadow-sm flex items-start gap-3" id="card-${item.id}">
+            <img 
+              src="${imgSrc}" 
+              alt="${item.target}" 
+              class="w-12 h-12 rounded-lg object-cover border border-slate-300 shrink-0 group-hover:border-amber-500 transition-colors mt-0.5" 
+              onerror="handleImgError(this)" 
+            />
+            <div class="flex-1 overflow-hidden">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-1.5 truncate">
+                  <span class="w-2 h-2 rounded-full ${ledColor} shrink-0"></span>
+                  <span class="text-slate-900 font-bold text-xs group-hover:text-amber-600 transition-colors truncate">${item.target}</span>
+                </div>
+                <span class="text-[10px] text-slate-600 bg-slate-200 border border-slate-300 px-1.5 py-0.5 rounded font-bold shrink-0 ml-1">${item.quarter}</span>
               </div>
-              <span class="text-[11px] text-slate-600 bg-slate-200 border border-slate-300 px-2 py-0.5 rounded font-bold">${item.quarter}</span>
-            </div>
-            <p class="text-xs text-slate-600 line-clamp-1 mb-2 font-sans">${item.vector}</p>
-            <div class="flex items-center justify-between text-xs pt-1.5 border-t border-slate-200 font-mono">
-              <span class="text-amber-700 font-bold">${item.impact}</span>
-              <span class="text-slate-500 group-hover:text-amber-600 font-bold group-hover:underline">Inspect ➔</span>
+              <p class="text-[11px] text-slate-600 line-clamp-1 mb-1.5 font-sans">${item.vector}</p>
+              <div class="flex items-center justify-between text-[11px] pt-1 border-t border-slate-200 font-mono">
+                <span class="text-amber-700 font-bold truncate">${item.impact}</span>
+                <span class="text-slate-500 group-hover:text-amber-600 font-bold shrink-0">Inspect ➔</span>
+              </div>
             </div>
           </div>
         `;
@@ -776,21 +1027,31 @@
       document.getElementById('center-stage-body').innerText = `Root Cause Vector: ${item.vector} This vulnerability permitted adversary infiltration, resulting in ${item.impact}. Organizations running similar assets require immediate validation.`;
       document.getElementById('center-stage-cta-label').innerText = item.service_cta;
 
-      // Toggle display to image if no direct video
+      // Always show forensic cyber image
       const videoBox = document.getElementById('video-embed-container');
       const imageBox = document.getElementById('image-embed-container');
       const ytLink = document.getElementById('direct-youtube-link');
+      const overlayYt = document.getElementById('image-overlay-yt-link');
 
-      if (item.media_video) {
-        videoBox.classList.remove('hidden');
-        imageBox.classList.add('hidden');
-        document.getElementById('main-base-video-iframe').src = "https://www.youtube.com/embed/1Vd3IxL1C_Q?controls=1&rel=0";
-        if (ytLink) ytLink.href = "https://youtu.be/1Vd3IxL1C_Q";
-      } else {
-        videoBox.classList.add('hidden');
-        imageBox.classList.remove('hidden');
-        document.getElementById('center-stage-image').src = item.image || "public/seqscan3.png";
+      setImgWithFallback(document.getElementById('center-stage-image'), item.image);
+
+      const graphicLabel = document.getElementById('center-stage-graphic-label');
+      if (graphicLabel) {
+        graphicLabel.innerText = `${item.quarter} • FORENSIC INCIDENT TELEMETRY`;
       }
+
+      const targetYt = item.media_video || "https://youtu.be/1Vd3IxL1C_Q";
+      if (ytLink) ytLink.href = targetYt;
+      if (overlayYt) overlayYt.href = targetYt;
+
+      const iframe = document.getElementById('main-base-video-iframe');
+      if (iframe) iframe.src = "https://www.youtube.com/embed/1Vd3IxL1C_Q?controls=1&rel=0";
+
+      showingVideoEmbed = false;
+      if (videoBox) videoBox.classList.add('hidden');
+      if (imageBox) imageBox.classList.remove('hidden');
+      const toggleText = document.getElementById('toggle-embed-btn-text');
+      if (toggleText) toggleText.innerText = "Inline Video Player";
 
       if (window.innerWidth < 1024) {
         document.getElementById('center-stage-title').scrollIntoView({ behavior: 'smooth' });
@@ -817,9 +1078,15 @@
       if (!container) return;
 
       container.innerHTML = newsArticles.map((art, idx) => {
+        const imgSrc = cleanImgSrc(art.image);
         return `
           <div onclick="projectNewsArticleToCenter(${idx})" class="bg-slate-50 hover:bg-amber-50/60 border border-slate-200 hover:border-amber-400 rounded-xl p-3 cursor-pointer transition-all flex items-center gap-3 group shadow-sm">
-            <img src="${art.image || 'public/secritygrfff88.jpg'}" alt="Thumb" class="w-14 h-14 rounded-lg object-cover border border-slate-300 shrink-0 group-hover:border-amber-500 transition-colors" />
+            <img 
+              src="${imgSrc}" 
+              alt="Thumb" 
+              class="w-14 h-14 rounded-lg object-cover border border-slate-300 shrink-0 group-hover:border-amber-500 transition-colors" 
+              onerror="handleImgError(this)" 
+            />
             <div class="overflow-hidden flex-1">
               <span class="text-[11px] font-mono font-bold text-amber-700 uppercase tracking-wider block">${art.category}</span>
               <h4 class="text-slate-900 font-bold text-xs group-hover:text-amber-700 transition-colors line-clamp-2 leading-snug my-0.5">${art.title}</h4>
@@ -842,11 +1109,26 @@
       document.getElementById('center-stage-body').innerText = art.excerpt;
       document.getElementById('center-stage-cta-label').innerText = "Surface Defense Verification";
 
-      // Show article image in center
-      document.getElementById('video-embed-container').classList.add('hidden');
-      const imgBox = document.getElementById('image-embed-container');
-      imgBox.classList.remove('hidden');
-      document.getElementById('center-stage-image').src = art.image || "public/secritygrfff88.jpg";
+      // Show article cyber image in center
+      setImgWithFallback(document.getElementById('center-stage-image'), art.image);
+
+      const graphicLabel = document.getElementById('center-stage-graphic-label');
+      if (graphicLabel) {
+        graphicLabel.innerText = `${art.category.toUpperCase()} • ADVISORY GRAPHIC`;
+      }
+
+      const ytLink = document.getElementById('direct-youtube-link');
+      if (ytLink) ytLink.href = "https://youtu.be/1Vd3IxL1C_Q";
+      const overlayYt = document.getElementById('image-overlay-yt-link');
+      if (overlayYt) overlayYt.href = "https://youtu.be/1Vd3IxL1C_Q";
+
+      showingVideoEmbed = false;
+      const videoBox = document.getElementById('video-embed-container');
+      const imageBox = document.getElementById('image-embed-container');
+      if (videoBox) videoBox.classList.add('hidden');
+      if (imageBox) imageBox.classList.remove('hidden');
+      const toggleText = document.getElementById('toggle-embed-btn-text');
+      if (toggleText) toggleText.innerText = "Inline Video Player";
 
       if (window.innerWidth < 1024) {
         document.getElementById('center-stage-title').scrollIntoView({ behavior: 'smooth' });
@@ -876,7 +1158,7 @@
           "severity": "Critical Attack",
           "badge_color": "red",
           "media_video": "https://youtu.be/1Vd3IxL1C_Q",
-          "image": "public/seqscan3.png"
+          "image": "seqscan3.png"
         },
         {
           "id": "breach-q3-fbi-recruitment",
@@ -891,7 +1173,7 @@
           "severity": "Critical Attack",
           "badge_color": "red",
           "media_video": "https://youtu.be/1Vd3IxL1C_Q",
-          "image": "public/4in1overlay88.png"
+          "image": "4in1overlay88.png"
         },
         {
           "id": "breach-q1-free-mobile",
@@ -906,7 +1188,7 @@
           "severity": "Regulatory Fine",
           "badge_color": "amber",
           "media_video": "",
-          "image": "public/seqscan2.png"
+          "image": "seqscan2.png"
         },
         {
           "id": "breach-q1-kaiser-permanente",
@@ -921,7 +1203,7 @@
           "severity": "Regulatory Fine",
           "badge_color": "amber",
           "media_video": "",
-          "image": "public/cybergirlheadfix88.jpg"
+          "image": "cybergirlheadfix88.jpg"
         }
       ];
     }
@@ -932,24 +1214,48 @@
           "category": "Zero-Day Defense",
           "date": "October 06, 2026",
           "title": "Microsoft Exchange High-Severity Privilege Escalation (CVE-2026-96940)",
-          "image": "public/secritygrfff88.jpg",
-          "excerpt": "Out-of-band updates address perimeter authentication bypass allowing attackers to read confidential corporate mailboxes.",
+          "image": "secritygrfff88.jpg",
+          "excerpt": "Out-of-band updates address perimeter authentication bypass allowing attackers to read confidential corporate mailboxes. Automated mass-scanning compromises legacy assets in under 29 minutes post-disclosure.",
           "read_time": "4 min read"
         },
         {
           "category": "Ransomware Alert",
           "date": "October 04, 2026",
           "title": "Dual-Extortion Ransomware Targets Healthcare & Critical Infrastructure",
-          "image": "public/seqscan188.png",
-          "excerpt": "Adversaries weaponize living-off-the-land binaries to execute lateral movement in under 18 minutes post initial credential compromise.",
+          "image": "seqscan188.png",
+          "excerpt": "Adversaries weaponize living-off-the-land binaries to execute lateral movement in under 18 minutes post initial credential compromise. Backups are actively targeted before encryption is triggered.",
           "read_time": "6 min read"
         },
         {
           "category": "Executive GRC",
           "date": "October 01, 2026",
           "title": "SEC Cybersecurity Disclosure Enforcement: $38M Fine for Latent Breach Coverup",
-          "image": "public/chart floating88.jpg",
-          "excerpt": "Regulatory audits mandate 4-day material incident reporting. Why delayed forensic dwell time creates personal CISO liability.",
+          "image": "chart_floating88.jpg",
+          "excerpt": "Regulatory audits mandate 4-day material incident reporting. Why delayed forensic dwell time creates personal CISO liability and invalidates insurance policies.",
+          "read_time": "5 min read"
+        },
+        {
+          "category": "Autonomous Cloak",
+          "date": "September 28, 2026",
+          "title": "Ricochet Ephemeral Protocol: Sub-Millisecond Deception Replaces Static Firewalls",
+          "image": "4in1overlay88.png",
+          "excerpt": "How synthetic honeynet flytraps absorb adversary reconnaissance while cloaked production enclaves drop all public listening ports. Contains breakout attempts in under 20 microseconds.",
+          "read_time": "5 min read"
+        },
+        {
+          "category": "AI Governance",
+          "date": "September 23, 2026",
+          "title": "ISO 42001 & EU AI Act: Enterprise Risk Classification for High-Impact LLMs",
+          "image": "3d-brain88.jpg",
+          "excerpt": "Mandatory compliance requirements for corporate AI deployments. How continuous audit packs insulate enterprise infrastructure from steep regulatory penalties.",
+          "read_time": "6 min read"
+        },
+        {
+          "category": "Surface Defense",
+          "date": "September 18, 2026",
+          "title": "HSTS & Cryptographic Cipher Spoofing: Hardening Edge Boundaries Across TLS 1.3",
+          "image": "nebulagazer1.jpg",
+          "excerpt": "Why outdated edge proxies fail to enforce HSTS preloading and how adversary downgrade attacks compromise session confidentiality across hybrid cloud environments.",
           "read_time": "5 min read"
         }
       ];
