@@ -653,14 +653,14 @@
           </p>
         </div>
 
-        <!-- FORMAL PDF EXPORT BUTTON -->
+        <!-- FORMAL PDF EMAIL DISPATCH BUTTON -->
         <button 
           onclick="openLeadCaptureModal()" 
           id="btn-export-pdf"
           class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs py-3 px-6 rounded-xl shadow-lg hover:shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0"
         >
-          <i class="fa-solid fa-file-pdf text-sm"></i>
-          <span>Export Executive Assessment PDF</span>
+          <i class="fa-solid fa-paper-plane text-sm"></i>
+          <span>Email Executive Assessment &amp; Remediation PDF</span>
         </button>
       </div>
 
@@ -1045,19 +1045,34 @@
       }
     }
 
+    // Google Apps Script Webhook URL (Connected to Anergi Master Operations Hub)
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8hiPcGHVL9Uk4UHTscm2ZXpVJf0vzP3kvMd9RRAxUbRH6ERwqKmaPeb7PzOIQSEUfUg/exec';
+
     // Lead Capture Modal Controls
     function openLeadCaptureModal() {
-      // Check if already captured in this session
-      const existingEmail = sessionStorage.getItem('anergi_lead_email');
-      if (existingEmail) {
-        unlockOnScreenRemediation();
-        generateExecutivePDF();
-        return;
-      }
-
-      const currentDomain = document.getElementById('report-domain-heading')?.textContent || 'anergi.io';
+      const currentDomain = (document.getElementById('report-domain-heading')?.textContent || 'anergi.io').toLowerCase().trim();
       const orgInput = document.getElementById('lead-org-name');
       if (orgInput && !orgInput.value) orgInput.value = currentDomain;
+
+      // Hidden Anti-Abuse Check: Check if this domain or email was already dispatched within 24h
+      const storedAuditRaw = localStorage.getItem('anergi_spa_sent_' + currentDomain);
+      if (storedAuditRaw) {
+        try {
+          const storedAudit = JSON.parse(storedAuditRaw);
+          const elapsed = Date.now() - (storedAudit.time || 0);
+          const twentyFourHours = 24 * 60 * 60 * 1000;
+          if (elapsed < twentyFourHours) {
+            // Already dispatched within 24h: show active cycle notice
+            const abuseBox = document.getElementById('abuse-warning-box');
+            const abuseMsg = document.getElementById('abuse-warning-msg');
+            if (abuseBox && abuseMsg) {
+              const dateStr = new Date(storedAudit.time).toLocaleDateString();
+              abuseMsg.textContent = `An official executive assessment for ${currentDomain} was already dispatched to ${storedAudit.email} on ${dateStr}. To prevent reconnaissance abuse, domain evaluations are limited to 1 per 24 hours. Please check your inbox or reply directly to the email to converse with SecOps.`;
+              abuseBox.classList.remove('hidden');
+            }
+          }
+        } catch (e) {}
+      }
 
       const modal = document.getElementById('executive-lead-modal');
       if (modal) {
@@ -1075,62 +1090,128 @@
 
     function handleLeadSubmit(event) {
       event.preventDefault();
+
+      // 1. HIDDEN HONEYPOT BOT CHECK
+      const botTrap = document.getElementById('corp-anti-bot-trap')?.value;
+      if (botTrap) {
+        console.warn("Automated submission intercepted.");
+        closeLeadCaptureModal();
+        return;
+      }
+
       const emailInput = document.getElementById('lead-work-email');
       const orgInput = document.getElementById('lead-org-name');
       const roleInput = document.getElementById('lead-exec-role');
       const emailVal = emailInput.value.trim().toLowerCase();
+      const currentDomain = (orgInput.value.trim() || document.getElementById('report-domain-heading')?.textContent || 'anergi.io').toLowerCase().trim();
 
-      // Check for personal webmail (friendly advisory)
-      const personalDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
-      const domainPart = emailVal.split('@')[1];
+      // 2. DISPOSABLE EMAIL BLACKLIST CHECK
+      const disposableDomains = [
+        'mailinator.com', 'tempmail.com', '10minutemail.com', 'guerrillamail.com', 
+        'throwawaymail.com', 'trashmail.com', 'yopmail.com', 'sharklasers.com', 
+        'dispostable.com', 'getnada.com', 'mohmal.com', 'burnermail.io'
+      ];
+      const domainPart = emailVal.split('@')[1] || '';
       const validationMsg = document.getElementById('email-validation-msg');
 
-      if (personalDomains.includes(domainPart)) {
+      if (disposableDomains.some(d => domainPart.includes(d))) {
         if (validationMsg) {
-          validationMsg.textContent = 'Advisory: Corporate domain recommended for formal underwriter attestation.';
+          validationMsg.textContent = 'Temporary or disposable email domains are prohibited. Please provide a verified corporate email.';
           validationMsg.classList.remove('hidden');
         }
+        return;
       }
 
-      // Store lead session
-      sessionStorage.setItem('anergi_lead_email', emailVal);
-      sessionStorage.setItem('anergi_lead_org', orgInput ? orgInput.value.trim() : '');
-      sessionStorage.setItem('anergi_lead_role', roleInput ? roleInput.value : '');
+      // 3. PERSONAL WEBMAIL ADVISORY
+      const personalDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
+      if (personalDomains.includes(domainPart)) {
+        if (validationMsg) {
+          validationMsg.textContent = 'Advisory: Corporate work email recommended for underwriter compliance validation.';
+          validationMsg.classList.remove('hidden');
+        }
+      } else {
+        if (validationMsg) validationMsg.classList.add('hidden');
+      }
 
-      // Show confirmation state
+      // 4. HIDDEN ANTI-ABUSE RATE LIMITING CHECK
+      const storedAuditRaw = localStorage.getItem('anergi_spa_sent_' + currentDomain);
+      if (storedAuditRaw) {
+        try {
+          const storedAudit = JSON.parse(storedAuditRaw);
+          const elapsed = Date.now() - (storedAudit.time || 0);
+          if (elapsed < 24 * 60 * 60 * 1000 && storedAudit.email === emailVal) {
+            const abuseBox = document.getElementById('abuse-warning-box');
+            const abuseMsg = document.getElementById('abuse-warning-msg');
+            if (abuseBox && abuseMsg) {
+              abuseMsg.textContent = `A report was already dispatched to ${emailVal} within the past 24 hours. Check your inbox and spam folder, or reply to our dispatch email.`;
+              abuseBox.classList.remove('hidden');
+            }
+            return;
+          }
+        } catch (e) {}
+      }
+
+      // Generate abuse token
+      const abuseToken = 'SEC-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+      // 5. COMPILE WEBHOOK PAYLOAD FOR MASTER ANERGI SPREADSHEET
+      const payload = {
+        source: "Mini S.P.A. PDF Gateway",
+        type: "mini_spa_pdf",
+        corporate_email: emailVal,
+        email: emailVal,
+        target_domain: currentDomain,
+        domain: currentDomain,
+        executive_role: roleInput ? roleInput.value : "Executive Lead",
+        role: roleInput ? roleInput.value : "Executive Lead",
+        posture_grade: document.getElementById('score-grade')?.textContent || 'GRADE A (Low Attack Surface)',
+        vital_signs: `Eyes: ${document.getElementById('score-eyes')?.textContent || '95%'} | Arteries: ${document.getElementById('score-arteries')?.textContent || 'TLS 1.3'} | Bones: ${document.getElementById('score-bones')?.textContent || 'Enforced'} | Brain: Audit Ready`,
+        newsletter_opt_in: true,
+        abuse_token: abuseToken,
+        client_timestamp: new Date().toISOString()
+      };
+
+      // 6. DISPATCH TO GOOGLE APPS SCRIPT WEBHOOK (Anergi Master Operations Hub)
+      if (GOOGLE_APPS_SCRIPT_URL) {
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn("Anergi Webhook dispatch registered (no-cors)"));
+      }
+
+      // 7. RECORD ANTI-ABUSE TIMESTAMP IN LOCALSTORAGE
+      localStorage.setItem('anergi_spa_sent_' + currentDomain, JSON.stringify({ email: emailVal, time: Date.now() }));
+      localStorage.setItem('anergi_spa_sent_email_' + emailVal, JSON.stringify({ domain: currentDomain, time: Date.now() }));
+
+      // 8. SHOW SUCCESS CONFIRMATION IN MODAL
       document.getElementById('lead-capture-form').classList.add('hidden');
+      const abuseBox = document.getElementById('abuse-warning-box');
+      if (abuseBox) abuseBox.classList.add('hidden');
+
       const successBox = document.getElementById('lead-success-box');
       if (successBox) {
         successBox.classList.remove('hidden');
-        document.getElementById('lead-success-msg').textContent = 
-          `Official Assessment queued for ${emailVal}. Unlocking remediation directives and initializing PDF download...`;
+        document.getElementById('lead-success-msg').innerHTML = 
+          `The official assessment, unredacted CVE remediation roadmap, and underwriter evidence packet have been dispatched to <strong>${emailVal}</strong>.`;
       }
 
-      // Unlock on-screen remediation
+      // 9. UNLOCK ON-SCREEN REMEDIATION DIRECTIVES
       unlockOnScreenRemediation();
 
-      // Trigger PDF export
-      setTimeout(() => {
-        generateExecutivePDF();
-      }, 700);
-
-      // Auto-close modal after 2.8s
-      setTimeout(() => {
-        closeLeadCaptureModal();
-        document.getElementById('lead-capture-form')?.classList.remove('hidden');
-        successBox?.classList.add('hidden');
-      }, 2800);
+      // 10. UPDATE PAGE BUTTON STATE
+      const exportBtn = document.getElementById('btn-export-pdf');
+      if (exportBtn) {
+        exportBtn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>Executive PDF Dispatched to ${emailVal}</span>`;
+        exportBtn.classList.remove('from-amber-500', 'to-orange-500');
+        exportBtn.classList.add('from-emerald-600', 'to-teal-600');
+      }
     }
 
     function unlockOnScreenRemediation() {
       document.querySelectorAll('.remediation-locked-box').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.remediation-unlocked-box').forEach(el => el.classList.remove('hidden'));
-      
-      const exportBtn = document.getElementById('btn-export-pdf');
-      if (exportBtn) {
-        exportBtn.innerHTML = '<i class="fa-solid fa-file-pdf text-sm"></i><span>Download Executive PDF Again</span>';
-        exportBtn.onclick = generateExecutivePDF;
-      }
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1139,7 +1220,7 @@
   </script>
 
   <!-- ========================================================================= -->
-  <!-- EXECUTIVE LEAD CAPTURE MODAL                                              -->
+  <!-- EXECUTIVE LEAD CAPTURE MODAL: EMAIL DISPATCH & ANTI-ABUSE GATE            -->
   <!-- ========================================================================= -->
   <div id="executive-lead-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden transition-opacity duration-300">
     <div class="relative w-full max-w-lg bg-[#2d3238] border border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden p-6 sm:p-8 text-white space-y-6">
@@ -1154,15 +1235,27 @@
           <i class="fa-solid fa-shield-halved"></i> Executive Assurance Gateway
         </div>
         <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-          Dispatch Executive Attestation PDF
+          Email Executive Attestation &amp; Remediation
         </h3>
         <p class="text-xs text-slate-300 leading-relaxed font-sans">
-          Receive the full unredacted Boardroom Assessment, step-by-step CVE remediation directives, and underwriter compliance mapping directly to your corporate inbox.
+          Receive the complete unredacted Boardroom PDF, CVE patch matrix, and insurance underwriter evidence package directly in your corporate inbox.
         </p>
+      </div>
+
+      <!-- Abuse Notice Box (Hidden by default) -->
+      <div id="abuse-warning-box" class="hidden p-3.5 bg-amber-950/80 border border-amber-500/50 rounded-xl text-xs text-amber-200 space-y-1">
+        <div class="font-bold flex items-center gap-2 text-amber-400">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Active Audit Cycle In Effect</span>
+        </div>
+        <p id="abuse-warning-msg" class="text-[11px] leading-relaxed text-slate-300"></p>
       </div>
 
       <!-- Form -->
       <form id="lead-capture-form" onsubmit="handleLeadSubmit(event)" class="space-y-4">
+        <!-- Hidden Honeypot Anti-Bot Field -->
+        <input type="text" name="corp_anti_bot_trap" id="corp-anti-bot-trap" style="display:none;" tabindex="-1" autocomplete="off" />
+
         <div>
           <label for="lead-work-email" class="block text-[11px] font-mono-code font-bold uppercase tracking-wider text-slate-300 mb-1">
             Corporate Work Email <span class="text-amber-400">*</span>
@@ -1208,32 +1301,49 @@
           </div>
         </div>
 
-        <div class="pt-2">
+        <!-- Newsletter & Conversational Entity Notice -->
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-700/60 space-y-1.5 text-[10px] text-slate-400 font-mono-code">
+          <div class="flex items-center gap-1.5 text-slate-300 font-bold">
+            <i class="fa-solid fa-envelope-circle-check text-amber-400"></i>
+            <span>Verified Corporate Inbox Delivery</span>
+          </div>
+          <p class="leading-relaxed">
+            Your assessment will be emailed with direct reply access to our SecOps Alliance Lead (DIRECTOR R.E.P.) and includes complimentary enrollment in our monthly CISO Threat Intelligence Briefing.
+          </p>
+        </div>
+
+        <div class="pt-1">
           <button 
             type="submit" 
             id="btn-lead-submit"
             class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs py-3.5 px-6 rounded-xl shadow-lg hover:shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <i class="fa-solid fa-file-arrow-down text-sm"></i>
-            <span>Dispatch Report &amp; Download PDF</span>
+            <i class="fa-solid fa-paper-plane text-sm"></i>
+            <span>Dispatch PDF &amp; Remediation to Corporate Email</span>
           </button>
         </div>
 
-        <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 font-mono-code">
-          <span><i class="fa-solid fa-lock text-emerald-400"></i> Ephemeral zero-spam privacy</span>
+        <div class="flex items-center justify-between text-[10px] text-slate-400 pt-0.5 font-mono-code">
+          <span><i class="fa-solid fa-lock text-emerald-400"></i> Anti-abuse logic enforced</span>
           <span>Point-in-time Attestation</span>
         </div>
       </form>
 
       <!-- Confirmation banner -->
-      <div id="lead-success-box" class="hidden p-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-center space-y-2">
-        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-base">
+      <div id="lead-success-box" class="hidden p-5 bg-emerald-950/80 border border-emerald-500/50 rounded-xl text-center space-y-3">
+        <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-lg">
           <i class="fa-solid fa-check"></i>
         </div>
-        <div class="text-xs font-bold text-white">Executive Dossier Dispatched &amp; Download Initialized</div>
-        <p class="text-[11px] text-emerald-200/80 font-mono-code" id="lead-success-msg">
-          The official assessment has been queued for your inbox and your local PDF is downloading.
+        <div class="text-sm font-bold text-white">Executive Attestation Dispatched to Inbox</div>
+        <p class="text-xs text-emerald-200/90 font-mono-code leading-relaxed" id="lead-success-msg">
+          The official assessment and unredacted remediation directives have been dispatched to your corporate inbox.
         </p>
+        <div class="p-3 bg-black/40 rounded-lg border border-emerald-500/30 text-[11px] text-slate-300">
+          <strong class="text-amber-400">Conversational Next Step:</strong> Reply directly to the incoming dispatch email to converse with DIRECTOR R.E.P. or request underwriter evidence packets.
+        </div>
+        <button onclick="closeLeadCaptureModal()" class="mt-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+          Done &amp; View Unlocked Telemetry
+        </button>
       </div>
     </div>
   </div>
