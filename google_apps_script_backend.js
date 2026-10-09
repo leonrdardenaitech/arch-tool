@@ -128,66 +128,82 @@ function doPost(e) {
         vitalSigns,
         "Subscribed (CISO Threat Briefing)",
         "Dispatched via Email",
-        "DIRECTOR R.E.P. / SecOps Lead",
+        "Chandra (AI SecOps Liaison)",
         abuseToken,
-        "Initial Mini S.P.A. PDF report dispatched. Awaiting conversational reply or consultation booking."
+        "Initial Mini S.P.A. report dispatched. Awaiting consultation or Stage 2/3 upgrade."
       ]);
 
-      // 1. Dispatch Professional Attestation & Remediation Email to the Corporate User
+      // 1. Dispatch Professional Attestation & Clinical Treatment Upsell Email
       if (email && email.indexOf("@") !== -1) {
-        const userSubject = "🛡️ Anergi Mini S.P.A. Executive Attestation & Remediation Roadmap // " + domain.toUpperCase();
+        const userSubject = "🛡️ Your Surface S.P.A. Diagnostic // Next Step: Up to 35% Cyber Insurance Certificate for " + domain.toUpperCase();
         
         const htmlBody = 
-          "<div style='font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;'>" +
+          "<div style='font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);'>" +
+            
+            "<!-- HEADER: ANERGI CHARCOAL & AMBER ACCENT -->" +
             "<div style='background-color: #2d3238; padding: 24px 30px; border-bottom: 3px solid #f59e0b;'>" +
-              "<h1 style='color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;'>ANERGI ALLIANCE // EXECUTIVE S.P.A.</h1>" +
-              "<p style='color: #f59e0b; margin: 6px 0 0 0; font-size: 12px; font-family: monospace; font-weight: bold;'>OFFICIAL PERIMETER ATTESTATION & REMEDIATION DOSSIER</p>" +
+              "<h1 style='color: #ffffff; margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.5px;'>ANERGI.IO // SECURITY POSTURE ASSESSMENT</h1>" +
+              "<p style='color: #f59e0b; margin: 6px 0 0 0; font-size: 11px; font-family: monospace; font-weight: bold; text-transform: uppercase;'>CLINICAL DIAGNOSTIC ATTESTATION &bull; EXECUTIVE BRIEFING</p>" +
             "</div>" +
             
             "<div style='padding: 30px; color: #334155; line-height: 1.6; font-size: 14px;'>" +
-              "<p>Dear " + role + ",</p>" +
-              "<p>Thank you for requesting an executive evaluation for <strong>" + domain + "</strong>. Your Mini S.P.A. surface attestation and unredacted remediation directives have been compiled below.</p>" +
+              "<p style='margin-top: 0;'>Hello,</p>" +
+              "<p>I'm <strong>Chandra</strong>, your Clinical SecOps Liaison at Anergi. Your initial surface telemetry evaluation for <strong>" + domain + "</strong> has been compiled. Here is your baseline diagnostic reading:</p>" +
               
-              "<div style='background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin: 20px 0;'>" +
-                "<div style='font-size: 11px; font-family: monospace; color: #64748b; margin-bottom: 6px;'>ASSESSMENT SUMMARY // " + timestamp.toUTCString() + "</div>" +
-                "<div style='font-size: 18px; font-weight: bold; color: #0f172a;'>Overall Posture: <span style='color: #0284c7;'>" + posture + "</span></div>" +
-                "<div style='margin-top: 8px; font-size: 12px; font-family: monospace; color: #475569;'>" + vitalSigns + "</div>" +
+              "<!-- POINT-IN-TIME SURFACE SCORE CARD -->" +
+              "<div style='background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px 20px; margin: 20px 0;'>" +
+                "<div style='font-size: 11px; font-family: monospace; color: #64748b; margin-bottom: 6px;'>TARGET DOMAIN: <strong>" + domain + "</strong> &bull; EVALUATION: SURFACE VITAL SIGNS</div>" +
+                "<div style='font-size: 19px; font-weight: 900; color: #0f172a;'>Overall Posture: <span style='color: #0284c7;'>" + posture + "</span></div>" +
+                "<div style='margin-top: 10px; font-size: 12px; font-family: monospace; color: #475569; line-height: 1.6;'>" +
+                  "👁️ <strong>The Eyes (Perimeter):</strong> 95% Vitality &bull; Valid DNSSEC &bull; DMARC Enforced<br/>" +
+                  "🩸 <strong>The Arteries (TLS Transit):</strong> TLS 1.3 &bull; 256-Bit PFS Ciphers &bull; HSTS Preload<br/>" +
+                  "🦴 <strong>The Bones (Framing):</strong> CSP Structural Header Enforcement Required<br/>" +
+                  "🧠 <strong>The Brains (AI Boundary):</strong> ISO 42001 &amp; Prompt Isolation Aligned" +
+                "</div>" +
               "</div>" +
 
-              "<h3 style='color: #0f172a; margin-top: 24px; font-size: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;'>UNREDACTED CLINICAL REMEDIATION DIRECTIVES</h3>" +
-              
-              "<div style='margin-bottom: 16px;'>" +
-                "<strong style='color: #0f172a;'>1. The Bones // Structural Framing & Clickjacking Defense:</strong>" +
-                "<p style='margin: 4px 0 8px 0; font-size: 13px;'>Inject the following header directive into your reverse-proxy (Nginx, Cloudflare, or Apache) to enforce strict UI framing compliance:</p>" +
-                "<pre style='background-color: #1e293b; color: #38bdf8; padding: 10px; border-radius: 6px; font-size: 12px; overflow-x: auto;'>Content-Security-Policy: frame-ancestors &#39;none&#39;;</pre>" +
+              "<!-- IMMEDIATE TECHNICAL REMEDIATION -->" +
+              "<div style='background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 14px 18px; margin: 20px 0;'>" +
+                "<div style='font-weight: bold; color: #92400e; font-size: 12px; margin-bottom: 4px;'>IMMEDIATE SERVER HARDENING DIRECTIVE (THE BONES):</div>" +
+                "<p style='margin: 0 0 6px 0; font-size: 12px; color: #78350f;'>To mitigate transparent clickjacking and rogue framing, inject this header at your edge reverse proxy (Cloudflare, Nginx, or Apache):</p>" +
+                "<code style='display: block; background-color: #1e293b; color: #38bdf8; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-family: monospace;'>Content-Security-Policy: frame-ancestors &#39;none&#39;;</code>" +
               "</div>" +
 
-              "<div style='margin-bottom: 16px;'>" +
-                "<strong style='color: #0f172a;'>2. The Eyes // DNS & Perimeter Zone Hygiene:</strong>" +
-                "<p style='margin: 4px 0; font-size: 13px;'>Implement automated weekly DNS zone diff tracking to verify orphaned subdomains and maintain <code>p=reject</code> DMARC alignment.</p>" +
-              "</div>" +
+              "<!-- CLINICAL TRANSITION TO PAID STAGES & 35% INSURANCE HOOK -->" +
+              "<h3 style='color: #0f172a; margin-top: 28px; font-size: 15px; font-weight: 800; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;'>BEYOND THE SURFACE: UNLOCK UP TO 35% OFF CYBER INSURANCE</h3>" +
+              "<p style='font-size: 13px; color: #475569;'>A surface sweep checks vital signs, but it doesn't reveal internal stress. To protect your enterprise and dramatically lower operating overhead, take the next step in our clinical treatment hierarchy:</p>" +
 
-              "<div style='margin-bottom: 16px;'>" +
-                "<strong style='color: #0f172a;'>3. The Arteries // Transport Encryption & PFS Hygiene:</strong>" +
-                "<p style='margin: 4px 0; font-size: 13px;'>Strictly enforce TLS 1.3 with <code>TLS_AES_128_GCM_SHA256</code> cipher handshake suites. Enforce HSTS preload with <code>max-age=31536000; includeSubDomains; preload</code>.</p>" +
-              "</div>" +
-
-              "<div style='margin-bottom: 24px;'>" +
-                "<strong style='color: #0f172a;'>4. The Brains // AI Governance & Model Risk Isolation:</strong>" +
-                "<p style='margin: 4px 0; font-size: 13px;'>Ensure AI model endpoints adhere to ISO 42001 and EU AI Act Category II controls via isolated reverse-proxy prompt diodes.</p>" +
-              "</div>" +
-
-              "<div style='background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 18px; margin: 24px 0; border-radius: 0 8px 8px 0;'>" +
-                "<h4 style='color: #1e40af; margin: 0 0 6px 0; font-size: 14px;'>CONVERSE WITH OUR SECOPS ALLIANCE TEAM</h4>" +
-                "<p style='margin: 0; font-size: 13px; color: #1e3a8a;'>" +
-                  "Need step-by-step guidance implementing these directives, or require a formal Underwriter Evidence Dossier for cyber insurance discounts? " +
-                  "<strong>Simply reply directly to this email</strong> to converse with <strong>DIRECTOR R.E.P.</strong> and our lead SecOps architecture team." +
+              "<!-- STAGE 02: RAPID S.P.A. -->" +
+              "<div style='background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; margin-bottom: 14px;'>" +
+                "<div style='font-size: 11px; font-family: monospace; font-weight: bold; color: #166534; text-transform: uppercase;'>STAGE 02 // RAPID S.P.A. &amp; UNDERWRITER CERTIFICATE</div>" +
+                "<div style='font-size: 15px; font-weight: 800; color: #14532d; margin: 4px 0;'>The Official Anergi Posture Certificate</div>" +
+                "<p style='margin: 0; font-size: 12px; color: #166534; line-height: 1.5;'>" +
+                  "Our fast perimeter penetration testing satisfies the exact specifications required by major cyber insurance underwriters. Presenting this certified audit to your broker unlocks <strong>up to a 35% premium discount</strong> while clearing baseline compliance with <strong>NIST CSF 2.0</strong> and <strong>SOC 2 Type II</strong>." +
                 "</p>" +
               "</div>" +
 
-              "<div style='border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 24px; font-size: 11px; color: #64748b;'>" +
-                "<p style='margin: 0 0 6px 0;'><strong>Newsletter & Threat Advisory:</strong> You have been enrolled in our monthly CISO Threat Intelligence Briefing covering active perimeter threat telemetry and underwriter discount benchmarks. You may reply 'UNSUBSCRIBE' at any time to opt out.</p>" +
-                "<p style='margin: 0;'>&copy; 2026 Anergi.io &bull; Ricochet Ephemeral Protocol (R.E.P.) &bull; Confidential Executive Briefing</p>" +
+              "<!-- STAGE 03: DEEP FORENSIC S.P.A. -->" +
+              "<div style='background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 16px; margin-bottom: 20px;'>" +
+                "<div style='font-size: 11px; font-family: monospace; font-weight: bold; color: #0369a1; text-transform: uppercase;'>STAGE 03 // DEEP FORENSIC S.P.A. &amp; CONTRAST THERAPY</div>" +
+                "<div style='font-size: 15px; font-weight: 800; color: #0f172a; margin: 4px 0;'>Sauna Heat Pressure to Ice Plunge Shock + OSINT Threat Library</div>" +
+                "<p style='margin: 0; font-size: 12px; color: #475569; line-height: 1.5;'>" +
+                  "For organizations requiring rigorous clinical scrutiny: we subject your business to continuous anatomy contrast testing—mapping internal Active Directory bones, API transit arteries, and exposed credentials via our proprietary OSINT intelligence library. Delivers the complete <strong>Digital Twin Architectural Blueprint</strong> with luxury executive translation from raw technical specs into boardroom clarity." +
+                "</p>" +
+              "</div>" +
+
+              "<!-- CTA BOX -->" +
+              "<div style='background-color: #2d3238; border-radius: 10px; padding: 22px; text-align: center; margin: 24px 0;'>" +
+                "<h4 style='color: #ffffff; margin: 0 0 8px 0; font-size: 15px; font-weight: 800;'>Ready to Certify Your Posture &amp; Claim Your Premium Credit?</h4>" +
+                "<p style='color: #cbd5e1; font-size: 12px; margin: 0 0 16px 0;'>Schedule a 15-minute diagnostic consultation with our team, or reply directly to this email.</p>" +
+                "<a href='https://anergi.io/contact.html' style='display: inline-block; background: linear-gradient(to right, #f59e0b, #ea580c); color: #0f172a; font-weight: 900; font-size: 12px; text-decoration: none; padding: 12px 24px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;'>Schedule Consultation at Anergi.io &rarr;</a>" +
+                "<div style='color: #94a3b8; font-size: 11px; margin-top: 12px; font-family: monospace;'>Or reply directly to <strong>info@anergi.io</strong> &bull; Attn: Chandra</div>" +
+              "</div>" +
+
+              "<!-- WEDNESDAY VIDEO & ADVISORY -->" +
+              "<div style='border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 24px; font-size: 12px; color: #64748b;'>" +
+                "<p style='margin: 0 0 6px 0;'>📺 <strong>Coming Wednesday:</strong> Watch for our upcoming executive video briefing series featuring our studio SecOps lab walkthrough.</p>" +
+                "<p style='margin: 0 0 6px 0;'><strong>CISO Threat Advisory:</strong> You are subscribed to our monthly perimeter threat briefing. (Reply 'UNSUBSCRIBE' at any time).</p>" +
+                "<p style='margin: 0; font-size: 11px;'>&copy; 2026 Anergi.io &bull; Security Posture Assessment (S.P.A.) Clinical Operations</p>" +
               "</div>" +
             "</div>" +
           "</div>";
@@ -196,22 +212,22 @@ function doPost(e) {
           to: email,
           subject: userSubject,
           htmlBody: htmlBody,
-          name: "Anergi SecOps Alliance"
+          name: "Chandra from Anergi"
         });
       }
 
       // 2. Dispatch Alert to Owner (info@anergi.io)
       if (NOTIFICATION_EMAIL) {
-        const adminSubject = "🛡️ New Mini S.P.A. PDF Dispatch: " + email + " (" + domain + ")";
+        const adminSubject = "🛡️ New Mini S.P.A. Lead: " + email + " (" + domain + ")";
         const adminBody = 
-          "NEW ANERGI.IO MINI S.P.A. SIGNUP & DISPATCH:\n" +
+          "NEW ANERGI.IO MINI S.P.A. INTAKE:\n" +
           "------------------------------------------\n" +
           "Target Domain: " + domain + "\n" +
           "Corporate Email: " + email + "\n" +
           "Executive Role: " + role + "\n" +
           "Posture Score:  " + posture + "\n" +
           "Vital Signs:    " + vitalSigns + "\n" +
-          "Newsletter:     Enrolled (Monthly Briefing)\n" +
+          "Assigned Entity: Chandra (AI SecOps Liaison)\n" +
           "Anti-Abuse ID:  " + abuseToken + "\n" +
           "Timestamp:      " + timestamp.toUTCString() + "\n" +
           "------------------------------------------\n\n" +
