@@ -212,7 +212,8 @@ function doPost(e) {
           to: email,
           subject: userSubject,
           htmlBody: htmlBody,
-          name: "Chandra from Anergi"
+          name: "Chandra from Anergi",
+          replyTo: "info@anergi.io"
         });
       }
 
