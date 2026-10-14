@@ -286,5 +286,21 @@
     "badge_color": "cyan",
     "media_video": "",
     "image": "4in1overlay88.png"
+  },
+  {
+    "id": "breach-q4-2026-mid-october-perimeter",
+    "quarter": "Q4 2026",
+    "date": "Oct 14, 2026",
+    "target": "Mid-October Perimeter Vectors",
+    "industry": "Enterprise & Cloud Infra",
+    "vector": "Contractor key leaks, abandoned subdomains & MFA session replay attacks.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://youtu.be/QJfHxNVtlD8",
+    "image": "seqscan3.png"
   }
 ]
