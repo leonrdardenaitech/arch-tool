@@ -1,15 +1,13 @@
 [
   {
-    "category": "Wednesday Briefing",
+    "category": "Operations & Community",
     "date": "October 14, 2026",
-    "title": "Mid October Cyber Breaches You Missed (And How to Protect Your Perimeter)",
-    "image": "seqscan3.png",
-    "excerpt": "Anergi's Wednesday executive intelligence release: deconstructing active October perimeter intrusions, unmonitored vendor backdoors, and how the 3-Hour S.P.A. protocol reveals hidden attack surfaces before threat actors strike.",
-    "read_time": "5 min read",
-    "badge_color": "red",
-    "link": "https://youtu.be/QJfHxNVtlD8",
-    "youtube_url": "https://youtu.be/QJfHxNVtlD8",
-    "video_embed_url": "https://www.youtube.com/embed/QJfHxNVtlD8?autoplay=0&controls=1&rel=0"
+    "title": "Anergi Operations // YouTube Channel, Reddit Desk & Automated Threat Intel Feed Live",
+    "image": "4in1overlay88.png",
+    "excerpt": "Scheduled Content Engine & Intelligence drop: official Anergi YouTube channel broadcast desk, Reddit threat intelligence feeds, and automated perimeter telemetry notifications now synchronized with the Anergi Command Deck.",
+    "read_time": "3 min read",
+    "badge_color": "cyan",
+    "link": "https://www.youtube.com/channel/UCPE9Y0LzxXqnu0i4AWT7_Xw"
   },
   {
     "category": "Zero-Day Defense",

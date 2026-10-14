@@ -1,5 +1,21 @@
 [
   {
+    "id": "breach-q4-2026-mid-october-perimeter",
+    "quarter": "Q4 2026",
+    "date": "Oct 14, 2026",
+    "target": "Mid-October Perimeter Vectors",
+    "industry": "Enterprise & Cloud Infra",
+    "vector": "Contractor key leaks, abandoned subdomains & MFA session replay attacks.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://youtu.be/QJfHxNVtlD8",
+    "image": "seqscan3.png"
+  },
+  {
     "id": "breach-q1-2026-free-mobile",
     "quarter": "Q1 2026",
     "date": "Jan 2026",
@@ -270,21 +286,5 @@
     "badge_color": "amber",
     "media_video": "https://www.youtube.com/shorts/F7q4wGMr0MY",
     "image": "chart_floating88.jpg"
-  },
-  {
-    "id": "breach-q4-2026-mid-october-perimeter",
-    "quarter": "Q4 2026",
-    "date": "Oct 14, 2026",
-    "target": "Mid-October Perimeter Vectors",
-    "industry": "Enterprise & Cloud Infra",
-    "vector": "Contractor key leaks, abandoned subdomains & MFA session replay attacks.",
-    "impact": "Wednesday Executive Intelligence Briefing",
-    "penalty_usd": 0.0,
-    "service_cta": "3-Hour S.P.A. Surface Audit",
-    "cta_target": "mini_spa.html",
-    "severity": "Critical Attack",
-    "badge_color": "red",
-    "media_video": "https://youtu.be/QJfHxNVtlD8",
-    "image": "seqscan3.png"
   }
 ]
