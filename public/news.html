@@ -350,24 +350,9 @@
   <!-- TOP NAVIGATION BAR (MEDIUM GREY BRAND THEME) -->
   <nav class="anergi-navbar relative z-20 w-full px-4 sm:px-8 py-3.5 shadow-2xl">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <!-- BRAND LOGO WITH 3D ROTATING A CUBE -->
-      <a href="index.html" class="flex items-center gap-3 text-decoration-none">
-        <div class="nav-cube-wrapper">
-          <div class="nav-cube" title="Anergi 3D Interactive Logo">
-            <div class="nav-cube-face nav-face-front"><span>A</span></div>
-            <div class="nav-cube-face nav-face-back"><span>A</span></div>
-            <div class="nav-cube-face nav-face-right"><span>A</span></div>
-            <div class="nav-cube-face nav-face-left"><span>A</span></div>
-            <div class="nav-cube-face nav-face-top"><span>A</span></div>
-            <div class="nav-cube-face nav-face-bottom"><span>A</span></div>
-          </div>
-        </div>
-        <div class="relative flex flex-col items-center justify-center pt-1">
-          <svg class="brand-arch" viewBox="0 0 95 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 4 16 Q 47.5 -2 91 16" stroke="#fd991e" stroke-width="2.5" stroke-linecap="round" />
-          </svg>
-          <span class="brand-wordmark">nergi.io</span>
-        </div>
+      <!-- BRAND LOGO (OFFICIAL ALOGO BRANDING FOR NEWS DECK) -->
+      <a href="index.html" class="flex items-center gap-3 text-decoration-none group">
+        <img src="Alogo.png" alt="Anergi.io Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="handleImgError(this)" />
       </a>
 
       <!-- NAV LINKS -->
@@ -430,8 +415,8 @@
       
       <!-- HERO LEFT: LOGO TITLE -->
       <div class="md:col-span-4 text-center md:text-left flex items-center justify-center md:justify-start gap-4">
-        <div class="w-14 h-14 rounded-2xl bg-white shadow-xl flex items-center justify-center border-2 border-amber-500">
-          <span class="text-2xl font-black text-amber-500 font-mono">A</span>
+        <div class="w-14 h-14 rounded-2xl bg-white shadow-xl flex items-center justify-center border-2 border-amber-500 p-1.5 overflow-hidden">
+          <img src="Alogo.png" alt="Anergi.io Logo" class="w-full h-full object-contain" onerror="handleImgError(this)" />
         </div>
         <div>
           <span class="text-xs font-mono uppercase tracking-widest text-amber-300 font-extrabold block">Anergi.io Command</span>
@@ -585,10 +570,10 @@
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span id="center-stage-graphic-label">OCTOBER 14, 2026 &bull; FORENSIC TELEMETRY GRAPHIC</span>
             </div>
-            <!-- QUICK LAUNCH YOUTUBE PILL OVERLAY -->
-            <a id="image-overlay-yt-link" href="https://youtu.be/QJfHxNVtlD8" target="_blank" rel="noopener" class="absolute bottom-3 right-3 bg-red-600/90 hover:bg-red-600 text-white text-xs font-mono font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg backdrop-blur transition-all">
-              <i class="fa-brands fa-youtube"></i> Watch Video ➔
-            </a>
+            <!-- QUICK LAUNCH INLINE VIDEO PILL OVERLAY -->
+            <button onclick="toggleVideoGraphicView()" class="absolute bottom-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 text-xs font-mono font-black px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg backdrop-blur transition-all cursor-pointer">
+              <i class="fa-solid fa-play text-xs"></i> Play Video Inline
+            </button>
           </div>
 
           <!-- OPTIONAL INLINE VIDEO EMBED CONTAINER -->
@@ -605,17 +590,16 @@
             </iframe>
           </div>
 
-          <!-- DUAL ACTION DOCK: YOUTUBE DIRECT LINK + OPTIONAL PLAYER TOGGLE -->
+          <!-- ACTION DOCK: INLINE VIDEO PLAYER TOGGLE -->
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-            <div class="flex items-center gap-2">
-              <i class="fa-brands fa-youtube text-red-600 text-lg"></i>
-              <a id="direct-youtube-link" href="https://youtu.be/QJfHxNVtlD8" target="_blank" rel="noopener" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all flex items-center gap-1.5 shadow">
-                <span>Watch on YouTube</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-              </a>
+            <div class="flex items-center gap-2 text-slate-700">
+              <i class="fa-solid fa-circle-play text-amber-600 text-base"></i>
+              <span class="font-bold text-slate-900">Anergi Intelligence Player:</span>
+              <span class="text-slate-500 hidden sm:inline">Mid-October Cyber Briefing</span>
             </div>
-            <button id="toggle-embed-btn" onclick="toggleVideoGraphicView()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-lg transition-all flex items-center gap-1.5 border border-slate-300 cursor-pointer">
-              <i class="fa-solid fa-film text-amber-600"></i>
-              <span id="toggle-embed-btn-text">Inline Video Player</span>
+            <button id="toggle-embed-btn" onclick="toggleVideoGraphicView()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-lg transition-all flex items-center gap-2 shadow cursor-pointer">
+              <i class="fa-solid fa-film text-xs"></i>
+              <span id="toggle-embed-btn-text">Play Inline Video</span>
             </button>
           </div>
 
@@ -891,7 +875,7 @@
       } else {
         if (videoBox) videoBox.classList.add('hidden');
         if (imageBox) imageBox.classList.remove('hidden');
-        if (toggleText) toggleText.innerText = "Inline Video Player";
+        if (toggleText) toggleText.innerText = "Play Inline Video";
       }
     }
 
@@ -1102,7 +1086,7 @@
       if (videoBox) videoBox.classList.add('hidden');
       if (imageBox) imageBox.classList.remove('hidden');
       const toggleText = document.getElementById('toggle-embed-btn-text');
-      if (toggleText) toggleText.innerText = "Inline Video Player";
+      if (toggleText) toggleText.innerText = "Play Inline Video";
 
       // Up Next navigation link for breach
       const currentIndex = breachData.findIndex(b => b.id === id);
@@ -1192,7 +1176,7 @@
       if (videoBox) videoBox.classList.add('hidden');
       if (imageBox) imageBox.classList.remove('hidden');
       const toggleText = document.getElementById('toggle-embed-btn-text');
-      if (toggleText) toggleText.innerText = "Inline Video Player";
+      if (toggleText) toggleText.innerText = "Play Inline Video";
 
       // Up Next navigation link for article
       const nextArt = newsArticles[(idx + 1) % newsArticles.length];

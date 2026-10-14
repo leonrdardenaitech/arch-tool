@@ -272,22 +272,6 @@
     "image": "chart_floating88.jpg"
   },
   {
-    "id": "breach-q4-2026-anergi-operatio",
-    "quarter": "Q4 2026",
-    "date": "Oct 7, 2026",
-    "target": "Anergi Operations",
-    "industry": "Media / Security",
-    "vector": "Scheduled Content Engine release drop for YouTube & LinkedIn.",
-    "impact": "3-Episode Script & Feed Batch",
-    "penalty_usd": 0.0,
-    "service_cta": "Mini S.P.A. 60-Sec Scanner",
-    "cta_target": "mini_spa.html",
-    "severity": "Surface Exposure",
-    "badge_color": "cyan",
-    "media_video": "",
-    "image": "4in1overlay88.png"
-  },
-  {
     "id": "breach-q4-2026-mid-october-perimeter",
     "quarter": "Q4 2026",
     "date": "Oct 14, 2026",
