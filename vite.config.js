@@ -33,6 +33,7 @@ export default defineConfig({
         'command-center': resolve(__dirname, 'command-center.html'),
         nle: resolve(__dirname, 'nle-standalone.html'),
         pa: resolve(__dirname, 'pa-standalone.html'),
+        rep_protocol: resolve(__dirname, 'rep_protocol.html'),
       },
     },
   },
