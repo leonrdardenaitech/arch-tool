@@ -1,5 +1,17 @@
 [
   {
+    "category": "Executive Intelligence",
+    "date": "October 21, 2026",
+    "title": "The Photo Finish // Q3 Ransomware Trends, Day-Three Exploits & Perimeter CTEM Defense",
+    "image": "seqscan3.png",
+    "excerpt": "Wednesday Intelligence Briefing: Deconstructing the 2,627-attack surge and the dead-heat rivalry between Qilin (357) and The Gentlemen (342). Why Day-Three exploit weaponization and dark web Access-as-a-Service require a 72-hour exposure SLA.",
+    "read_time": "5 min read",
+    "badge_color": "red",
+    "link": "https://youtu.be/1di-q0hiOQw",
+    "youtube_url": "https://youtu.be/1di-q0hiOQw",
+    "video_embed_url": "https://www.youtube.com/embed/1di-q0hiOQw?autoplay=0&controls=1&rel=0"
+  },
+  {
     "category": "Operations & Community",
     "date": "October 14, 2026",
     "title": "Anergi Operations // YouTube Channel, Reddit Desk & Automated Threat Intel Feed Live",

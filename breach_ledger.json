@@ -1,5 +1,21 @@
 [
   {
+    "id": "breach-q4-2026-photo-finish-perimeter",
+    "quarter": "Q4 2026",
+    "date": "Oct 21, 2026",
+    "target": "The Photo Finish: Q3 Syndicate Duopoly & Perimeter Defense",
+    "industry": "Enterprise & Cloud Infra",
+    "vector": "Day-3 exploit weaponization, Access-as-a-Service dark web markets & authentication bypasses.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://youtu.be/1di-q0hiOQw",
+    "image": "seqscan3.png"
+  },
+  {
     "id": "breach-q4-2026-mid-october-perimeter",
     "quarter": "Q4 2026",
     "date": "Oct 14, 2026",
