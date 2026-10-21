@@ -755,7 +755,7 @@
           </div>
 
           <!-- 2. PRIMARY CYBER FORENSIC GRAPHIC CONTAINER -->
-          <div id="image-embed-container" class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-xl group">
+          <div id="image-embed-container" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-slate-900 shadow-xl group">
             <img 
               id="center-stage-image" 
               src="seqscan3.png" 
@@ -775,7 +775,7 @@
           </div>
 
           <!-- OPTIONAL INLINE VIDEO EMBED CONTAINER -->
-          <div id="video-embed-container" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-black shadow-xl">
+          <div id="video-embed-container" class="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-300 bg-black shadow-xl">
             <iframe 
               id="main-base-video-iframe"
               class="absolute inset-0 w-full h-full"
@@ -796,8 +796,8 @@
               <span class="text-slate-500 hidden sm:inline">The Photo Finish Intelligence Briefing</span>
             </div>
             <button id="toggle-embed-btn" onclick="toggleVideoGraphicView()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black rounded-lg transition-all flex items-center gap-2 shadow cursor-pointer">
-              <i class="fa-solid fa-film text-xs"></i>
-              <span id="toggle-embed-btn-text">Play Inline Video</span>
+              <i class="fa-solid fa-image text-xs"></i>
+              <span id="toggle-embed-btn-text">Show Cyber Graphic</span>
             </button>
           </div>
 
@@ -998,13 +998,13 @@
       {
         id: "wednesday-briefing-mid-oct",
         title: "The Photo Finish: Q3 Ransomware Trends, Day-Three Exploits & Perimeter Defense",
-        badge: "FEATURED WEDNESDAY BRIEFING • MID-OCTOBER 2026",
-        date: "October 14, 2026",
+        badge: "FEATURED WEDNESDAY BRIEFING • OCTOBER 21, 2026",
+        date: "October 21, 2026",
         industry: "Enterprise Perimeter & Cloud Architecture",
         impact: "Multi-Vector Ingress Analysis",
         image: "seqscan3.png",
-        videoEmbedUrl: "https://www.youtube.com/embed/QJfHxNVtlD8?autoplay=0&controls=1&rel=0",
-        youtubeUrl: "https://youtu.be/QJfHxNVtlD8",
+        videoEmbedUrl: "https://www.youtube.com/embed/1di-q0hiOQw?autoplay=0&controls=1&rel=0",
+        youtubeUrl: "https://youtu.be/1di-q0hiOQw",
         body: "In this Wednesday executive intelligence briefing, Anergi deconstructs the Q3 ransomware surge: the neck-and-neck rivalry between Qilin (357 attacks) and The Gentlemen (342 attacks), the collapse of vulnerability weaponization to just 3 days, and how Access-as-a-Service dark web markets feed active campaigns. Discover how Anergi's 3-Hour Security Posture Assessment (S.P.A.) validates real-world perimeter resilience.",
         ctaLabel: "Schedule 3-Hour Security Posture Assessment",
         nextPreview: "Up Next: 2026 Enterprise Breach Briefing (FBI Contractor Zero-Day & Healthcare Ingress)"
@@ -1057,7 +1057,7 @@
     let breachData = [];
     let newsArticles = [];
     let activeFilter = 'ALL';
-    let showingVideoEmbed = false;
+    let showingVideoEmbed = true;
 
     // TOGGLE BETWEEN CYBER FORENSIC GRAPHIC AND INLINE VIDEO EMBED
     function toggleVideoGraphicView() {
@@ -1224,10 +1224,10 @@
     // HELPER: Convert any YouTube URL format to an embed URL
     function getEmbedUrl(rawUrl) {
       if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
-        return "https://www.youtube.com/embed/QJfHxNVtlD8?autoplay=0&controls=1&rel=0";
+        return "https://www.youtube.com/embed/1di-q0hiOQw?autoplay=0&controls=1&rel=0";
       }
       const trimmed = rawUrl.trim();
-      let vidId = "QJfHxNVtlD8";
+      let vidId = "1di-q0hiOQw";
       if (trimmed.includes("youtu.be/")) {
         vidId = trimmed.split("youtu.be/")[1].split("?")[0].split("&")[0];
       } else if (trimmed.includes("watch?v=")) {
@@ -1280,11 +1280,18 @@
       const iframe = document.getElementById('main-base-video-iframe');
       if (iframe) iframe.src = getEmbedUrl(targetYt);
 
-      showingVideoEmbed = false;
-      if (videoBox) videoBox.classList.add('hidden');
-      if (imageBox) imageBox.classList.remove('hidden');
       const toggleText = document.getElementById('toggle-embed-btn-text');
-      if (toggleText) toggleText.innerText = "Play Inline Video";
+      if (item.media_video && item.media_video.trim() !== "") {
+        showingVideoEmbed = true;
+        if (videoBox) videoBox.classList.remove('hidden');
+        if (imageBox) imageBox.classList.add('hidden');
+        if (toggleText) toggleText.innerText = "Show Cyber Graphic";
+      } else {
+        showingVideoEmbed = false;
+        if (videoBox) videoBox.classList.add('hidden');
+        if (imageBox) imageBox.classList.remove('hidden');
+        if (toggleText) toggleText.innerText = "Play Inline Video";
+      }
 
       // Up Next navigation link for breach
       const currentIndex = breachData.findIndex(b => b.id === id);
@@ -1368,13 +1375,20 @@
       const iframe = document.getElementById('main-base-video-iframe');
       if (iframe) iframe.src = embedUrl;
 
-      showingVideoEmbed = false;
       const videoBox = document.getElementById('video-embed-container');
       const imageBox = document.getElementById('image-embed-container');
-      if (videoBox) videoBox.classList.add('hidden');
-      if (imageBox) imageBox.classList.remove('hidden');
       const toggleText = document.getElementById('toggle-embed-btn-text');
-      if (toggleText) toggleText.innerText = "Play Inline Video";
+      if (art.youtube_url || (art.link && art.link.includes('youtu'))) {
+        showingVideoEmbed = true;
+        if (videoBox) videoBox.classList.remove('hidden');
+        if (imageBox) imageBox.classList.add('hidden');
+        if (toggleText) toggleText.innerText = "Show Cyber Graphic";
+      } else {
+        showingVideoEmbed = false;
+        if (videoBox) videoBox.classList.add('hidden');
+        if (imageBox) imageBox.classList.remove('hidden');
+        if (toggleText) toggleText.innerText = "Play Inline Video";
+      }
 
       // Up Next navigation link for article
       const nextArt = newsArticles[(idx + 1) % newsArticles.length];
