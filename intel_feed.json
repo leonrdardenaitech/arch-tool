@@ -1,6 +1,18 @@
 [
   {
     "category": "Executive Intelligence",
+    "date": "October 28, 2026",
+    "title": "PhP and Black October // AI-Accelerated Vulnerability Crisis & Perimeter Exposure",
+    "image": "seqscan3.png",
+    "excerpt": "Wednesday Intelligence Briefing: Black October refers to the October 2026 cybersecurity crisis where AI-accelerated vulnerability discovery triggered a wave of severe flaws across core infrastructure and PHP runtimes.",
+    "read_time": "5 min read",
+    "badge_color": "red",
+    "link": "https://youtu.be/YtkECKMfnBI",
+    "youtube_url": "https://youtu.be/YtkECKMfnBI",
+    "video_embed_url": "https://www.youtube.com/embed/YtkECKMfnBI?autoplay=0&controls=1&rel=0"
+  },
+  {
+    "category": "Executive Intelligence",
     "date": "October 21, 2026",
     "title": "The Photo Finish // Q3 Ransomware Trends, Day-Three Exploits & Perimeter CTEM Defense",
     "image": "seqscan3.png",

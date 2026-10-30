@@ -1,5 +1,21 @@
 [
   {
+    "id": "breach-q4-2026-php-black-october",
+    "quarter": "Q4 2026",
+    "date": "Oct 28, 2026",
+    "target": "PhP and Black October: AI-Accelerated Vulnerability Crisis",
+    "industry": "Core Web Infra & PHP Runtimes",
+    "vector": "AI-accelerated vulnerability discovery triggering severe exploit waves across core web infrastructure and legacy PHP perimeters.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://youtu.be/YtkECKMfnBI",
+    "image": "seqscan3.png"
+  },
+  {
     "id": "breach-q4-2026-photo-finish-perimeter",
     "quarter": "Q4 2026",
     "date": "Oct 21, 2026",
