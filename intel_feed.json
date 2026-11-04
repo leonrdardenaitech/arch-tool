@@ -1,6 +1,18 @@
 [
   {
     "category": "Executive Intelligence",
+    "date": "November 04, 2026",
+    "title": "MidWeek Breach Ledger Report // The 2026 Threat Triad: Forgotten Edges, Hijacked Trust & Autonomous AI",
+    "image": "seqscan3.png",
+    "excerpt": "Wednesday Intelligence Briefing: Modern threat actors bypass encrypted vault doors via unmonitored backdoors and hijacked keys. Analyzing peripheral administrative leaks (NSW Health), compromised software pipelines (cPGuard), GhostAction AI API token harvesting, and NCSC warnings on autonomous CNI.",
+    "read_time": "6 min read",
+    "badge_color": "red",
+    "link": "https://www.youtube.com/watch?v=iC0phFzdss4",
+    "youtube_url": "https://www.youtube.com/watch?v=iC0phFzdss4",
+    "video_embed_url": "https://www.youtube.com/embed/iC0phFzdss4?autoplay=0&controls=1&rel=0"
+  },
+  {
+    "category": "Executive Intelligence",
     "date": "October 28, 2026",
     "title": "PhP and Black October // AI-Accelerated Vulnerability Crisis & Perimeter Exposure",
     "image": "seqscan3.png",

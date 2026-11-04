@@ -1,5 +1,21 @@
 [
   {
+    "id": "breach-q4-2026-threat-triad-autonomous-ai",
+    "quarter": "Q4 2026",
+    "date": "Nov 04, 2026",
+    "target": "MidWeek Threat Triad: Forgotten Edges, Hijacked Trust & Autonomous AI",
+    "industry": "Healthcare, Update Pipelines & Autonomous AI",
+    "vector": "Peripheral admin leaks (NSW Health), hijacked update pipelines (cPGuard), AI API key harvesting (GhostAction), and autonomous CNI threats.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://www.youtube.com/watch?v=iC0phFzdss4",
+    "image": "seqscan3.png"
+  },
+  {
     "id": "breach-q4-2026-php-black-october",
     "quarter": "Q4 2026",
     "date": "Oct 28, 2026",
