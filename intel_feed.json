@@ -1,6 +1,18 @@
 [
   {
     "category": "Executive Intelligence",
+    "date": "November 11, 2026",
+    "title": "24 Days Offline: The Brutal Economics of Healthcare Cyber Extortion",
+    "image": "weekly_healthcare_20261111.jpg",
+    "excerpt": "Wednesday Intelligence Briefing: Deconstructing the cascading fallout when healthcare networks go dark. Modern ransomware cartels bypass traditional perimeters to hold EHR systems, clinical pipelines, and patient care hostage for nearly a month. Analyzing the crippling balance sheet impact, collateral exposure, and proactive posture defense.",
+    "read_time": "6 min read",
+    "badge_color": "red",
+    "link": "https://youtu.be/PyVjoKVfWQY",
+    "youtube_url": "https://youtu.be/PyVjoKVfWQY",
+    "video_embed_url": "https://www.youtube.com/embed/PyVjoKVfWQY?autoplay=0&controls=1&rel=0"
+  },
+  {
+    "category": "Executive Intelligence",
     "date": "November 04, 2026",
     "title": "MidWeek Breach Ledger Report // The 2026 Threat Triad: Forgotten Edges, Hijacked Trust & Autonomous AI",
     "image": "seqscan3.png",

@@ -1,5 +1,21 @@
 [
   {
+    "id": "breach-q4-2026-healthcare-24-days-offline",
+    "quarter": "Q4 2026",
+    "date": "Nov 11, 2026",
+    "target": "Healthcare Cyber Extortion: 24 Days Offline & Clinical Paralysis",
+    "industry": "Healthcare, Clinical Networks & Regional Care Systems",
+    "vector": "Ransomware extortion targeting clinical systems, EHR infrastructure, and hospital communication channels leading to 24-day operational blackout.",
+    "impact": "Wednesday Executive Intelligence Briefing",
+    "penalty_usd": 0.0,
+    "service_cta": "3-Hour S.P.A. Surface Audit",
+    "cta_target": "mini_spa.html",
+    "severity": "Critical Attack",
+    "badge_color": "red",
+    "media_video": "https://youtu.be/PyVjoKVfWQY",
+    "image": "weekly_healthcare_20261111.jpg"
+  },
+  {
     "id": "breach-q4-2026-threat-triad-autonomous-ai",
     "quarter": "Q4 2026",
     "date": "Nov 04, 2026",
